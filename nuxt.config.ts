@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint'
   ],
 
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
   future: {
     compatibilityVersion: 4

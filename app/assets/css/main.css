@@ -3,4 +3,65 @@
 
 @theme {
   --font-sans: 'Public Sans', sans-serif;
+
+/* find more pallets at fireux.app/pallets */
+/* Double check manaualy that you have the same names as in app.config - if you can find a better way get in touch */
+/* Primary Colors uncomment for (Yellow) */
+  --color-primary-50:  #FEFCE8;
+  --color-primary-100: #FEF9C3;
+  --color-primary-200: #FEF08A;
+  --color-primary-300: #FDE047;
+  --color-primary-400: #FACC15;
+  --color-primary-500: #EAB308;
+  --color-primary-600: #CA8A04;
+  --color-primary-700: #A16207;
+  --color-primary-800: #854D0E;
+  --color-primary-900: #713F12;
+  --color-primary-950: #422006;
+
+  /* Neutral Colors (Zinc) */
+  --color-neutral-50:  #FAFAFA;
+  --color-neutral-100: #F4F4F5;
+  --color-neutral-200: #E4E4E7;
+  --color-neutral-300: #D4D4D8;
+  --color-neutral-400: #A1A1AA;
+  --color-neutral-500: #71717A;
+  --color-neutral-600: #52525B;
+  --color-neutral-700: #3F3F46;
+  --color-neutral-800: #27272A;
+  --color-neutral-900: #18181B;
+  --color-neutral-950: #09090B;
+}
+
+:root {
+  color-scheme: light dark;
+
+  /* Primary Colors */
+  --primary: var(--color-primary-400);
+  --primary-transparent: rgba(250, 204, 21, 0.05);
+  --secondary-transparent: rgba(250, 204, 21, 0.02);
+
+  /* Neutral Colors */
+  --bg: var(--color-neutral-50);
+  --text: var(--color-neutral-900);
+  --decoration: var(--color-neutral-500);
+  --border: var(--color-neutral-200);
+  --shadow: var(--color-neutral-400);
+  --inset-shadow: var(--color-neutral-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Mode Adjustments */
+    --primary: var(--color-primary-500);
+    --primary-transparent: rgba(234, 179, 8, 0.05);
+    --secondary-transparent: rgba(234, 179, 8, 0.02);
+
+    --bg: var(--color-neutral-900);
+    --text: var(--color-neutral-50);
+    --decoration: var(--color-neutral-400);
+    --border: var(--color-neutral-600);
+    --shadow: var(--color-neutral-600);
+    --inset-shadow: var(--color-neutral-500);
+  }
 }

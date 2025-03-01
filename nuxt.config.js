@@ -34,10 +34,13 @@ export default defineNuxtConfig({
       projectId: process.env.FIREBASE_PROJECT_ID,
       storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
       messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-      appId: process.env.FIREBASE_APP_ID,
-      measurementId: process.env.FIREBASE_MEASUREMENT_ID
+      appId: process.env.FIREBASE_APP_ID
     },
-    init: true
+
+    auth: {
+      enabled: true, // ✅ Enables Firebase Auth
+      sessionCookies: true // ✅ Uses session cookies for better persistence
+    }
   },
 
   // Auto-import composables from the "composables" folder including all children

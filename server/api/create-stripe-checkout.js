@@ -1,21 +1,18 @@
-// server/api/create-checkout-session.ts
 import { defineEventHandler, readBody, setResponseStatus } from 'h3'
 import Stripe from 'stripe'
 import admin from '../utils/firebase'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-02-24.acacia'
 })
 
 export default defineEventHandler(async event => {
-  // Only allow POST requests
   if (event.req.method !== 'POST') {
     setResponseStatus(event, 405)
     return { error: 'Method Not Allowed' }
   }
 
   try {
-    // Read and parse the request body
     const body = await readBody(event)
     const { userId, collection, product, amount } = body
 
@@ -24,7 +21,6 @@ export default defineEventHandler(async event => {
       return { error: 'Missing required parameters' }
     }
 
-    // Create a Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -42,7 +38,6 @@ export default defineEventHandler(async event => {
       cancel_url: `${process.env.FRONTEND_URL}/cancel`
     })
 
-    // Write a record of the transaction to Firestore
     const db = admin.firestore()
     await db.collection(collection).add({
       userId,
@@ -53,12 +48,8 @@ export default defineEventHandler(async event => {
     })
 
     return { id: session.id }
-  } catch (error: unknown) {
+  } catch (error) {
     setResponseStatus(event, 500)
-    let message = 'Unknown error'
-    if (error instanceof Error) {
-      message = error.message
-    }
-    return { error: message }
+    return { error: error?.message || 'Unknown error' }
   }
 })

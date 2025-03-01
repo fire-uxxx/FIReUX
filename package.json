@@ -18,13 +18,14 @@
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
     "nuxt": "^3.15.4",
-    "stripe": "^17.7.0"
+    "nuxt-vuefire": "^1.0.5",
+    "stripe": "^17.7.0",
+    "vuefire": "^3.2.1"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.1.0",
     "eslint": "^9.21.0",
-    "sass-embedded": "^1.85.1",
-    "typescript": "^5.7.3"
+    "sass-embedded": "^1.85.1"
   },
   "overrides": {
     "tailwindcss": "4.0.7",

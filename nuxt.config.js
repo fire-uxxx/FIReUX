@@ -1,16 +1,52 @@
+// nuxt.config.js
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  ssr: true, // Ensure SSR is enabled
 
-  modules: ['@nuxt/ui', '@nuxt/eslint', 'nuxt-vuefire'],
+  // Use the Firebase preset for hosting if deploying to Firebase
+  nitro: {
+    preset: 'firebase',
+    firebase: {
+      gen: 2 // Generation 2
+    },
+    // Disable caching in development mode (avoid stale content in dev)
+    devServer:
+      process.env.NODE_ENV === 'development'
+        ? {
+            headers: {
+              'Cache-Control':
+                'no-store, no-cache, must-revalidate, proxy-revalidate',
+              Pragma: 'no-cache',
+              Expires: '0',
+              'Surrogate-Control': 'no-store'
+            }
+          }
+        : {}
+  },
+
+  devtools: { enabled: true }, // Enable Nuxt devtools for debugging
+
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/eslint',
+    'nuxt-vuefire',
+    '@vite-pwa/nuxt' // PWA module
+  ],
+
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
-  // Plugins live in the root-level plugins folder
   plugins: ['./plugins/firebase.client.js'],
+
+  vite: {
+    build: {
+      sourcemap: false // Disable all sourcemaps
+    }
+  },
 
   runtimeConfig: {
     public: {
+      // Firebase environment variables
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
       FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
@@ -27,6 +63,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-11-27',
 
+  // Vuefire config for Firebase + Auth
   vuefire: {
     config: {
       apiKey: process.env.FIREBASE_API_KEY,
@@ -36,15 +73,48 @@ export default defineNuxtConfig({
       messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       appId: process.env.FIREBASE_APP_ID
     },
-
     auth: {
-      enabled: true, // ✅ Enables Firebase Auth
-      sessionCookies: true // ✅ Uses session cookies for better persistence
+      enabled: true, // Enable Firebase Auth
+      sessionCookies: true
     }
   },
 
-  // Auto-import composables from the "composables" folder including all children
+  // Auto-import composables from composables/
   imports: {
     dirs: ['~/composables/**']
+  },
+
+  // -----------------------------------------
+  //       PWA Configuration
+  // -----------------------------------------
+  pwa: {
+    registerType: 'autoUpdate',
+
+    // Basic Manifest
+    manifest: {
+      name: 'Misebox',
+      short_name: 'Misebox',
+      start_url: '/',
+      display: 'standalone',
+      theme_color: '#6C5CE7',
+      background_color: '#ffffff',
+      icons: [
+        { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
+      ]
+    },
+
+    // Minimal Workbox config
+    workbox: {
+      navigateFallback: '/', // fallback route for unmatched requests
+      cleanupOutdatedCaches: true,
+      clientsClaim: true,
+      skipWaiting: true
+      // No runtimeCaching → purely minimal
+    },
+
+    devOptions: {
+      enabled: false // No SW in dev; build+preview to test
+    }
   }
 })

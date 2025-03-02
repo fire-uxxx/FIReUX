@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "cross-env FRONTEND_URL=http://localhost:3000 nuxt dev",
+    "build": "cross-env NODE_ENV=production FRONTEND_URL=https://fireux-mvp.web.app nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -15,8 +15,10 @@
     "@iconify-json/lucide": "^1.2.26",
     "@iconify-json/simple-icons": "^1.2.26",
     "@nuxt/ui": "^3.0.0-alpha.13",
+    "@vite-pwa/nuxt": "^0.10.6",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
+    "firebase-functions": "^6.3.2",
     "nuxt": "^3.15.4",
     "nuxt-vuefire": "^1.0.5",
     "stripe": "^17.7.0",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "sass-embedded": "^1.85.1"
   },

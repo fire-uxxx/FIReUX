@@ -1,8 +1,16 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3'
 import Stripe from 'stripe'
 import admin from '../utils/firebase'
+import { useRuntimeConfig } from '#imports' // Auto-imported in Nuxt 3
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+// Get runtime configuration (private and public)
+const config = useRuntimeConfig()
+
+// Use the secret key from the private part of the runtimeConfig
+const stripeSecretKey = config.STRIPE_SECRET_KEY
+console.log('Stripe Secret Key from runtime config:', stripeSecretKey)
+
+const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-02-24.acacia'
 })
 
@@ -18,8 +26,12 @@ export default defineEventHandler(async event => {
 
     if (!userId || !collection || !product || !amount) {
       setResponseStatus(event, 400)
-      return { error: 'Missing required parameters' }
+      return { error: 'Missing required parameters', received: body }
     }
+
+    // Get the front-end URL from the public runtime config
+    const frontendUrl =
+      config.public.FRONTEND_URL || 'https://fallback-url.com/'
 
     // Create the Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -35,29 +47,30 @@ export default defineEventHandler(async event => {
         }
       ],
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}/`,
-      cancel_url: `${process.env.FRONTEND_URL}/`
+      success_url: `${frontendUrl}`,
+      cancel_url: `${frontendUrl}`
     })
 
-    // Write a record to Firestore with proper fields
+    console.log('Created Stripe session:', session)
+
+    // Write a record to Firestore (if needed)
     const db = admin.firestore()
     await db.collection(collection).add({
       userId,
       product,
       amount, // store the raw amount (in cents)
       sessionId: session.id,
-      // Use 'timestamp' (instead of createdAt) so the client can access it
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      status: 'pending' // Set initial status to pending
+      status: 'pending'
     })
 
-    // Return both the session id and the URL so the client can redirect
+    // Return the session id and URL for client redirection
     return {
       id: session.id,
       url: session.url
     }
   } catch (error) {
     setResponseStatus(event, 500)
-    return { error: error?.message || 'Unknown error' }
+    return { error: error instanceof Error ? error.message : 'Unknown error' }
   }
 })

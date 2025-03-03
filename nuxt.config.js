@@ -4,7 +4,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   ssr: true, // Ensure SSR is enabled
 
-  // Use the Firebase preset for hosting if deploying to Firebase
   nitro: {
     preset: 'firebase',
     firebase: {
@@ -27,12 +26,7 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true }, // Enable Nuxt devtools for debugging
 
-  modules: [
-    '@nuxt/ui',
-    '@nuxt/eslint',
-    'nuxt-vuefire',
-    '@vite-pwa/nuxt' // PWA module
-  ],
+  modules: ['@nuxt/ui', '@nuxt/eslint', 'nuxt-vuefire', '@vite-pwa/nuxt'],
 
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
@@ -53,8 +47,11 @@ export default defineNuxtConfig({
       FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
       FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
-      FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID
-    }
+      FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
+      FRONTEND_URL: process.env.FRONTEND_URL // e.g. "https://fireux-mvp.web.app"
+    },
+    // Keep sensitive keys private (not exposed to the client)
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
   },
 
   future: {
@@ -92,8 +89,8 @@ export default defineNuxtConfig({
 
     // Basic Manifest
     manifest: {
-      name: 'Misebox',
-      short_name: 'Misebox',
+      name: 'Fire Mvp',
+      short_name: 'fire',
       start_url: '/',
       display: 'standalone',
       theme_color: '#6C5CE7',
@@ -110,7 +107,6 @@ export default defineNuxtConfig({
       cleanupOutdatedCaches: true,
       clientsClaim: true,
       skipWaiting: true
-      // No runtimeCaching → purely minimal
     },
 
     devOptions: {

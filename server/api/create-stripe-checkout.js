@@ -8,8 +8,11 @@ const config = useRuntimeConfig()
 
 // Use the secret key from the private part of the runtimeConfig
 const stripeSecretKey = config.STRIPE_SECRET_KEY
-console.log('Stripe Secret Key from runtime config:', stripeSecretKey)
 
+// Define a constant currency
+const currency = 'usd'
+
+// Initialize Stripe
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-02-24.acacia'
 })
@@ -39,7 +42,7 @@ export default defineEventHandler(async event => {
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency,
             product_data: { name: product },
             unit_amount: amount // in cents
           },
@@ -51,17 +54,16 @@ export default defineEventHandler(async event => {
       cancel_url: `${frontendUrl}`
     })
 
-    console.log('Created Stripe session:', session)
-
-    // Write a record to Firestore (if needed)
+    // Write a record to Firestore
     const db = admin.firestore()
     await db.collection(collection).add({
       userId,
       product,
-      amount, // store the raw amount (in cents)
+      amount, // stored in cents
       sessionId: session.id,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      status: 'pending'
+      status: 'pending',
+      currency
     })
 
     // Return the session id and URL for client redirection

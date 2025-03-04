@@ -1,33 +1,25 @@
 <template>
   <UContainer v-if="currentUser" class="content-center">
-    <img src="/img/logo.png" alt="FIReMVP Logo" class="logo" />
+    <!-- Main Logo -->
+    <a href="https://fireux.app" target="_blank">
+      <img src="/img/logo.png" alt="FIReMVP Logo" class="logo" >
+    </a>
 
     <header>
-      <UHeading level="1" class="content-center"
-        >🔥 Support with a Tip</UHeading
-      >
+      <h1 class="title">Support with a Tip</h1>
     </header>
 
-    <section class="tip-section content-center">
-      <UButton @click="tipUser" class="button"> Send a Tip 💸 1 USD </UButton>
+    <section class="tip-section">
+      <UButton class="button" @click="tipUser">Send a Tip 💸 1 USD</UButton>
     </section>
 
-    <section class="ledger-section content-center">
-      <UHeading level="2">📜 Ledger</UHeading>
-      <div v-if="formattedLedger.length">
-        <div
-          v-for="(entry, index) in formattedLedger"
-          :key="index"
-          class="mb-4"
-        >
-          <UCard variant="outlined">
-            <p><strong>Amount:</strong> ${{ entry.amt }}</p>
-            <p><strong>Status:</strong> {{ entry.status }}</p>
-            <p><strong>Date:</strong> {{ entry.timestamp }}</p>
-          </UCard>
-        </div>
-      </div>
-      <div v-else class="no-transactions">
+    <section class="ledger-section">
+      <h1 class="sub-title">📜 Ledger</h1>
+      <!-- Ledger Table using UTable -->
+      <UTable :data="formattedLedger" :columns="columns" class="ledger-table" />
+
+      <!-- No-Transactions info (always visible during development) -->
+      <div class="no-transactions">
         <p>FIReMVP: A Low-Code Starter for Stripe & Firebase Integrations.</p>
         <p>
           FIReMVP is provided by FIReUX as a low-code solution for developers
@@ -50,10 +42,21 @@
           documentation, troubleshooting, and modules.
         </p>
       </div>
+
+      <!-- Secondary Logos in a column -->
       <div class="no-transactions-logos">
-        <img src="/img/nuxt.png" alt="Nuxt Logo" class="logo" />
-        <img src="/img/firebase.png" alt="Firebase Logo" class="logo" />
-        <img src="/img/stripe.png" alt="Stripe Logo" class="logo" />
+        <a href="https://fireux.app" target="_blank">
+          <img src="/img/logo.png" alt="FIReMVP Logo" class="logo" >
+        </a>
+        <a href="https://nuxt.com" target="_blank">
+          <img src="/img/nuxt.png" alt="Nuxt Logo" class="logo" >
+        </a>
+        <a href="https://firebase.google.com" target="_blank">
+          <img src="/img/firebase.png" alt="Firebase Logo" class="logo" >
+        </a>
+        <a href="https://stripe.com" target="_blank">
+          <img src="/img/stripe.png" alt="Stripe Logo" class="logo" >
+        </a>
       </div>
     </section>
 
@@ -70,26 +73,23 @@
 const currentUser = useCurrentUser()
 const ledger = useVuefireCollection('ledger')
 
+// Map each ledger entry to a simple object with a raw amount and a formatted date (day/month)
 const formattedLedger = computed(() =>
-  (ledger.value || []).map(entry => {
-    const rawAmount = entry.amount ?? 0
-    const amtDollars = (rawAmount / 100).toFixed(2)
-    const rawStatus = entry.status || 'Unknown'
-    const capitalizedStatus =
-      rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1)
-    let displayDate = 'N/A'
-    if (entry.timestamp?.seconds) {
-      displayDate = new Date(entry.timestamp.seconds * 1000).toLocaleDateString(
-        'en-GB'
-      )
-    }
-    return {
-      amt: amtDollars,
-      status: capitalizedStatus,
-      timestamp: displayDate
-    }
-  })
+  (ledger.value || []).map(entry => ({
+    amount: entry.amount, // keep the raw number
+    timestamp: entry.timestamp?.seconds
+      ? new Date(entry.timestamp.seconds * 1000).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit'
+        })
+      : 'N/A'
+  }))
 )
+
+const columns = [
+  { accessorKey: 'amount', header: 'Amount' },
+  { accessorKey: 'timestamp', header: 'Date' }
+]
 
 async function tipUser() {
   if (!currentUser.value) {
@@ -124,33 +124,44 @@ async function tipUser() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: fit-content;
+  margin: 0 auto;
   gap: var(--spacing-l);
-}
-
-/* Style for the no-transactions section */
-.no-transactions {
   padding: var(--spacing-m);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background-color: var(--bg);
-  text-align: start;
   max-width: 600px;
-}
-
-/* Logos inside the no-transactions section arranged in a row */
-.no-transactions-logos {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-l);
-  justify-content: center;
-  align-items: center;
-  margin-top: var(--spacing-m);
 }
 
 .logo {
   max-height: 60px;
   width: auto;
   object-fit: contain;
+}
+
+.title {
+  text-align: center;
+  margin: var(--spacing-s) 0;
+  font-size: 2rem;
+}
+
+.sub-title {
+  text-align: center;
+  margin: var(--spacing-s) 0;
+  font-size: 1.5rem;
+}
+
+.no-transactions {
+  padding: var(--spacing-m);
+  border: 1px solid var(--border);
+  border-radius: var(--spacing);
+  background-color: var(--bg);
+  text-align: center;
+  max-width: 600px;
+}
+
+.no-transactions-logos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+  justify-content: center;
+  align-items: center;
 }
 </style>

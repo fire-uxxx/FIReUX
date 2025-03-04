@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cross-env FRONTEND_URL=http://localhost:3000 nuxt dev",
-    "build": "cross-env NODE_ENV=production FRONTEND_URL=https://fireux-mvp.web.app nuxt build",
+    "dev": "clear && nuxt dev",
+    "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

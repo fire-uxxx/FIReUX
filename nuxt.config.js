@@ -1,4 +1,3 @@
-// nuxt.config.js
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
@@ -9,7 +8,6 @@ export default defineNuxtConfig({
     firebase: {
       gen: 2 // Generation 2
     },
-    // Disable caching in development mode (avoid stale content in dev)
     devServer:
       process.env.NODE_ENV === 'development'
         ? {
@@ -48,9 +46,12 @@ export default defineNuxtConfig({
       FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
-      FRONTEND_URL: process.env.FRONTEND_URL // e.g. "https://fireux-mvp.web.app"
+      FRONTEND_URL: process.env.FRONTEND_URL, // e.g. "https://fireux-mvp.web.app"
+      PWA_APP_NAME: process.env.PWA_APP_NAME || 'Fire Mvp',
+      PWA_APP_SHORT_NAME: process.env.PWA_APP_SHORT_NAME || 'fire',
+      PWA_THEME_COLOR: process.env.PWA_THEME_COLOR || '#6C5CE7',
+      PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR || '#ffffff'
     },
-    // Keep sensitive keys private (not exposed to the client)
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
   },
 
@@ -60,7 +61,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-11-27',
 
-  // Vuefire config for Firebase + Auth
   vuefire: {
     config: {
       apiKey: process.env.FIREBASE_API_KEY,
@@ -76,41 +76,46 @@ export default defineNuxtConfig({
     }
   },
 
-  // Auto-import composables from composables/
   imports: {
     dirs: ['~/composables/**']
   },
 
-  // -----------------------------------------
-  //       PWA Configuration
-  // -----------------------------------------
   pwa: {
     registerType: 'autoUpdate',
 
     // Basic Manifest
     manifest: {
-      name: 'Fire Mvp',
-      short_name: 'fire',
+      name: process.env.PWA_APP_NAME,
+      short_name: process.env.PWA_APP_SHORT_NAME,
       start_url: '/',
       display: 'standalone',
-      theme_color: '#6C5CE7',
-      background_color: '#ffffff',
+      theme_color: process.env.PWA_THEME_COLOR,
+      background_color: process.env.PWA_BACKGROUND_COLOR,
       icons: [
         { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
         { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
       ]
     },
 
-    // Minimal Workbox config
+    injectManifest: {
+      injectionPoint: undefined, // Prevents injection warnings
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+    },
+
+    // Minimal Workbox config for production
     workbox: {
-      navigateFallback: '/', // fallback route for unmatched requests
+      navigateFallback: '/',
       cleanupOutdatedCaches: true,
       clientsClaim: true,
       skipWaiting: true
     },
 
+    // Disable PWA in development mode and suppress warnings
     devOptions: {
-      enabled: false // No SW in dev; build+preview to test
+      enabled: false,
+      suppressWarnings: true,
+      navigateFallbackAllowlist: [/^\/$/],
+      type: 'module'
     }
   }
 })

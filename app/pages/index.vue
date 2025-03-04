@@ -2,7 +2,10 @@
   <UContainer v-if="currentUser" class="content-center">
     <!-- Main Logo -->
     <a href="https://fireux.app" target="_blank">
-      <img src="/img/logo.png" alt="FIReMVP Logo" class="logo" >
+      <img src="/img/logo.png" alt="FIReMVP Logo" class="logo">
+    </a>
+    <a href="https://github.com/fire-uxxx/fire-mvp" target="_blank">
+      <img src="/img/github.png" alt="FIReMVP Logo" class="logo">
     </a>
 
     <header>
@@ -22,7 +25,7 @@
       <div class="no-transactions">
         <p>FIReMVP: A Low-Code Starter for Stripe & Firebase Integrations.</p>
         <p>
-          FIReMVP is provided by FIReUX as a low-code solution for developers
+          FIReMVP is provided by 🔥FIReUX as a low-code solution for developers
           who want to integrate Stripe and Firebase quickly. By cloning the
           project from GitHub and updating your API keys and configuration
           details, you’ll have a fully functional tipping system that allows
@@ -33,6 +36,11 @@
           all our subsequent applications and tutorials. With FIReMVP, you learn
           how to manage transactions and maintain a database—skills that unlock
           the potential to build a wide range of online applications.
+        </p>
+        <p>
+          🚀 <strong>FIReMVP is also a Progressive Web App (PWA)!</strong>  
+          That means you can <strong>install it on your device</strong>, use it <strong>offline</strong>, and experience
+          <strong>blazing-fast performance</strong>. Whether you're on desktop or mobile, you can <strong>add it to your home screen</strong> for quick access!
         </p>
         <p>
           Try it out, customize it, and if it works for you, feel free to send a
@@ -46,16 +54,19 @@
       <!-- Secondary Logos in a column -->
       <div class="no-transactions-logos">
         <a href="https://fireux.app" target="_blank">
-          <img src="/img/logo.png" alt="FIReMVP Logo" class="logo" >
+          <img src="/img/logo.png" alt="FIReMVP Logo" class="logo">
         </a>
         <a href="https://nuxt.com" target="_blank">
-          <img src="/img/nuxt.png" alt="Nuxt Logo" class="logo" >
+          <img src="/img/nuxt.png" alt="Nuxt Logo" class="logo">
         </a>
         <a href="https://firebase.google.com" target="_blank">
-          <img src="/img/firebase.png" alt="Firebase Logo" class="logo" >
+          <img src="/img/firebase.png" alt="Firebase Logo" class="logo">
         </a>
         <a href="https://stripe.com" target="_blank">
-          <img src="/img/stripe.png" alt="Stripe Logo" class="logo" >
+          <img src="/img/stripe.png" alt="Stripe Logo" class="logo">
+        </a>
+        <a href="https://web.dev/what-are-pwas/" target="_blank">
+          <img src="/img/pwa.svg" alt="PWA Logo" class="logo">
         </a>
       </div>
     </section>

@@ -1,178 +1,158 @@
 <template>
-  <UContainer v-if="currentUser" class="content-center">
-    <!-- Main Logo -->
-    <a href="https://fireux.app" target="_blank">
-      <img src="/img/logo.png" alt="FIReMVP Logo" class="logo">
-    </a>
-    <a href="https://github.com/fire-uxxx/fire-mvp" target="_blank">
-      <img src="/img/github.png" alt="FIReMVP Logo" class="logo">
-    </a>
-
-    <header>
-      <h1 class="title">Support with a Tip</h1>
-    </header>
-
-    <section class="tip-section">
-      <UButton class="button" @click="tipUser">Send a Tip 💸 1 USD</UButton>
+  <div class="home page">
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="flame">🔥</h1>
+      <LayoutLogo size="large" />
+      <div class="hero-title">- Vision Fuel -</div>
+      <p class="hero-subtitle">Apps and Interfaces for Enterprise</p>
+      <UButton>Get Started</UButton>
     </section>
 
-    <section class="ledger-section">
-      <h1 class="sub-title">📜 Ledger</h1>
-      <!-- Ledger Table using UTable -->
-      <UTable :data="formattedLedger" :columns="columns" class="ledger-table" />
+    <!-- What We Offer -->
+    <section class="hero-left">
+      <h2 class="section-title">Why FIReUX?</h2>
+      <ul>
+        <li>🚀 Rapid Deployment with modern frameworks</li>
+        <li>🎨 Highly Customizable to match your business needs</li>
+        <li>🤝 Personal Developer & Ongoing Support</li>
+      </ul>
+    </section>
 
-      <!-- No-Transactions info (always visible during development) -->
-      <div class="no-transactions">
-        <p>FIReMVP: A Low-Code Starter for Stripe & Firebase Integrations.</p>
-        <p>
-          FIReMVP is provided by 🔥FIReUX as a low-code solution for developers
-          who want to integrate Stripe and Firebase quickly. By cloning the
-          project from GitHub and updating your API keys and configuration
-          details, you’ll have a fully functional tipping system that allows
-          users to send a one-dollar tip directly into your Stripe account.
-        </p>
-        <p>
-          This project is fully customizable and serves as the foundation for
-          all our subsequent applications and tutorials. With FIReMVP, you learn
-          how to manage transactions and maintain a database—skills that unlock
-          the potential to build a wide range of online applications.
-        </p>
-        <p>
-          🚀 <strong>FIReMVP is also a Progressive Web App (PWA)!</strong>  
-          That means you can <strong>install it on your device</strong>, use it <strong>offline</strong>, and experience
-          <strong>blazing-fast performance</strong>. Whether you're on desktop or mobile, you can <strong>add it to your home screen</strong> for quick access!
-        </p>
-        <p>
-          Try it out, customize it, and if it works for you, feel free to send a
-          tip as a thank-you! This message will disappear after your first
-          transaction. Visit
-          <a href="https://fireux.app" target="_blank">FIReUX</a> for full
-          documentation, troubleshooting, and modules.
-        </p>
-      </div>
-
-      <!-- Secondary Logos in a column -->
-      <div class="no-transactions-logos">
-        <a href="https://fireux.app" target="_blank">
-          <img src="/img/logo.png" alt="FIReMVP Logo" class="logo">
-        </a>
-        <a href="https://nuxt.com" target="_blank">
-          <img src="/img/nuxt.png" alt="Nuxt Logo" class="logo">
-        </a>
-        <a href="https://firebase.google.com" target="_blank">
-          <img src="/img/firebase.png" alt="Firebase Logo" class="logo">
-        </a>
-        <a href="https://stripe.com" target="_blank">
-          <img src="/img/stripe.png" alt="Stripe Logo" class="logo">
-        </a>
-        <a href="https://web.dev/what-are-pwas/" target="_blank">
-          <img src="/img/pwa.svg" alt="PWA Logo" class="logo">
-        </a>
+    <!-- Technologies Section -->
+    <section class="technologies">
+      <h2 class="section-title">Powering Our Apps</h2>
+      <div class="tech-grid">
+        <div class="tech-item">
+          <img src="/img/nuxt.png" alt="Nuxt Logo" />
+          <p>Nuxt 3</p>
+        </div>
+        <div class="tech-item">
+          <img src="/img/firebase.png" alt="Firebase Logo" />
+          <p>Firebase</p>
+        </div>
+        <div class="tech-item">
+          <img src="/img/stripe.png" alt="Stripe Logo" />
+          <p>Stripe</p>
+        </div>
       </div>
     </section>
 
-    <section v-if="errorInfo">
-      <UAlert type="error">
-        <template #header>Error Details:</template>
-        <pre>{{ errorInfo }}</pre>
-      </UAlert>
+    <!-- Killer Pitch Section -->
+    <section class="killer-pitch">
+      <h2>You're Not Just Buying a Website—You're Investing in a Business Tool</h2>
+      <p>
+        Unlike Wix and WordPress, FIReUX delivers <strong>custom business solutions</strong> that automate workflows,
+        integrate APIs, and power your industry with real software.
+      </p>
+      <UButton>Learn More</UButton>
     </section>
-  </UContainer>
+  </div>
 </template>
 
-<script setup lang="ts">
-const currentUser = useCurrentUser()
-const ledger = useVuefireCollection('ledger')
-
-// Map each ledger entry to a simple object with a raw amount and a formatted date (day/month)
-const formattedLedger = computed(() =>
-  (ledger.value || []).map(entry => ({
-    amount: entry.amount, // keep the raw number
-    timestamp: entry.timestamp?.seconds
-      ? new Date(entry.timestamp.seconds * 1000).toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit'
-        })
-      : 'N/A'
-  }))
-)
-
-const columns = [
-  { accessorKey: 'amount', header: 'Amount' },
-  { accessorKey: 'timestamp', header: 'Date' }
-]
-
-async function tipUser() {
-  if (!currentUser.value) {
-    alert('You need to be logged in to send a tip!')
-    return
-  }
-  try {
-    const response = await useFetch('/api/create-stripe-checkout', {
-      method: 'POST',
-      body: {
-        userId: currentUser.value.uid,
-        collection: 'ledger',
-        product: 'Tip Donation',
-        amount: 100 // 100 cents = $1.00
-      }
-    })
-    if (response.data.value?.url) {
-      window.location.href = response.data.value.url
-    } else {
-      console.error('Stripe session creation failed:', response.data.value)
-      alert('Failed to create checkout session.')
-    }
-  } catch (error) {
-    console.error('Error sending tip:', error)
-    alert('Something went wrong, please try again!')
-  }
-}
-</script>
-
 <style scoped>
-.content-center {
+/* General Page Layout */
+.home {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-  gap: var(--spacing-l);
+  width: 100%;
   padding: var(--spacing-m);
-  max-width: 600px;
-}
-
-.logo {
-  max-height: 60px;
-  width: auto;
-  object-fit: contain;
-}
-
-.title {
   text-align: center;
-  margin: var(--spacing-s) 0;
-  font-size: 2rem;
-}
-
-.sub-title {
-  text-align: center;
-  margin: var(--spacing-s) 0;
-  font-size: 1.5rem;
-}
-
-.no-transactions {
-  padding: var(--spacing-m);
-  border: 1px solid var(--border);
-  border-radius: var(--spacing);
   background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-l) 0;
+  gap: var(--spacing-m);
+}
+
+.flame {
+  font-size: var(--text-5xl);
+}
+
+.hero-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.hero-subtitle {
+  font-size: var(--text-lg);
+  color: var(--text);
+}
+
+/* What We Offer */
+.hero-left {
+  text-align: left;
+  max-width: 600px;
+  width: 100%;
+  padding: var(--spacing-m);
+}
+
+.hero-left ul {
+  list-style: none;
+  padding: 0;
+}
+
+.hero-left li {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-s);
+}
+
+/* Section Titles */
+.section-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-m);
+}
+
+/* Technologies Section */
+.technologies {
   text-align: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.tech-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-m);
   max-width: 600px;
 }
 
-.no-transactions-logos {
+.tech-item {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-m);
-  justify-content: center;
   align-items: center;
+}
+
+.tech-item img {
+  width: 50px;
+  height: auto;
+  margin-bottom: var(--spacing-xs);
+}
+
+.tech-item p {
+  font-size: var(--text-sm);
+}
+
+/* Killer Pitch */
+.killer-pitch {
+  text-align: center;
+  padding: var(--spacing-l);
+}
+
+.killer-pitch h2 {
+  font-size: var(--text-2xl);
+}
+
+.killer-pitch p {
+  font-size: var(--text-lg);
 }
 </style>

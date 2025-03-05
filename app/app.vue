@@ -1,13 +1,12 @@
 <template>
   <UApp>
     <VitePwaManifest />
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </UApp>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style scoped>
-</style>
+<style scoped></style>

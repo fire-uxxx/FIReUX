@@ -16,6 +16,7 @@
     "@iconify-json/simple-icons": "^1.2.26",
     "@nuxt/ui": "^3.0.0-alpha.13",
     "@vite-pwa/nuxt": "^0.10.6",
+    "@vueuse/core": "^12.8.0",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
     "firebase-functions": "^6.3.2",

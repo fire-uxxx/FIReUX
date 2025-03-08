@@ -1,56 +1,86 @@
+/* ===========================
+🎨 Global Variables & Defaults
+=========================== */
 
-:root {
-  /* Custom Spacing Tokens */
-  --spacing-xs: 0.125rem; /* 2px - Extra Small */
-  --spacing-s: 0.25rem;   /* 4px - Small */
-  --spacing: 0.5rem;      /* 8px - Default spacing */
-  --spacing-m: 1rem;      /* 16px - Medium */
-  --spacing-l: 2rem;      /* 32px - Large */
-  --spacing-xl: 4rem;     /* 64px - Extra Large */
-  --spacing-xxl: 8rem;    /* 128px - Double Extra Large */
-  --header-height-mobile: 60px;
-
-
-
-/* 
-  Tailwind Preflight resets margins, paddings, box-sizing, etc.
-  This file only adds custom base styles using your design tokens.
-*/
-}
+/* 🔹 General Reset */
 body {
-  /* Set your preferred typography */
   font-family: var(--font-sans);
-  font-size: var(--text-base); /* using your custom token */
+  font-size: var(--text-base);
   line-height: var(--leading-normal);
 }
 
+/* ===========================
+📑 Typography & Components
+=========================== */
 h1, h2, h3, h4, h5, h6 {
-  /* Use a bold weight for headings */
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-s); /* extra spacing for headings */
 }
 
-p {
-  /* Custom paragraph spacing */
-  margin-bottom: var(--spacing-m);
+.flame {
+  font-size: var(--text-5xl);
 }
 
-a {
-  /* Basic link styles */
-  color: var(--hover);
-  text-decoration: none;
-  transition: color 0.3s ease;
+/* 🏗️ Layout Containers */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-m);
+  padding: var(--spacing-m);
 }
 
-a:hover {
-  text-decoration: underline;
+.title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
 }
 
-/* Custom container (if not using Tailwind's container) */
-.container-custom {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--spacing-l);
-  padding-right: var(--spacing-l);
+.text {
+  font-size: var(--text-base);
+  color: var(--ui-text-muted);
+}
+
+/* ===========================
+🧩 Grid & Layout Helpers
+=========================== */
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-m);
+  margin-top: var(--spacing-m);
+}
+
+.centered-section {
+  width: 100%;
+  max-width: 900px;
+  padding: var(--spacing-l) 0;
+  text-align: center;
+}
+
+/* ===========================
+🖼️ Cards & Buttons
+=========================== */
+
+/* Pushes button to bottom */
+.button-bottom {
+  margin-top: auto;
+}
+
+/* 🔄 Responsive Adjustments */
+@media (min-width: 768px) {
+  .page {
+    padding: var(--spacing-l);
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    gap: var(--spacing-l);
+  }
 }

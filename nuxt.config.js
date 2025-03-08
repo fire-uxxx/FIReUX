@@ -24,7 +24,7 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true }, // Enable Nuxt devtools for debugging
 
-  modules: ['@nuxt/ui', '@nuxt/eslint', 'nuxt-vuefire', '@vite-pwa/nuxt'],
+  modules: ['@nuxt/ui', '@nuxt/eslint', 'nuxt-vuefire', '@vite-pwa/nuxt', '@nuxt/image'],
 
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
@@ -77,7 +77,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ['~/composables/**']
+    dirs: ['composables/**', 'components/**'] // ✅ Scan both `composables/` & `components/`
   },
 
   pwa: {

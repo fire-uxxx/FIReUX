@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-logo">
-        <LayoutLogo />
+        <LayoutsLogo />
       </div>
       <p class="footer-text">&copy; {{ new Date().getFullYear() }} FIReUX. All rights reserved.</p>
     </div>

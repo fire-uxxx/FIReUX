@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "clear && nuxt dev",
-    "build": "nuxt build",
+    "build": "clear npx nuxi analyze && nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -14,31 +14,21 @@
   "dependencies": {
     "@iconify-json/lucide": "^1.2.26",
     "@iconify-json/simple-icons": "^1.2.26",
-    "@nuxt/ui": "^3.0.0-alpha.13",
+    "@nuxt/image": "^1.9.0",
+    "@nuxt/ui": "^3.0.0-beta.3",
     "@vite-pwa/nuxt": "^0.10.6",
     "@vueuse/core": "^12.8.0",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
     "firebase-functions": "^6.3.2",
-    "nuxt": "^3.15.4",
+    "nuxt": "^3.16.0",
     "nuxt-vuefire": "^1.0.5",
     "stripe": "^17.7.0",
     "vuefire": "^3.2.1"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.1.0",
-    "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "sass-embedded": "^1.85.1"
-  },
-  "overrides": {
-    "tailwindcss": "4.0.7",
-    "@tailwindcss/postcss": "4.0.7",
-    "@tailwindcss/vite": "4.0.7"
-  },
-  "resolutions": {
-    "tailwindcss": "4.0.7",
-    "@tailwindcss/postcss": "4.0.7",
-    "@tailwindcss/vite": "4.0.7"
   }
 }

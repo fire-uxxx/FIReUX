@@ -1,31 +1,10 @@
 // plugins/firebase.client.js
-import { defineNuxtPlugin, useRuntimeConfig } from '#app'
-import { initializeApp, getApps, getApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
-import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth'
+import { defineNuxtPlugin } from '#app'
+import { useFirebase } from '~/composables/firebase/useFirebase'
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 
 export default defineNuxtPlugin(() => {
-  // Use runtime config
-  const config = useRuntimeConfig().public
-
-  let app
-  if (!getApps().length) {
-    const firebaseConfig = {
-      apiKey: config.FIREBASE_API_KEY,
-      authDomain: config.FIREBASE_AUTH_DOMAIN,
-      projectId: config.FIREBASE_PROJECT_ID,
-      storageBucket: config.FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
-      appId: config.FIREBASE_APP_ID,
-      measurementId: config.FIREBASE_MEASUREMENT_ID
-    }
-    app = initializeApp(firebaseConfig)
-  } else {
-    app = getApp()
-  }
-
-  const db = getFirestore(app)
-  const auth = getAuth(app)
+  const { db, auth, storage, functions } = useFirebase() // ✅ Get services from composable
 
   if (import.meta.client) {
     onAuthStateChanged(auth, async user => {
@@ -42,7 +21,7 @@ export default defineNuxtPlugin(() => {
           )
         }
       } else {
-        console.log(`User is signed in with uid: ${user.uid}`)
+        console.log(`User is signed in with UID: ${user.uid}`)
       }
     })
   }
@@ -51,7 +30,9 @@ export default defineNuxtPlugin(() => {
     provide: {
       firebase: {
         db,
-        auth
+        auth,
+        storage,
+        functions
       }
     }
   }

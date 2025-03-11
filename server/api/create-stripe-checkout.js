@@ -33,8 +33,7 @@ export default defineEventHandler(async event => {
     }
 
     // Get the front-end URL from the public runtime config
-    const frontendUrl =
-      config.public.FRONTEND_URL || 'https://fallback-url.com/'
+    const frontendUrl = config.public.DOMAIN || 'https://fallback-url.com/'
 
     // Create the Stripe checkout session
     const session = await stripe.checkout.sessions.create({

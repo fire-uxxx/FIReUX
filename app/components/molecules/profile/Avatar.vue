@@ -12,8 +12,8 @@ const router = useRouter()
 const currentUser = useCurrentUser()
 
 const userAvatar = computed(() => {
-  if (!currentUser.value) return '/img/default-avatar.png'
-  return currentUser.value.photoURL || '/img/default-avatar.png'
+  if (!currentUser.value) return 'img/default-avatar.png'
+  return currentUser.value.photoURL || 'img/default-avatar.png'
 })
 
 const userAlt = computed(() => currentUser.value?.displayName || 'Guest')

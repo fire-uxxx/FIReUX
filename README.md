@@ -3,7 +3,9 @@
 **FIReUX** is the central hub for distributing, managing, and expanding **low-code SaaS applications**. It provides developers and businesses with tools, templates, and a growing ecosystem of applications, starting with **FIReMVP**—a fully functional Firebase and Stripe starter kit.
 
 ## 🔥 What is FIReUX?
+
 FIReUX is a platform that makes it easy for users to:
+
 - **Download & Deploy FIReMVP**—a ready-to-use Nuxt 3, Firebase, and Stripe integration.
 - **Access SaaS Templates**—future updates will include industry-specific app templates.
 - **Learn & Grow**—guides, tutorials, and community support.
@@ -16,27 +18,31 @@ FIReUX is a platform that makes it easy for users to:
 The **first version** of FIReUX is focused on onboarding users to **FIReMVP**. The more users set up **FIReMVP**, the easier it will be to transition them to **other apps and services** in the FIReUX ecosystem.
 
 ### ✅ **FIReUX MVP Features**
+
 1️⃣ **Homepage** → Showcases FIReMVP and its benefits. (🚀 Primary CTA: "Deploy FIReMVP Now")
 2️⃣ **Blog & Tutorials** → Learn how to build SaaS apps with Firebase & Stripe.
 3️⃣ **Community & Support** → FAQs, troubleshooting, and Discord/forum access.
 4️⃣ **Versioning System** → Track FIReMVP updates & new releases.
 
-
 ---
 
 ## 🛠️ Getting Started
+
 ### 1️⃣ **Clone the Repository**
+
 ```sh
 git clone https://github.com/fire-uxxx/fireux.git
 cd fireux
 ```
 
 ### 2️⃣ **Install Dependencies**
+
 ```sh
 npm install
 ```
 
 ### 3️⃣ **Setup Environment Variables**
+
 Create a `.env` file in the root directory with the following credentials:
 
 ```env
@@ -58,21 +64,25 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
 
 # Node Environment & Frontend URL
 NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
+DOMAIN=http://localhost:3000
 ```
 
 **Make sure to add `.env` to `.gitignore`** to prevent exposing sensitive information.
 
 ### 4️⃣ **Run the Development Server**
+
 ```sh
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) in your browser to test the platform.
 
 ---
 
 ## 🚀 Future Plans for FIReUX
+
 Once the MVP is successfully deployed, FIReUX will expand into a **full marketplace and SaaS platform**, offering:
+
 - **FIReMarketplace** → A store for SaaS-ready templates.
 - **FIReEnterprise** → Multi-tenant SaaS applications with premium features.
 - **FIReBuilder** → A low-code app generator for businesses.
@@ -81,25 +91,24 @@ Once the MVP is successfully deployed, FIReUX will expand into a **full marketpl
 ---
 
 ## 🎯 Next Steps
+
 1️⃣ **Complete the FIReUX homepage to drive users to FIReMVP**
 2️⃣ **Set up a Blog & Tutorials section for education**
 3️⃣ **Create a Community & Support space (Discord, FAQs, or Forum)**
 4️⃣ **Improve the FIReMVP onboarding experience**
 
-
 ---
 
 ## 🤝 Contributing
+
 We welcome contributions! If you have ideas for improving FIReUX, feel free to fork, submit issues, or create pull requests.
 
-
 ## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 🔥 **FIReUX is more than just a website—it's the future of SaaS development.** Start today by deploying FIReMVP and see how easy it is to launch your own applications!
 
 👉 [Visit FIReUX](https://fireux.app) for more details.
-

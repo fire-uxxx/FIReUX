@@ -5,19 +5,27 @@
       <div class="header-content">
         <!-- Left Section: Logo -->
         <div class="left-section">
-          <LayoutsLogo size="small" />
+          <LogoType size="small" />
         </div>
 
         <!-- Right Section: User Profile & Mobile Menu -->
         <div class="right-section">
           <MoleculesProfileAvatar v-if="user" />
-          <UIcon v-if="isMobile && !mobileMenuOpen" name="lucide:menu" @click="toggleMobileNav" />
+          <UIcon
+            v-if="isMobile && !mobileMenuOpen"
+            name="lucide:menu"
+            @click="toggleMobileNav"
+          />
         </div>
       </div>
     </header>
 
     <!-- Mobile Navigation Menu -->
-    <USlideover v-model:open="mobileMenuOpen" side="right" :ui="{ header: 'p-2 min-h-[60px]' }">
+    <USlideover
+      v-model:open="mobileMenuOpen"
+      side="right"
+      :ui="{ header: 'p-2 min-h-[60px]' }"
+    >
       <template #header>
         <div class="slideover-header">
           <UIcon name="lucide:x" @click="toggleMobileNav" />
@@ -31,24 +39,24 @@
 </template>
 
 <script setup>
-import { useWindowSize } from "@vueuse/core";
+import { useWindowSize } from '@vueuse/core'
 
 defineProps({
   navLinks: {
     type: Array,
-    default: () => [], // Default to empty array if no links provided
-  },
-});
+    default: () => [] // Default to empty array if no links provided
+  }
+})
 
-const { width } = useWindowSize();
-const isMobile = computed(() => width.value < 1024);
+const { width } = useWindowSize()
+const isMobile = computed(() => width.value < 1024)
 
-const mobileMenuOpen = ref(false);
+const mobileMenuOpen = ref(false)
 const toggleMobileNav = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value;
-};
+  mobileMenuOpen.value = !mobileMenuOpen.value
+}
 
-const user = ref(true); // Replace with actual user authentication logic
+const user = ref(true) // Replace with actual user authentication logic
 </script>
 <style scoped>
 .header {
@@ -57,7 +65,7 @@ const user = ref(true); // Replace with actual user authentication logic
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-s) var(--spacing-m);
+  padding: var(--space-2) var(--space-4);
   background-color: var(--background);
   z-index: 100;
 }
@@ -80,13 +88,13 @@ const user = ref(true); // Replace with actual user authentication logic
 .right-section {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m); /* ✅ Ensures spacing between Avatar & Menu */
+  gap: var(--space-4); /* ✅ Ensures spacing between Avatar & Menu */
 }
 
 /* Mobile Menu */
 .slideover-header {
   display: flex;
   justify-content: flex-end;
-  padding-right: var(--spacing-s);
+  padding-right: var(--space-2);
 }
 </style>

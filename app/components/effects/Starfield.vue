@@ -27,7 +27,7 @@ onMounted(() => {
 
 .star {
   position: absolute;
-  background: var(--primary);
+  background: var(--ui-primary);
   border-radius: 50%;
   animation-name: twinkle, moveUp;
   animation-duration: 4s, 60s;

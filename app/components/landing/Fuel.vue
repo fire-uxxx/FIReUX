@@ -1,30 +1,74 @@
 <template>
-  <section class="centered-section">
-    <h2 class="flame">🔥</h2>
-    <div class="grid-layout">
-      <div class="fuel-item">
-        <NuxtImg src="/img/nuxt.png" alt="Nuxt Logo" />
+  <ClientOnly>
+    <section class="section">
+      <LogoFlame size="small" />
+      <div class="grid-layout">
+        <div class="fuel-item" v-for="(logo, key) in logos" :key="key">
+          <img :src="isDark ? logo.dark : logo.light" :alt="key + ' Logo'" />
+        </div>
       </div>
-      <div class="fuel-item">
-        <NuxtImg src="/img/firebase.png" alt="Firebase Logo" />
-      </div>
-      <div class="fuel-item">
-        <NuxtImg src="/img/stripe.png" alt="Stripe Logo" />
-      </div>
-    </div>
-  </section>
+    </section>
+
+    <template #fallback>
+      <div class="loading-placeholder" />
+    </template>
+  </ClientOnly>
 </template>
 
+<script setup>
+import { computed } from 'vue'
+
+const colorMode = useColorMode()
+
+// ✅ Ensure correct initial state (Runs only on the client)
+const isDark = computed(() => colorMode.value === 'dark')
+
+const logos = {
+  nuxt: {
+    light: '/img/nuxt-black.png',
+    dark: '/img/nuxt-white.png'
+  },
+  firebase: {
+    light: '/img/firebase-black.png',
+    dark: '/img/firebase-white.png'
+  },
+  stripe: {
+    light: '/img/stripe-black.png',
+    dark: '/img/stripe-white.png'
+  }
+}
+</script>
+
 <style scoped>
+/* ✅ Center the section */
+.centered-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+/* ✅ Default: Mobile-First Column Layout */
+.grid-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+  max-width: 300px; /* Keeps it centered on mobile */
+}
+
+/* ✅ Fuel Item */
 .fuel-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-m);
-  background-color: var(--bg);
+  padding: var(--space-8);
+  background-color: var(--ui-bg);
   transition: transform 0.3s ease-out, box-shadow 0.3s ease-in-out;
 }
 
+/* ✅ Fuel Item Image */
 .fuel-item img {
   max-width: 100px;
   filter: grayscale(50%);
@@ -38,5 +82,20 @@
 
 .fuel-item:hover img {
   filter: grayscale(0%);
+}
+
+/* ✅ Desktop: Switch to Row Layout */
+@media (min-width: 768px) {
+  .grid-layout {
+    flex-direction: row;
+    justify-content: center;
+    max-width: 100%;
+  }
+}
+
+/* ✅ Placeholder while loading */
+.loading-placeholder {
+  height: 100px;
+  width: 100%;
 }
 </style>

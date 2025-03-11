@@ -1,12 +1,17 @@
 <template>
   <UApp>
-    <VitePwaManifest />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </UApp>
 </template>
 
-<script setup></script>
+<script setup>
+useHead({
+  link: [
+    { rel: 'manifest', href: '/manifest.webmanifest' }
+  ]
+})
+</script>
 
 <style scoped></style>

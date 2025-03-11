@@ -2,9 +2,11 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-logo">
-        <LayoutsLogo />
+        <LogoType />
       </div>
-      <p class="footer-text">&copy; {{ new Date().getFullYear() }} FIReUX. All rights reserved.</p>
+      <p class="footer-text">
+        &copy; {{ new Date().getFullYear() }} FIReUX. All rights reserved.
+      </p>
     </div>
   </footer>
 </template>
@@ -18,7 +20,7 @@
   align-items: center;
   flex-direction: column;
   background: var(--bg);
-  padding: var(--spacing-m);
+  padding: var(--space-4);
   text-align: center;
   width: 100%;
   border-top: 1px solid var(--border);
@@ -28,7 +30,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--space-4);
   width: 100%;
   max-width: 1200px;
 }

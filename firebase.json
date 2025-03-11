@@ -4,16 +4,30 @@
   },
   "hosting": [
     {
-      "site": "fireux-mvp",
+      "site": "fireux-2005",
       "public": ".output/public",
       "cleanUrls": true,
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "headers": [
+        {
+          "source": "/img/**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        }
       ],
       "rewrites": [
-        { "source": "**", "function": "server" }
+        {
+          "source": "/img/**",
+          "destination": "/img/**"
+        },
+        {
+          "source": "/**",
+          "function": "server"
+        }
       ]
     }
   ]

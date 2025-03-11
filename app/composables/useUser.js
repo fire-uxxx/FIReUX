@@ -39,7 +39,7 @@ export function useUser() {
 
       if (!avatarUrl) {
         // If Google image fails, upload the default fallback avatar
-        const response = await fetch('/img/default-avatar.png')
+        const response = await fetch('img/default-avatar.png')
         const fallbackBlob = await response.blob()
         avatarUrl = await uploadFile(avatarPath, fallbackBlob)
       }

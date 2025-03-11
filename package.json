@@ -16,7 +16,6 @@
     "@iconify-json/simple-icons": "^1.2.26",
     "@nuxt/image": "^1.9.0",
     "@nuxt/ui": "^3.0.0-beta.3",
-    "@vite-pwa/nuxt": "^0.10.6",
     "@vueuse/core": "^12.8.0",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
@@ -27,7 +26,9 @@
     "vuefire": "^3.2.1"
   },
   "devDependencies": {
+    "@iconify-json/skill-icons": "^1.2.0",
     "@nuxt/eslint": "^1.1.0",
+    "@vite-pwa/nuxt": "^0.10.6",
     "eslint": "^9.21.0",
     "sass-embedded": "^1.85.1"
   }

@@ -14,23 +14,22 @@
 </template>
 
 <script setup lang="ts">
-const breadcrumbLinks = useBreadcrumbs();
+const breadcrumbLinks = useBreadcrumbs()
 
 const mainNavLinks = ref([
-  { label: "products", to: "/products" },
-  { label: "white-label", to: "/white-label" },
-  { label: "saas", to: "/saas" },
-  { label: "templates", to: "/templates" },
-  { label: "pricing", to: "/pricing" },
-  { label: "getting-started", to: "/getting-started" },
-]);
+  { label: 'products', to: '/products' },
+  { label: 'white-label', to: '/white-label' },
+  { label: 'saas', to: '/saas' },
+  { label: 'templates', to: '/templates' },
+  { label: 'pricing', to: '/pricing' },
+  { label: 'getting-started', to: '/getting-started' }
+])
 </script>
 <style lang="scss" scoped>
 /* ✅ Super Parent Layout */
 .layout-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   align-items: center; /* ✅ Ensures everything is aligned centrally */
   justify-content: space-between;
 }

@@ -1,6 +1,5 @@
-<!-- File: layouts/LayoutsHeader.vue -->
 <template>
-  <client-only>
+  <ClientOnly>
     <header class="header">
       <div class="header-content">
         <!-- Left Section: Logo -->
@@ -8,9 +7,10 @@
           <LogoType size="small" />
         </div>
 
-        <!-- Right Section: User Profile & Mobile Menu -->
+        <!-- Right Section: User Profile / Sign-In & Mobile Menu -->
         <div class="right-section">
-          <MoleculesProfileAvatar v-if="user" />
+          <MoleculesProfileAvatar v-if="appUser" @click="navigateToDashboard" class="clickable-avatar" />
+          <UButton v-else @click="navigateToAuth" size="sm">Sign In</UButton>
           <UIcon
             v-if="isMobile && !mobileMenuOpen"
             name="lucide:menu"
@@ -35,11 +35,32 @@
         <UNavigationMenu orientation="vertical" :items="navLinks" />
       </template>
     </USlideover>
-  </client-only>
+  </ClientOnly>
 </template>
 
 <script setup>
 import { useWindowSize } from '@vueuse/core'
+import { useRouter } from 'vue-router'
+
+// ✅ Fetch Firestore user data
+const { appUser } = useAppUser()
+const router = useRouter()
+
+// ✅ Navigation Handlers
+const navigateToAuth = () => {
+  router.push('/auth')
+}
+const navigateToDashboard = () => {
+  router.push('/dashboard')
+}
+
+// ✅ Mobile Menu Handling
+const { width } = useWindowSize()
+const isMobile = computed(() => width.value < 1024)
+const mobileMenuOpen = ref(false)
+const toggleMobileNav = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value
+}
 
 defineProps({
   navLinks: {
@@ -47,17 +68,8 @@ defineProps({
     default: () => [] // Default to empty array if no links provided
   }
 })
-
-const { width } = useWindowSize()
-const isMobile = computed(() => width.value < 1024)
-
-const mobileMenuOpen = ref(false)
-const toggleMobileNav = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value
-}
-
-const user = ref(true) // Replace with actual user authentication logic
 </script>
+
 <style scoped>
 .header {
   width: 100%;
@@ -84,11 +96,21 @@ const user = ref(true) // Replace with actual user authentication logic
   align-items: center;
 }
 
-/* Right Section (Avatar & Mobile Menu) */
+/* Right Section (Avatar, Sign-In Button & Mobile Menu) */
 .right-section {
   display: flex;
   align-items: center;
   gap: var(--space-4); /* ✅ Ensures spacing between Avatar & Menu */
+}
+
+/* ✅ Clickable Avatar */
+.clickable-avatar {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.clickable-avatar:hover {
+  transform: scale(1.05);
 }
 
 /* Mobile Menu */

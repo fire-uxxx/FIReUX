@@ -1,16 +1,14 @@
 <template>
-  <UContainer class="page">
-    <MoleculesAuthForm />
-  </UContainer>
+  <div class="page">
+    <ClientOnly>
+      <MoleculesAuthForm v-if="currentUser" />
+    </ClientOnly>
+  </div>
 </template>
 
-<style>
-.page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  text-align: center;
-}
-</style>
+<script setup>
+definePageMeta({
+  middleware: 'redirect-if-auth' // ✅ Redirects if already logged in
+})
+const currentUser = useCurrentUser()
+</script>

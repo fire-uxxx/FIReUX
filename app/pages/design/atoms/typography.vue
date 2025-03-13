@@ -1,3 +1,4 @@
+<!-- app/pages/design/atoms/typography.vue -->
 <template>
   <div class="design">
     <UTabs :items="items" class="custom-tabs">
@@ -30,6 +31,16 @@
           </div>
         </div>
       </template>
+
+      <template #tracking>
+        <h2>Tracking</h2>
+        <div class="grid">
+          <div v-for="track in trackingTokens" :key="track.class" class="typo-item" :class="track.class">
+            <p>{{ track.label }}</p>
+            <p class="class-name">{{ track.class }}</p>
+          </div>
+        </div>
+      </template>
     </UTabs>
   </div>
 </template>
@@ -40,7 +51,8 @@ definePageMeta({ layout: "design" });
 const items = [
   { icon: "i-lucide-type", slot: "fontSizes" },
   { icon: "i-lucide-bold", slot: "fontWeights" },
-  { icon: "i-lucide-ruler", slot: "lineHeights" }
+  { icon: "i-lucide-ruler", slot: "lineHeights" },
+  { icon: "i-lucide-letter-spacing", slot: "tracking" }
 ];
 
 const fontSizes = [
@@ -74,6 +86,15 @@ const lineHeights = [
   { label: "Leading Normal", class: "leading-normal" },
   { label: "Leading Relaxed", class: "leading-relaxed" },
   { label: "Leading Loose", class: "leading-loose" }
+];
+
+const trackingTokens = [
+  { label: "Tracking Tighter", class: "tracking-tighter" },
+  { label: "Tracking Tight", class: "tracking-tight" },
+  { label: "Tracking Normal", class: "tracking-normal" },
+  { label: "Tracking Wide", class: "tracking-wide" },
+  { label: "Tracking Wider", class: "tracking-wider" },
+  { label: "Tracking Widest", class: "tracking-widest" }
 ];
 </script>
 
@@ -128,32 +149,40 @@ h2 {
 }
 
 /* ✅ Font Sizes */
-.text-xs { font-size: 0.75rem; }
-.text-sm { font-size: 0.875rem; }
-.text-base { font-size: 1rem; }
-.text-lg { font-size: 1.125rem; }
-.text-xl { font-size: 1.25rem; }
-.text-2xl { font-size: 1.5rem; }
-.text-3xl { font-size: 1.875rem; }
-.text-4xl { font-size: 2.25rem; }
-.text-5xl { font-size: 3rem; }
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+.text-3xl { font-size: var(--text-3xl); }
+.text-4xl { font-size: var(--text-4xl); }
+.text-5xl { font-size: var(--text-5xl); }
 
 /* ✅ Font Weights */
-.font-thin { font-weight: 100; }
-.font-extralight { font-weight: 200; }
-.font-light { font-weight: 300; }
-.font-normal { font-weight: 400; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-.font-extrabold { font-weight: 800; }
-.font-black { font-weight: 900; }
+.font-thin { font-weight: var(--font-weight-thin); }
+.font-extralight { font-weight: var(--font-weight-extralight); }
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-extrabold { font-weight: var(--font-weight-extrabold); }
+.font-black { font-weight: var(--font-weight-black); }
 
 /* ✅ Line Heights */
-.leading-none { line-height: 1; }
-.leading-tight { line-height: 1.25; }
-.leading-snug { line-height: 1.375; }
-.leading-normal { line-height: 1.5; }
-.leading-relaxed { line-height: 1.625; }
-.leading-loose { line-height: 2; }
+.leading-none { line-height: var(--text-xs--line-height); }
+.leading-tight { line-height: var(--leading-tight); }
+.leading-snug { line-height: var(--leading-snug); }
+.leading-normal { line-height: var(--leading-normal); }
+.leading-relaxed { line-height: var(--leading-relaxed); }
+.leading-loose { line-height: var(--leading-loose); }
+
+/* ✅ Tracking */
+.tracking-tighter { letter-spacing: var(--tracking-tighter); }
+.tracking-tight { letter-spacing: var(--tracking-tight); }
+.tracking-normal { letter-spacing: var(--tracking-normal); }
+.tracking-wide { letter-spacing: var(--tracking-wide); }
+.tracking-wider { letter-spacing: var(--tracking-wider); }
+.tracking-widest { letter-spacing: var(--tracking-widest); }
 </style>

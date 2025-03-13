@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/profile/Avatar.vue -->
 <template>
   <UChip inset @click="navigate">
     <UAvatar :src="userAvatar" :alt="userAlt" size="lg" />

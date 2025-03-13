@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/landing/FireUX.vue -->
 <template>
   <section class="section">
     <div class="grid">

@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/layouts/default/Footer.vue -->
 <template>
   <footer class="footer">
     <div class="footer-content">

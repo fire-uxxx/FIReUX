@@ -1,3 +1,4 @@
+// COMMENT: app/composables/useAppUser.js
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { useFirestore, useCurrentUser, useDocument } from 'vuefire'
 import { useStorage } from '@/composables/firebase/useStorage'

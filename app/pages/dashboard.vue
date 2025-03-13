@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/dashboard.vue -->
 <template>
   <UContainer class="dashboard-container">
     <ClientOnly>

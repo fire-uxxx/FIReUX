@@ -1,3 +1,4 @@
+// COMMENT: app/composables/utils/tailwindDefaults.js
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default {

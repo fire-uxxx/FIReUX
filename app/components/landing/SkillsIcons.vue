@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/landing/SkillsIcons.vue -->
 <template>
   <div class="skills-icons">
     <Icon

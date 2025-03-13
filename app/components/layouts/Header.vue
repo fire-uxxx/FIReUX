@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/layouts/Header.vue -->
 <template>
   <ClientOnly>
     <header class="header">

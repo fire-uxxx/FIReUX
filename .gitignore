@@ -25,3 +25,6 @@ logs/
 
 # Service account config
 config/service-account.json
+
+# scripts
+scripts

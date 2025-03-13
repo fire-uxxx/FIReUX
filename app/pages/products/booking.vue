@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/products/booking.vue -->
 <template>
   <div class="page">
     <h1>📅 Booking System</h1>

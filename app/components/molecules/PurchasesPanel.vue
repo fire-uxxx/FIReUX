@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/PurchasesPanel.vue -->
 <template>
   <UCard class="panel">
     <h2>Purchases Panel</h2>

@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/AuthForm.vue -->
 <template>
   <UContainer class="auth-container">
     <ClientOnly>

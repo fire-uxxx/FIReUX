@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/products/tip.vue -->
 <template>
   <div class="page">
     <h1>💰 FIRe-Tip</h1>

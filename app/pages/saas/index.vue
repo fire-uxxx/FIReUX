@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/saas/index.vue -->
 <template>
   <div class="page">
     <h1>🔄 FIReUX SaaS Solutions</h1>

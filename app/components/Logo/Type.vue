@@ -1,5 +1,6 @@
+<!-- COMMENT: app/components/Logo/Type.vue -->
 <template>
-  <div class="logo-container">
+  <UContainer>
     <NuxtLink to="/">
       <img
         src="/img/logotype.png"
@@ -8,11 +9,10 @@
         :class="logoSizeClass"
       >
     </NuxtLink>
-  </div>
+  </UContainer>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 
 const props = defineProps({
   size: {
@@ -30,16 +30,3 @@ const logoSizeClass = computed(() => ({
   'h-20 mt-8 mb-8': props.size === 'hero' // ✅ New size with spacing
 }))
 </script>
-
-<style scoped>
-.logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2);
-}
-
-.logo {
-  filter: var(--shadow);
-}
-</style>

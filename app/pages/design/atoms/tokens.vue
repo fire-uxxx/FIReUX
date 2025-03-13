@@ -1,3 +1,4 @@
+<!-- app/pages/design/atoms/tokens.vue -->
 <template>
   <div class="design">
     <UTabs :items="items">

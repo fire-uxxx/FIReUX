@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/design/atoms/colors.vue -->
 <script setup>
 import { ref, onMounted } from 'vue';
 

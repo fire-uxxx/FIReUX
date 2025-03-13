@@ -1,3 +1,4 @@
+// COMMENT: app/composables/firebase/useStorage.js
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 export function useStorage() {

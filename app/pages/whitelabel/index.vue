@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/whitelabel/index.vue -->
 <template>
   <div class="page">
     <h1>🚀 White-Label Solutions</h1>

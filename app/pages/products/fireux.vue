@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/products/fireux.vue -->
 <template>
   <div class="page">
     <h1>🔥 FIReUX Core</h1>

@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/SettingsPanel.vue -->
 <template>
   <UCard class="panel">
     <h2>Settings Panel</h2>

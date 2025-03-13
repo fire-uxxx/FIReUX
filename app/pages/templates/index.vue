@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/templates/index.vue -->
 <template>
   <div class="page">
     <h1>📂 FIReUX App Templates</h1>

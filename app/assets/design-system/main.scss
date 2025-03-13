@@ -1,111 +1,58 @@
-/* ===========================
-🎨 Global Variables & Defaults
-=========================== */
-html,
-body {
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
-}
+/* ============================
+   app/assets/design-system/main.scss
+   ============================ */
 
-body::-webkit-scrollbar {
-  display: none; /* Hide scrollbar in Chrome, Safari, and Opera */
-}
-/* 🔹 General Reset */
-body {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-}
+   @use './atoms.scss';
+   @use './base.scss';
+   @use './utilities.scss';
+   
+   @use './components/page.scss';
+   @use './components/layout.scss';
+   @use './components/fuel.scss';
 
-/* ===========================
-📑 Typography & Components
-=========================== */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: var(--font-weight-bold);
-}
 
-.flame-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--space-2);
-}
+//    Here’s a  list of our CSS classes grouped by the file in which they reside:
 
-.flame-icon {
-  width: 24px; /* Tiny size */
-  height: auto;
-}
+// ⸻
 
-.u-icon {
-  color: var(--ui-primary) !important;
-}
+// app/assets/design-system/atoms.scss
+// 	•	.flame-icon
+// (Note: UI Icons are mentioned, but no specific classes were provided.)
 
-/* 🏗️ Layout Containers */
-.page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: var(--space-4);
-  padding: var(--space-4);
-}
+// ⸻
 
-.title {
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-bold);
-}
+// app/assets/design-system/base.scss
+// (No custom CSS classes defined in this file.)
 
-.text {
-  font-size: var(--text-base);
-  color: var(--ui-text-muted);
-}
+// ⸻
 
-/* ===========================
-🧩 Grid & Layout Helpers
-=========================== */
-.flex-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+// app/assets/design-system/components/fuel.scss
+// 	•	.fuel-logos
+// 	•	.fuel-item
 
-.grid-layout {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-4);
-  margin-top: var(--space-4);
-}
+// ⸻
 
-.centered-section {
-  width: 100%;
-  max-width: 900px;
-  padding: var(--space-2) 0;
-  text-align: center;
-}
+// app/assets/design-system/components/layout.scss
+// 	•	.layout-container
+// 	•	.layout-content
+// 	•	.layout-main-content
+// 	•	.layout-breadcrumbs
 
-/* ===========================
-🖼️ Cards & Buttons
-=========================== */
+// ⸻
 
-/* Pushes button to bottom */
-.button-bottom {
-  margin-top: auto;
-}
+// app/assets/design-system/components/page.scss
+// 	•	.page
 
-/* 🔄 Responsive Adjustments */
-@media (min-width: 768px) {
-  .page {
-    padding: var(--space-2);
-  }
-}
+// ⸻
 
-@media (min-width: 1024px) {
-  .page {
-    gap: var(--space-2);
-  }
-}
+// app/assets/design-system/utilities.scss
+// 	•	.flex
+// 	•	.flex-center
+// 	•	.flex-column
+// 	•	.flex-between
+// 	•	.grid
+// 	•	.centered-section
+// 	•	.section
+// 	•	.cta-buttons
+// 	•	.fade-in
+// 	•	.highlight

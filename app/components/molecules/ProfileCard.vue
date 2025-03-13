@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/ProfileCard.vue -->
 <template>
   <UCard class="profile-card">
     <div v-if="user.avatar">

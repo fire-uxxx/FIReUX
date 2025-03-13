@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/landing/Solutions.vue -->
 <template>
   <section class="section">
     <div class="solutions-grid">

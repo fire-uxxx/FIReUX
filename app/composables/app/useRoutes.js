@@ -1,3 +1,4 @@
+// COMMENT: app/composables/app/useRoutes.js
 export function useRoutes() {
   return {
     home: { path: '/', template: 'default' },

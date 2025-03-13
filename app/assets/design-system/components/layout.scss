@@ -1,0 +1,35 @@
+/* ============================
+   app/assets/design-system/components/layout.scss
+   ============================ */
+
+/* Global Layout Container */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Layout Content */
+.layout-content {
+  width: 100%;
+  max-width: 1200px;
+  padding: var(--space-4);
+  margin: 0 auto;
+}
+
+/* Main Page Content */
+.layout-main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+}
+
+/* Breadcrumbs (Default: Centered structurally; override if needed) */
+.layout-breadcrumbs {
+  align-self: center;
+  margin-bottom: var(--space-4);
+}

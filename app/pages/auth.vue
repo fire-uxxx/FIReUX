@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/auth.vue -->
 <template>
   <div class="page">
     <ClientOnly>

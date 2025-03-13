@@ -1,3 +1,4 @@
+// COMMENT: app/composables/app/useBreadcrumbs.js
 // File: composables/ui/useBreadcrumbs.ts
 
 export function useBreadcrumbs() {

@@ -23,4 +23,72 @@
   --space-16: 4rem;
   --space-20: 5rem;
 }
-/* stylelint-enable */
+/* 
+Below is a consolidated list of our design tokens—sourced from Tailwind’s defaults (as auto-declared) and our custom overrides—organized by category:
+
+⸻
+
+Shadows
+	•	--shadow-none: none
+	•	--shadow-sm: var(--shadow-sm)
+	•	--shadow-md: var(--shadow-md)
+	•	--shadow-lg: var(--shadow-lg)
+	•	--shadow-xl: var(--shadow-xl)
+	•	--shadow-2xl: var(--shadow-2xl)
+
+⸻
+
+Opacity
+	•	--opacity-0: 0
+	•	--opacity-25: 0.25
+	•	--opacity-50: 0.5
+	•	--opacity-75: 0.75
+	•	--opacity-100: 1
+
+⸻
+
+Border Radius
+	•	--radius-xs: var(--radius-xs)
+	•	--radius-sm: var(--radius-sm)
+	•	--radius-md: var(--radius-md)
+	•	--radius-lg: var(--radius-lg)
+	•	--radius-xl: var(--radius-xl)
+	•	--radius-2xl: var(--radius-2xl)
+	•	--radius-3xl: var(--radius-3xl)
+	•	--radius-4xl: var(--radius-4xl)
+
+⸻
+
+Spacing
+	•	--space-0: var(--space-0)
+	•	--space-1: var(--space-1)
+	•	--space-2: var(--space-2)
+	•	--space-3: var(--space-3)
+	•	--space-4: var(--space-4)
+	•	--space-5: var(--space-5)
+	•	--space-6: var(--space-6)
+	•	--space-7: var(--space-7)
+	•	--space-8: var(--space-8)
+	•	--space-9: var(--space-9)
+	•	--space-10: var(--space-10)
+	•	--space-12: var(--space-12)
+	•	--space-16: var(--space-16)
+	•	--space-20: var(--space-20)
+
+⸻
+
+Font Weights
+	•	--font-weight-thin: 100
+	•	--font-weight-extralight: 200
+	•	--font-weight-light: 300
+	•	--font-weight-normal: 400
+	•	--font-weight-medium: 500
+	•	--font-weight-semibold: 600
+	•	--font-weight-bold: 700
+	•	--font-weight-extrabold: 800
+	•	--font-weight-black: 900
+
+⸻
+
+These tokens integrate seamlessly with Tailwind 4’s system and our custom global SCSS architecture, ensuring consistency and ease of maintenance across the FIReUX project.
+*/

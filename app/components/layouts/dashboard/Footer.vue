@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/layouts/dashboard/Footer.vue -->
 <template>
   <footer class="dashboard-footer">
     <p>&copy; {{ new Date().getFullYear() }} FIReUX. All rights reserved.</p>

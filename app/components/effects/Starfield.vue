@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/effects/Starfield.vue -->
 <template>
   <div class="starfield">
     <div v-for="n in 50" :key="n" class="star" />

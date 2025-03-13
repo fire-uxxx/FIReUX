@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/pricing.vue -->
 <!-- File: pages/pricing.vue -->
 <template>
   <div class="page">

@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/design/atoms/img.vue -->
 <script setup>
 const { data: images } = await useFetch('/api/images');
 </script>

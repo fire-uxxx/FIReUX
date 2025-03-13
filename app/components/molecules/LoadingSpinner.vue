@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/LoadingSpinner.vue -->
 <template>
   <div class="loading-container">
     <ULoader size="lg" />

@@ -1,3 +1,4 @@
+// COMMENT: app/composables/firebase/useAuth.js
 import { useFirebaseAuth, useCurrentUser } from 'vuefire'
 import {
   signInWithPopup,

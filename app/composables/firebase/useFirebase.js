@@ -1,3 +1,4 @@
+// COMMENT: app/composables/firebase/useFirebase.js
 // composables/firebase/useFirebase.js
 import { getApps, initializeApp, getApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'

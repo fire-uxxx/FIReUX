@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/getting-started.vue -->
 <template>
   <div>
     <h1>🔥 Get Started with FIReUX</h1>

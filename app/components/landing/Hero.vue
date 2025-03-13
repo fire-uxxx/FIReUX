@@ -1,32 +1,21 @@
+<!-- app/components/landing/Hero.vue -->
 <template>
-  <section class="section">
-    <div class="hero-text">
-      <h1 class="hero-title"><strong>Ignite</strong> with</h1>
-      <h1 class="hero-highlight">
-        <span class="highlight fade-in">Powerful Applications</span>
-      </h1>
-    </div>
-
+  <section class="hero">
+    <h1><strong class="font-black">Ignite</strong> with</h1>
+    <h1><span class="highlight fade-in">Powerful Applications</span></h1>
     <p class="hero-description">
       A low-code ecosystem for responsive, scalable, and data-driven
       applications built upon
-      <span class="highlight">Nuxt3</span> &
+      <span class="highlight">Nuxt4</span> &amp;
       <span class="highlight">Firebase</span>.
     </p>
-
-    <!-- ✅ Fuel Logos - No Wrapper -->
     <ClientOnly>
       <div class="fuel-logos">
         <div class="fuel-item" v-for="(logo, key) in logos" :key="key">
           <img :src="isDark ? logo.dark : logo.light" :alt="`${key} Logo`" />
         </div>
       </div>
-      <template #fallback>
-        <div class="loading-placeholder" />
-      </template>
     </ClientOnly>
-
-    <!-- ✅ CTA Buttons -->
     <div class="cta-buttons">
       <UButton variant="solid" to="/getting-started">Get Started</UButton>
       <UButton
@@ -56,64 +45,40 @@ const logos = {
 </script>
 
 <style scoped>
-.section {
-  gap: var(--space-8);
-  padding: var(--space-6);
-}
-/* ✅ Left-Aligned Hero Text */
-.hero-text,
-.hero-description {
+/* Mobile-first Styles for Hero Component */
+.hero {
   text-align: left;
-  align-self: flex-start;
-  max-width: 500px; /* ✅ Ensures text doesn’t stretch too wide */
+  padding: var(--space-8);
 }
 
-/* ✅ Increased Font Size */
-.hero-title,
-.hero-highlight {
+.hero h1 {
   font-size: var(--text-5xl);
-  font-weight: bold;
   line-height: 1.2;
+  font-weight: var(--font-weight-black);
 }
 
-/* ✅ Fuel Logos - No Wrapper */
-.fuel-logos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* ✅ Centered on mobile */
-  align-items: center;
-  gap: var(--space-6);
-  margin-top: var(--space-6);
-  width: 100%;
+.hero-description {
+  font-size: var(--text-base);
+  margin-top: var(--space-4);
+  line-height: 1.6;
 }
 
-/* ✅ Fuel Items */
-.fuel-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Ensure fuel logos and CTA buttons are full-width (flush with hero text) on mobile */
+.fuel-logos,
+.cta-buttons {
+  justify-content: flex-start;
+  margin-top: var(--space-10);
 }
 
-.fuel-item img {
-  max-width: 120px;
-  filter: grayscale(50%);
-  transition: filter 0.3s ease-out, transform 0.3s ease-in-out;
-}
-
-.fuel-item:hover img {
-  filter: grayscale(0%);
-}
-
-/* ✅ Large Screen: Left Align */
+/* Larger Screen Overrides */
 @media (min-width: 1024px) {
-  .hero-text,
-  .hero-description {
-    text-align: left;
-    align-self: flex-start;
-    max-width: 310px; /* ✅ Ensures text doesn’t stretch too wide */
-
+  .hero h1 {
+    font-size: var(--text-7xl);
   }
-
+  .hero-description {
+    font-size: var(--text-xl);
+  }
+  /* Left-align fuel logos and CTA buttons on larger screens */
   .fuel-logos,
   .cta-buttons {
     justify-content: flex-start;

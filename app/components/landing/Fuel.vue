@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/landing/Fuel.vue -->
 <template>
   <ClientOnly>
     <section class="section">

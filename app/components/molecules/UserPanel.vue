@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/molecules/UserPanel.vue -->
 <template>
   <UCard class="panel">
     <h2>User Panel</h2>

@@ -1,3 +1,4 @@
+// COMMENT: app/composables/app/effects/useStarfield.js
 export function useStarfield() {
   const initializeStars = () => {
     const stars = document.querySelectorAll('.star')

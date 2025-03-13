@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/design/index.vue -->
 <script setup>
 const sections = [
   { name: "Atoms", icon: "i-lucide-box", pages: ["colors", "img", "tokens", "typography"] },

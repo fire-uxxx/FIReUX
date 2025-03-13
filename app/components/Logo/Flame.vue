@@ -1,3 +1,4 @@
+<!-- COMMENT: app/components/Logo/Flame.vue -->
 <template>
   <img
     ref="logoRef"

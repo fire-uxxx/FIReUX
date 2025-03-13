@@ -1,3 +1,4 @@
+<!-- COMMENT: app/pages/products/cleaning.vue -->
 <template>
   <div class="page">
     <h1>🧼 Cleaning Business</h1>

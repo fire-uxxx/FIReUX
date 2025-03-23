@@ -3,21 +3,26 @@ import Stripe from 'stripe'
 import admin from '../utils/firebase'
 import { useRuntimeConfig } from '#imports' // Auto-imported in Nuxt 3
 
-// Get runtime configuration (private and public)
-const config = useRuntimeConfig()
-
-// Use the secret key from the private part of the runtimeConfig
-const stripeSecretKey = config.STRIPE_SECRET_KEY
-
-// Define a constant currency
-const currency = 'usd'
-
-// Initialize Stripe
-const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-02-24.acacia'
-})
-
 export default defineEventHandler(async event => {
+  // Get runtime configuration
+  const config = useRuntimeConfig()
+
+  // Ensure Stripe Secret Key is available
+  const stripeSecretKey = config.STRIPE_SECRET_KEY
+  if (!stripeSecretKey) {
+    console.error('Stripe Secret Key is missing in runtimeConfig.')
+    setResponseStatus(event, 500)
+    return { error: 'Internal Server Error: Stripe Secret Key is missing.' }
+  }
+
+  // Define a constant currency
+  const currency = 'usd'
+
+  // Initialize Stripe
+  const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: '2025-02-24.acacia'
+  })
+
   if (event.req.method !== 'POST') {
     setResponseStatus(event, 405)
     return { error: 'Method Not Allowed' }
@@ -49,8 +54,8 @@ export default defineEventHandler(async event => {
         }
       ],
       mode: 'payment',
-      success_url: `${frontendUrl}`,
-      cancel_url: `${frontendUrl}`
+      success_url: `${frontendUrl}/success`,
+      cancel_url: `${frontendUrl}/cancel`
     })
 
     // Write a record to Firestore
@@ -65,12 +70,13 @@ export default defineEventHandler(async event => {
       currency
     })
 
-    // Return the session id and URL for client redirection
+    // Return the session ID and URL for client redirection
     return {
       id: session.id,
       url: session.url
     }
   } catch (error) {
+    console.error('Stripe Checkout Error:', error)
     setResponseStatus(event, 500)
     return { error: error instanceof Error ? error.message : 'Unknown error' }
   }

@@ -2,34 +2,37 @@
    app/assets/design-system/components/layout.scss
    ============================ */
 
-/* Global Layout Container */
+/* Ensure layout always fills viewport */
 .layout-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
   width: 100%;
 }
 
-/* Layout Content */
+/* Pushes content to fill space when minimal */
 .layout-content {
-  width: 100%;
-  max-width: 1200px;
-  padding: var(--space-4);
-  margin: 0 auto;
-}
-
-/* Main Page Content */
-.layout-main-content {
+  flex: 1; /* Expands content area to push footer down */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-
+  justify-content: space-between; /* Ensures content takes up space */
 }
 
+/* Ensures the main content area grows when there's little content */
+.layout-main-content {
+  flex: 1; /* Allows content to expand and keeps footer at bottom */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 /* Breadcrumbs (Default: Centered structurally; override if needed) */
 .layout-breadcrumbs {
   align-self: center;
   margin-bottom: var(--space-4);
+}
+
+:root {
+  --header-height: 61px;
 }

@@ -89,6 +89,28 @@ Font Weights
 	•	--font-weight-black: 900
 
 ⸻
+   🎨 Brand Colors
+   ⸻ */
+   •	--ui-primary
+   •	--ui-secondary
+ 
+ /* ⸻
+    🚦 Status Colors
+    ⸻ */
+   •	--ui-info
+   •	--ui-success
+   •	--ui-warning
+   •	--ui-error
+ 
+ /* ⸻
+    🖥️ UI Colors
+    ⸻ */
+   /* •	--ui-bg
+   •	--ui-bg-muted
+   •	--ui-bg-elevated
+   •	--ui-border
+   •	--ui-border-muted
+   •	--ui-border-accented
 
 These tokens integrate seamlessly with Tailwind 4’s system and our custom global SCSS architecture, ensuring consistency and ease of maintenance across the FIReUX project.
 */

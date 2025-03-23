@@ -1,4 +1,4 @@
-// COMMENT: app/composables/firebase/useAuth.js
+import { computed } from 'vue'
 import { useFirebaseAuth, useCurrentUser } from 'vuefire'
 import {
   signInWithPopup,
@@ -7,67 +7,67 @@ import {
   signOut,
   GoogleAuthProvider
 } from 'firebase/auth'
-import { useAppUser } from '@/composables/useAppUser' // ✅ Import onboarding logic
-import { navigateTo } from '#app'
+import { useRuntimeConfig } from '#app'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export function useAuth() {
   const auth = useFirebaseAuth()
   const currentUser = useCurrentUser()
-  const { onboardAppUser } = useAppUser() // ✅ Get onboarding function
+  const config = useRuntimeConfig()
+  const setUserAppIdClaim = async (user) => {
+    try {
+      const functions = getFunctions()
+      const setCustomClaims = httpsCallable(functions, 'setAppIdClaim')
+      await setCustomClaims({ uid: user.uid, appId: config.public.APP_ID })
+      await user.getIdToken(true)
+    } catch (error) {
+      console.error('❌ Failed to set custom claims:', error.message)
+    }
+  }
 
-  // ✅ Auth state is either AUTHENTICATED or NOT_AUTHENTICATED
-  const authState = computed(() => {
-    return currentUser.value && !currentUser.value.isAnonymous
+  const authState = computed(() =>
+    currentUser.value && !currentUser.value.isAnonymous
       ? 'AUTHENTICATED'
       : 'NOT_AUTHENTICATED'
-  })
+  )
 
-  // ✅ Google Sign-In with Onboarding & Redirect
   const signInWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
-
+      await setUserAppIdClaim(result.user)
       console.log('✅ Google Sign-In Success - User:', result.user)
-
-      // ✅ Ensure user is onboarded before redirecting
-      await onboardAppUser(result.user.uid)
-
-      console.log('✅ Onboarding Complete - Redirecting to /dashboard')
-
-      return navigateTo('/dashboard', { replace: true }) // ✅ Ensure proper navigation
     } catch (error) {
       console.error('❌ Google Sign-In Failed:', error.message)
-      return null // ❌ Return null on failure
     }
   }
 
-  // ✅ Email Sign-In with Success Indicator
   const signInWithEmailPassword = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
-      return result.user // ✅ Return user object instead of true
+      await setUserAppIdClaim(result.user)
+      return result.user
     } catch (error) {
       console.error('❌ Email Sign-In Failed:', error.message)
       return null
     }
   }
 
-  // ✅ Email Sign-Up with Success Indicator
   const signUpWithEmailPassword = async (email, password) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
-      return result.user // ✅ Return user object instead of true
+      await setUserAppIdClaim(result.user)
+      return result.user
     } catch (error) {
       console.error('❌ Email Sign-Up Failed:', error.message)
       return null
     }
   }
 
-  // ✅ Sign Out
   const signOutUser = async () => {
     try {
       await signOut(auth)
+      console.log('✅ Signed out successfully')
     } catch (error) {
       console.error('❌ Sign-Out Failed:', error.message)
     }

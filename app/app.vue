@@ -12,6 +12,7 @@ useHead({
     { rel: 'manifest', href: '/manifest.webmanifest' }
   ]
 })
+
 </script>
 
 <style scoped></style>

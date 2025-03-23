@@ -9,7 +9,7 @@ const { data: images } = await useFetch('/api/images');
 
     <div v-if="images" class="image-list">
       <div v-for="src in images" :key="src" class="image-item">
-        <img :src="src" :alt="src" class="test-image" />
+        <img :src="src" :alt="src" class="test-image" >
         <span class="image-name">{{ src }}</span>
       </div>
     </div>

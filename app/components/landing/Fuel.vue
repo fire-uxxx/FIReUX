@@ -4,20 +4,15 @@
     <section class="section">
       <LogoFlame size="small" />
       <div class="grid-layout">
-        <div class="fuel-item" v-for="(logo, key) in logos" :key="key">
-          <img :src="isDark ? logo.dark : logo.light" :alt="key + ' Logo'" />
+        <div v-for="(logo, key) in logos" :key="key" class="fuel-item">
+          <img :src="isDark ? logo.dark : logo.light" :alt="key + ' Logo'" >
         </div>
       </div>
     </section>
-
-    <template #fallback>
-      <div class="loading-placeholder" />
-    </template>
   </ClientOnly>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 
 const colorMode = useColorMode()
 

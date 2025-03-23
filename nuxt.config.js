@@ -1,12 +1,13 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  ssr: true, // Ensure SSR is enabled for SEO & better caching
+  // ✅ Enable SSR for SEO & better caching
+  ssr: true,
 
   nitro: {
     preset: 'firebase',
     firebase: {
-      gen: 2 // Using Firebase Gen 2
+      gen: 2 // ✅ Using Firebase Gen 2 Functions
     },
     devServer:
       process.env.NODE_ENV === 'development'
@@ -22,29 +23,32 @@ export default defineNuxtConfig({
         : {}
   },
 
-  devtools: { enabled: true }, // Enable Nuxt DevTools
+  // ✅ Enable Nuxt DevTools
+  devtools: { enabled: true },
 
   modules: [
     '@nuxt/ui',
     '@nuxt/eslint',
     'nuxt-vuefire',
     '@vite-pwa/nuxt',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxt/content'
   ],
 
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
+  // ✅ Shared Firebase plugin
   plugins: ['./plugins/firebase.client.js'],
 
   vite: {
     build: {
-      sourcemap: false // Disable all sourcemaps for performance
+      sourcemap: false // ✅ Disable sourcemaps for better performance
     }
   },
 
   runtimeConfig: {
     public: {
-      // Firebase Credentials
+      // ✅ Firebase Credentials (Loaded from .env)
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
       FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
@@ -53,21 +57,22 @@ export default defineNuxtConfig({
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
 
-      // App & PWA Metadata
+      // ✅ PWA Metadata for FIReUX
       DOMAIN: process.env.DOMAIN || 'https://fireux.app',
       PWA_APP_NAME: process.env.PWA_APP_NAME || 'FIReUX',
       PWA_APP_SHORT_NAME: process.env.PWA_APP_SHORT_NAME || 'FIReUX',
       PWA_THEME_COLOR: process.env.PWA_THEME_COLOR || '#FACC15',
-      PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR || '#FAFAFA'
-    },
-    // Secret Keys (never exposed to the frontend)
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
-  },
+      PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR || '#FAFAFA',
+      // ✅ Stripe Public Key (safe to expose)
+      STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+      PIN: process.env.PIN,
+      APP_ID: process.env.APP_ID,
+      PROJECT_NAME: process.env.PROJECT_NAME
 
-  future: {
-    compatibilityVersion: 4
+    },
+    // ✅ Stripe Secret Key (kept private)
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   },
-  compatibilityDate: '2024-11-27',
 
   vuefire: {
     config: {
@@ -79,18 +84,17 @@ export default defineNuxtConfig({
       appId: process.env.FIREBASE_APP_ID
     },
     auth: {
-      enabled: true, // Enable Firebase Authentication
+      enabled: true,
       sessionCookies: true
     }
   },
 
   imports: {
-    dirs: ['composables/**', 'components/**'] // ✅ Auto-import composables & components
+    dirs: ['composables/**/**', 'components/**/**']
   },
 
   pwa: {
     registerType: 'autoUpdate',
-
     manifest: {
       name: process.env.PWA_APP_NAME || 'FIReUX',
       short_name: process.env.PWA_APP_SHORT_NAME || 'FIReUX',
@@ -103,24 +107,29 @@ export default defineNuxtConfig({
         { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }
       ]
     },
-
-    injectManifest: {
-      injectionPoint: undefined,
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
-    },
-
     workbox: {
       navigateFallback: '/',
       cleanupOutdatedCaches: true,
       clientsClaim: true,
       skipWaiting: true
     },
-
     devOptions: {
-      enabled: process.env.NODE_ENV === 'development', // Only enable in dev mode
+      enabled: process.env.NODE_ENV === 'development',
       suppressWarnings: true,
       navigateFallbackAllowlist: [/^\/$/],
       type: 'module'
     }
-  }
+  },
+  future: {
+    compatibilityVersion: 4
+  },
+  compatibilityDate: '2025-03-17',
+
+  content: {
+    documentDriven: true
+  },
+
+  studio: {
+    enabled: true
+  },
 })

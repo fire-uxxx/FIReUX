@@ -1,7 +1,7 @@
 <!-- COMMENT: app/components/landing/Solutions.vue -->
 <template>
-  <section class="section">
-    <div class="solutions-grid">
+  <section>
+    <div class="grid">
       <UCard
         v-for="solution in solutions"
         :key="solution.title"
@@ -36,36 +36,5 @@ const solutions = [
 </script>
 
 <style scoped>
-/* 🔥 Section Layout */
-.solutions-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-8);
-  padding: var(--space-8);
-}
-
-/* 🔥 Responsive Grid */
-.solutions-grid {
-  display: grid;
-  gap: var(--space-6);
-  width: 100%;
-  max-width: 600px;
-}
-
-/* ✅ Mobile: 1 Column */
-@media (min-width: 600px) {
-  .solutions-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 900px;
-  }
-}
-
-/* ✅ Desktop: 3 Columns */
-@media (min-width: 1024px) {
-  .solutions-grid {
-    grid-template-columns: repeat(3, 1fr);
-    max-width: 1200px;
-  }
-}
+/* No styles for now — testing the grid system */
 </style>

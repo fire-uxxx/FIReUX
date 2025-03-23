@@ -5,23 +5,21 @@
 /* 🛠️ Utilities */
 
 /* Flexbox */
-.flex { display: flex; }
-.flex-center { display: flex; align-items: center; justify-content: center; }
-.flex-column { display: flex; flex-direction: column; }
-.flex-between { display: flex; justify-content: space-between; }
-
-/* Grid */
-.grid {
-  display: grid;
-  gap: var(--space-4);
+.flex {
+  display: flex;
 }
-
-/* Centered Section */
-.centered-section {
-  width: 100%;
-  max-width: 900px;
-  text-align: center;
-  padding: var(--space-2) 0;
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* -----------------------------
@@ -38,7 +36,7 @@
 }
 
 /* Standard CTA Buttons */
-.cta-buttons {
+.button-group {
   display: flex;
   flex-direction: row;
   justify-content: center; /* Centered on mobile */

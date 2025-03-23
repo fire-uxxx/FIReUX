@@ -6,7 +6,7 @@
     alt="FIReUX Logo"
     class="logo mx-auto"
     :class="logoSizeClass"
-  />
+  >
 </template>
 
 <script setup>
@@ -19,10 +19,6 @@ const props = defineProps({
 })
 
 const logoRef = ref(null)
-
-onMounted(() => {
-  console.log('Logo element:', logoRef.value)
-})
 
 // Maintain the **3:4 aspect ratio**, ensure `mx-auto` centers horizontally
 const logoSizeClass = computed(() => ({

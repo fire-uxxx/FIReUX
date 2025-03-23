@@ -1,0 +1,84 @@
+<template>
+  <div class="avatar-container">
+    <UAvatar :src="userPhotoURL" alt="User Avatar" class="avatar" />
+    <label class="upload-label">
+      <UIcon name="i-lucide-camera" />
+      <input type="file" accept="image/*" class="file-input" @change="handleFileChange">
+    </label>
+  </div>
+</template>
+
+<script setup>
+const currentUser = useCurrentUser()
+const { user, updateUser } = useUser()
+const { uploadFile } = useStorage()
+
+const userPhotoURL = computed(() => user.value?.photoURL || '')
+
+async function handleFileChange(e) {
+  if (!e.target.files || !e.target.files[0]) return
+  
+  const file = e.target.files[0]
+  const uid = currentUser.value?.uid
+  
+  if (!uid) {
+    console.error("No user ID available")
+    return
+  }
+  
+  try {
+    // Define the storage path for the avatar
+    const path = `users/${uid}/avatar.jpg`
+    const downloadURL = await uploadFile(path, file)
+    
+    if (downloadURL) {
+      await updateUser({ photoURL: downloadURL })
+      console.log('Avatar updated successfully:', downloadURL)
+    } else {
+      console.error('Failed to upload avatar')
+    }
+  } catch (error) {
+    console.error('Error updating avatar:', error)
+  }
+}
+</script>
+
+<style lang="scss">
+.avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-2);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+}
+
+.upload-label {
+  position: absolute;
+  top: calc(50% + 40px);
+  left: calc(50% + 40px);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: var(--ui-bg-muted);
+  padding: var(--space-2);
+  border-radius: 50%;
+}
+
+.file-input {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .avatar {
+    width: 120px;
+    height: 120px;
+  }
+}
+</style>

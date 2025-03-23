@@ -2,7 +2,7 @@
   <div class="design-layout">
     <div class="pinstripe-background" />
     <main class="content">
-      <slot />
+      <NuxtPage />
     </main>
   </div>
 </template>
@@ -15,9 +15,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  
-  background-image: 
-    linear-gradient(var(--ui-primary) 1px, transparent 1px),
+
+  background-image: linear-gradient(var(--ui-primary) 1px, transparent 1px),
     linear-gradient(90deg, var(--ui-primary) 1px, transparent 1px);
   background-size: 64px 64px;
   opacity: 0.15;

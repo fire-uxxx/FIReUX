@@ -1,4 +1,3 @@
-<!-- COMMENT: app/components/layouts/Header.vue -->
 <template>
   <ClientOnly>
     <header class="header">
@@ -8,10 +7,21 @@
           <LogoType size="small" />
         </div>
 
+        <!-- Desktop Navigation Menu -->
+        <nav class="hidden md:block">
+          <UNavigationMenu orientation="horizontal" :items="appLinks" />
+        </nav>
+
         <!-- Right Section: User Profile / Sign-In & Mobile Menu -->
         <div class="right-section">
-          <MoleculesProfileAvatar v-if="appUser" @click="navigateToDashboard" class="clickable-avatar" />
-          <UButton v-else @click="navigateToAuth" size="sm">Sign In</UButton>
+          <!-- Show avatar if a valid user exists -->
+          <MoleculesProfileAvatar
+            v-if="user"
+            class="clickable-avatar"
+            @click="navigateToDashboard"
+          />
+          <!-- Otherwise, show Sign In button -->
+          <UButton v-else size="sm" @click="navigateToAuth"> Sign In </UButton>
           <UIcon
             v-if="isMobile && !mobileMenuOpen"
             name="lucide:menu"
@@ -26,28 +36,34 @@
       v-model:open="mobileMenuOpen"
       side="right"
       :ui="{ header: 'p-2 min-h-[60px]' }"
+      :close="{
+        color: 'primary',
+        variant: 'outline',
+        class: 'rounded-full'
+      }"
     >
-      <template #header>
-        <div class="slideover-header">
-          <UIcon name="lucide:x" @click="toggleMobileNav" />
-        </div>
-      </template>
       <template #body>
-        <UNavigationMenu orientation="vertical" :items="navLinks" />
+        <div class="mobile-menu-wrapper">
+          <UNavigationMenu
+            orientation="vertical"
+            :items="mobileLinks"
+            class="w-full"
+          />
+        </div>
       </template>
     </USlideover>
   </ClientOnly>
 </template>
 
 <script setup>
+import { ref, computed, watch } from 'vue'
 import { useWindowSize } from '@vueuse/core'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
-// ✅ Fetch Firestore user data
-const { appUser } = useAppUser()
+const { user } = useUser()
 const router = useRouter()
 
-// ✅ Navigation Handlers
+// Navigation Handlers
 const navigateToAuth = () => {
   router.push('/auth')
 }
@@ -55,26 +71,42 @@ const navigateToDashboard = () => {
   router.push('/dashboard')
 }
 
-// ✅ Mobile Menu Handling
+// Mobile Menu Handling
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1024)
 const mobileMenuOpen = ref(false)
 const toggleMobileNav = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value
+
 }
+const route = useRoute()
+
+watch(() => route.fullPath, () => {
+  mobileMenuOpen.value = false
+})
+
+// Define props, renaming localLinks to mobileLinks
+// Note: Now we expect both appLinks and mobileLinks to be passed in
 
 defineProps({
-  navLinks: {
+  appLinks: {
     type: Array,
-    default: () => [] // Default to empty array if no links provided
+    default: () => []
+  },
+  mobileLinks: {
+    type: Array,
+    default: () => []
   }
 })
+
+// Compute a route title from meta or route name
+
 </script>
 
 <style scoped>
 .header {
   width: 100%;
-  height: 61px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +118,7 @@ defineProps({
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* ✅ Ensures spacing between left and right sections */
+  justify-content: space-between;
   width: 100%;
   max-width: 1200px;
 }
@@ -101,15 +133,14 @@ defineProps({
 .right-section {
   display: flex;
   align-items: center;
-  gap: var(--space-4); /* ✅ Ensures spacing between Avatar & Menu */
+  gap: var(--space-4);
 }
 
-/* ✅ Clickable Avatar */
+/* Clickable Avatar */
 .clickable-avatar {
   cursor: pointer;
   transition: transform 0.2s ease;
 }
-
 .clickable-avatar:hover {
   transform: scale(1.05);
 }
@@ -119,5 +150,19 @@ defineProps({
   display: flex;
   justify-content: flex-end;
   padding-right: var(--space-2);
+}
+
+/* Route Title in Mobile Menu */
+.route-title {
+  margin: var(--space-2) 0;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.mobile-menu-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: var(--space-4);
 }
 </style>

@@ -11,7 +11,7 @@
               <span class="token-name">{{ token.name }}</span>
               <span class="stacked-value">{{ token.value }}</span>
             </div>
-            <div class="shadow-block" :class="token.class"></div>
+            <div class="shadow-block" :class="token.class"/>
           </div>
         </div>
       </template>
@@ -25,7 +25,7 @@
               <span class="token-name">{{ token.name }}</span>
               <span>{{ token.value }}</span>
             </div>
-            <div class="opacity-block" :style="{ opacity: token.value }"></div>
+            <div class="opacity-block" :style="{ opacity: token.value }"/>
           </div>
         </div>
       </template>
@@ -39,7 +39,7 @@
               <span class="token-name">{{ token.name }}</span>
               <span>{{ token.value }}</span>
             </div>
-            <div class="radius-block" :style="{ borderRadius: token.value }"></div>
+            <div class="radius-block" :style="{ borderRadius: token.value }"/>
           </div>
         </div>
       </template>
@@ -53,7 +53,7 @@
               <span class="token-name">{{ token.name }}</span>
               <span>{{ token.value }}</span>
             </div>
-            <div class="spacing-block" :style="{ padding: token.value }"></div>
+            <div class="spacing-block" :style="{ padding: token.value }"/>
           </div>
         </div>
       </template>

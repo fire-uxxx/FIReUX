@@ -1,6 +1,6 @@
 <template>
   <div class="layout-container">
-    <LayoutsHeader :nav-links="mainNavLinks" />
+    <LayoutsHeader :app-links="appLinks" :mobile-links="mobileLinks" />
     <div class="layout-content">
       <main class="layout-main-content">
         <client-only>
@@ -13,15 +13,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const breadcrumbLinks = useBreadcrumbs()
+const { appLinks, mobileLinks } = useRoutes()
 
-const mainNavLinks = ref([
-  { label: 'products', to: '/products' },
-  { label: 'white-label', to: '/white-label' },
-  { label: 'saas', to: '/saas' },
-  { label: 'templates', to: '/templates' },
-  { label: 'pricing', to: '/pricing' },
-  { label: 'getting-started', to: '/getting-started' }
-])
 </script>

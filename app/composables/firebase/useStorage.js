@@ -1,48 +1,28 @@
-// COMMENT: app/composables/firebase/useStorage.js
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { useCurrentUser } from 'vuefire'
 
 export function useStorage() {
   const storage = getStorage()
+  const currentUser = useCurrentUser()
 
-  /**
-   * Uploads a file to Firebase Storage and returns its URL.
-   * @param {string} path - The storage path (e.g., 'users/uid/avatar.jpg').
-   * @param {Blob} file - The file/blob to upload.
-   * @returns {Promise<string>} - The download URL of the uploaded file.
-   */
   const uploadFile = async (path, file) => {
+    if (!currentUser.value?.uid) {
+      console.error('[Storage] No authenticated user. Cannot determine UID.')
+      return null
+    }
+
     try {
-      const storageRef = ref(storage, path)
+      const fullPath = `users/${currentUser.value.uid}/${path}`
+      const storageRef = ref(storage, fullPath)
       await uploadBytes(storageRef, file)
       return await getDownloadURL(storageRef)
     } catch (error) {
-      console.error('Error uploading file:', error.message)
-      return null
-    }
-  }
-
-  /**
-   * Downloads an external image (e.g., Google profile photo), converts it to a blob, and uploads it.
-   * @param {string} imageUrl - The external image URL.
-   * @param {string} path - The storage path (e.g., 'users/uid/avatar.jpg').
-   * @returns {Promise<string>} - The download URL of the uploaded image.
-   */
-  const uploadExternalImage = async (imageUrl, path) => {
-    try {
-      const response = await fetch(imageUrl, { mode: 'cors' })
-      const blob = await response.blob()
-      return await uploadFile(path, blob)
-    } catch (error) {
-      console.error(
-        'Error fetching and uploading external image:',
-        error.message
-      )
+      console.error('[Storage] Upload failed:', error.message)
       return null
     }
   }
 
   return {
-    uploadFile,
-    uploadExternalImage
+    uploadFile
   }
 }

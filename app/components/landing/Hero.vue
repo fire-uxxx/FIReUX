@@ -1,4 +1,3 @@
-<!-- app/components/landing/Hero.vue -->
 <template>
   <section class="hero">
     <h1><strong class="font-black">Ignite</strong> with</h1>
@@ -11,16 +10,16 @@
     </p>
     <ClientOnly>
       <div class="fuel-logos">
-        <div class="fuel-item" v-for="(logo, key) in logos" :key="key">
-          <img :src="isDark ? logo.dark : logo.light" :alt="`${key} Logo`" />
+        <div v-for="(logo, key) in logos" :key="key" class="fuel-item">
+          <img :src="isDark ? logo.dark : logo.light" :alt="`${key} Logo`" >
         </div>
       </div>
     </ClientOnly>
-    <div class="cta-buttons">
+    <div class="button-group">
       <UButton variant="solid" to="/getting-started">Get Started</UButton>
       <UButton
         variant="outline"
-        to="/projects"
+        to="https://fireux.app/projects"
         trailing-icon="i-heroicons-arrow-right"
       >
         Explore Projects
@@ -65,7 +64,7 @@ const logos = {
 
 /* Ensure fuel logos and CTA buttons are full-width (flush with hero text) on mobile */
 .fuel-logos,
-.cta-buttons {
+.button-group {
   justify-content: flex-start;
   margin-top: var(--space-10);
 }
@@ -80,7 +79,7 @@ const logos = {
   }
   /* Left-align fuel logos and CTA buttons on larger screens */
   .fuel-logos,
-  .cta-buttons {
+  .button-group {
     justify-content: flex-start;
   }
 }

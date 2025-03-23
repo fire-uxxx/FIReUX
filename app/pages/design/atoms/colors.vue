@@ -36,7 +36,7 @@ onMounted(() => {
   <div class="design">
     <div class="grid">
       <div v-for="color in colorValues" :key="color.name" class="color-item">
-        <div class="color-block" :style="{ backgroundColor: `var(${color.name})` }"></div>
+        <div class="color-block" :style="{ backgroundColor: `var(${color.name})` }"/>
         <div class="color-header">{{ color.name }}</div>
       </div>
     </div>

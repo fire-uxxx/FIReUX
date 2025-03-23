@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     firebase: {
       gen: 2 // ✅ Using Firebase Gen 2 Functions
     },
+     prerender: {
+      ignore: ['/']
+    },
     devServer:
       process.env.NODE_ENV === 'development'
         ? {
@@ -34,7 +37,9 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/content'
   ],
-
+  studio: {
+    enabled: true
+  },
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
   // ✅ Shared Firebase plugin
@@ -127,9 +132,5 @@ export default defineNuxtConfig({
 
   content: {
     documentDriven: true
-  },
-
-  studio: {
-    enabled: true
   },
 })

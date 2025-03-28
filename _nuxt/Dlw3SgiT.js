@@ -1,0 +1,1 @@
+import{j as s,c as t,h as o,e as c}from"./CoChPsuk.js";const r={},n={class:"page"};function a(d,e){return c(),t("div",n,e[0]||(e[0]=[o("h1",null,"Products",-1),o("p",null,"Explore our products. More details coming soon!",-1)]))}const _=s(r,[["render",a],["__scopeId","data-v-6c9b7159"]]);export{_ as default};

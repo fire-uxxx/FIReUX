@@ -1,9 +1,41 @@
 import { doc, setDoc, addDoc, collection } from 'firebase/firestore'
 import { useFirestore as vuefireFirestore, useCurrentUser } from 'vuefire'
+import { useApp } from '@/composables/app/useApp'
 
 export function useFirestoreCreate() {
   const db = vuefireFirestore()
   const currentUser = useCurrentUser()
+
+  // **Create a new document using slug as the document ID**
+  async function addSluggedDocument(collectionName, data) {
+    const { slug, ...rest } = data
+
+    if (!slug) {
+      return Promise.reject('[addSluggedDocument] Slug is required.')
+    }
+
+    try {
+      // Using slug as the document ID
+      const docRef = doc(db, collectionName, slug)
+
+      await setDoc(docRef, {
+        ...rest,
+        created_at: new Date().toISOString(),
+        slug // Include the slug as part of the document
+      })
+
+      console.log(
+        `[addSluggedDocument] Created document in '${collectionName}' with ID: ${slug}`
+      )
+      return slug
+    } catch (error) {
+      console.error(
+        `[addSluggedDocument] Error creating document in '${collectionName}' with ID: ${slug}`,
+        error
+      )
+      throw error
+    }
+  }
 
   // **Create a new document (standalone)**
   async function createDocument(collectionName, data) {
@@ -87,30 +119,29 @@ export function useFirestoreCreate() {
     }
   }
 
-  // **Create an app document using siteName as ID**
-  async function createApp(siteName) {
-    if (!siteName || !currentUser.value) {
-      return Promise.reject('[createApp] siteName and authenticated user required.')
+  // **Create an app document using internal appId and appName**
+  async function createApp() {
+    if (!currentUser.value) {
+      return Promise.reject(
+        '[createApp] Authenticated user required.'
+      )
     }
 
-    const documentId = siteName.toLowerCase().replace(/\s+/g, '')
+    const { appId, appName, addAdmin } = useApp()
 
     try {
-      await setDoc(doc(db, 'apps', documentId), {
-        site_name: siteName,
+      await setDoc(doc(db, 'apps', appId), {
+        site_name: appName,
         created_by: currentUser.value.uid,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       })
 
-      console.log(
-        `[createApp] Created app in 'apps' with ID: ${documentId}`
-      )
-      return documentId
+      await addAdmin(currentUser.value.uid)
+
+      console.log(`[createApp] Created app in 'apps' with ID: ${appId}`)
+      return appId
     } catch (error) {
-      console.error(
-        `[createApp] Error creating app in 'apps':`,
-        error
-      )
+      console.error(`[createApp] Error creating app in 'apps':`, error)
       throw error
     }
   }
@@ -119,6 +150,7 @@ export function useFirestoreCreate() {
     createDocument,
     createObject,
     createEntity,
-    createApp
+    createApp,
+    addSluggedDocument // Added function to create a document with a slug
   }
 }

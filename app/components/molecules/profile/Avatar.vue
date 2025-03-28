@@ -1,4 +1,3 @@
-<!-- COMMENT: app/components/molecules/profile/Avatar.vue -->
 <template>
   <UChip inset @click="navigate">
     <UAvatar :src="userAvatar" :alt="userAlt" size="lg" />
@@ -6,18 +5,19 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import { useCurrentUser } from 'vuefire'
-
 const router = useRouter()
 const currentUser = useCurrentUser()
+const { user } = useUser()
 
 const userAvatar = computed(() => {
-  if (!currentUser.value) return 'img/default-avatar.png'
-  return currentUser.value.photoURL || 'img/default-avatar.png'
+  return (
+    user.value?.avatar || currentUser.value?.avatar || 'img/default-avatar.png'
+  )
 })
 
-const userAlt = computed(() => currentUser.value?.displayName || 'Guest')
+const userAlt = computed(
+  () => user.value?.display_name || currentUser.value?.displayName || 'Guest'
+)
 
 const navigate = () => {
   if (currentUser.value?.isAnonymous) {

@@ -1,15 +1,29 @@
 <template>
   <div class="user-summary">
-    <UAvatar :src="props.user.photoURL || '/placeholder-avatar.png'" size="lg" class="avatar" />
+    <UAvatar
+      :src="props.user.avatar || '/placeholder-avatar.png'"
+      size="lg"
+      class="avatar"
+    />
     <div class="info">
       <strong class="name">{{ props.user.display_name }}</strong>
       <span class="handle">@{{ props.user.handle }}</span>
-      <span v-if="props.user.status" class="status">{{ props.user.status }}</span>
+      <span v-if="props.user.status" class="status">{{
+        props.user.status
+      }}</span>
       <span v-if="props.user.specialities?.length" class="specialities">
         {{ props.user.specialities.join(' | ') }}
       </span>
-      <span v-if="formattedJoinDate" class="joined">Joined: {{ formattedJoinDate }}</span>
-      <UBadge v-if="props.user?.isAdmin" color="primary" variant="subtle" class="badge">Admin</UBadge>
+      <span v-if="formattedJoinDate" class="joined"
+        >Joined: {{ formattedJoinDate }}</span
+      >
+      <UBadge
+        v-if="props.user?.isAdmin"
+        color="primary"
+        variant="subtle"
+        class="badge"
+        >Admin</UBadge
+      >
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@
     <div class="layout-content">
       <main class="layout-main-content">
         <client-only>
-          <UBreadcrumb :links="breadcrumbLinks" class="layout-breadcrumbs" />
+          <!-- <UBreadcrumb :links="breadcrumbLinks" class="layout-breadcrumbs" /> -->
         </client-only>
         <NuxtPage />
       </main>
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-const breadcrumbLinks = useBreadcrumbs()
+// const breadcrumbLinks = useBreadcrumbs()
 const { appLinks, mobileLinks } = useRoutes()
 
 </script>

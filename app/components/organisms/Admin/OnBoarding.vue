@@ -1,11 +1,16 @@
 <template>
   <UContainer>
-    <div v-if="currentUser?.isAnonymous" class="anon-warning">
-      <p>You must create an account before creating an app.</p>
-      <UButton to="/auth" color="primary" block>Create Account</UButton>
+    <div v-if="step === 'anon'" class="anon-warning">
+      <p>You must create an account before becoming an admin.</p>
+      <OrganismsAuthGoogle />
+      <OrganismsAuthEmail />
     </div>
 
-    <div v-else-if="!isUnlocked" class="pin-section">
+    <div v-else-if="step === 'missingUser'" class="anon-warning">
+         <OrganismsAuthAuthenticated />
+    </div>
+
+    <div v-else-if="step === 'pin'" class="pin-section">
       <UPinInput v-model="pin" :length="4" type="number" placeholder="○" @complete="checkPin" />
     </div>
 
@@ -13,22 +18,26 @@
       <div class="logo-wrapper">
         <LogoType size="medium" />
       </div>
-      <OrganismsAuthOnboardingVariables />
+      <OrganismsAdminOnboardingVariables />
       <div v-if="allEnvValid">
-        <UButton @click="saveAppDetails" color="primary" block>Create App</UButton>
+        <UButton @click="saveAppDetails"  block>Create App</UButton>
       </div>
-      <p v-else class="setup-reminder">✅ All required environment variables must be set before you can create an app.<br>After updating your credentials, restart your server: <code>npm run dev</code>.</p>
+      <p v-else class="setup-reminder">
+        ✅ All required environment variables must be set before you can create an app.<br>
+        After updating your credentials, restart your server: <code>npm run dev</code>.
+      </p>
     </div>
   </UContainer>
 </template>
 
 <script setup>
+// Refs
 const pin = ref([])
 const isUnlocked = ref(false)
-const { createApp } = useFirestoreManager()
-const { updateUser } = useUserUpdate()
 const currentUser = useCurrentUser()
+const { user } = useUser()
 
+// Environment check
 const { data: envData } = await useFetch('/api/env-check')
 
 const allEnvValid = computed(() => {
@@ -36,6 +45,15 @@ const allEnvValid = computed(() => {
   return Object.values(envData.value).every(entry => entry.present)
 })
 
+// Step computation
+const step = computed(() => {
+  if (currentUser.value?.isAnonymous) return 'anon'
+  if (!user.value) return 'missingUser'
+  if (!isUnlocked.value) return 'pin'
+  return 'onboard'
+})
+
+// PIN logic
 function checkPin() {
   const input = pin.value.join('')
   if (input === useRuntimeConfig().public.PIN) {
@@ -43,16 +61,15 @@ function checkPin() {
   }
 }
 
+// Save app details
+const { createApp } = useFirestoreManager()
+
 async function saveAppDetails() {
   try {
-    await createApp(useRuntimeConfig().public.PWA_APP_NAME.toLowerCase().replace(/\s+/g, ''))
-    if (currentUser.value) {
-      await updateUser({ isAdmin: true })
-      console.log('✅ User marked as admin.')
-    }
+    await createApp()
     console.log('✅ App created successfully.')
   } catch (error) {
-    console.error('❌ Failed to create app or assign admin:', error)
+    console.error('❌ Failed to create app:', error)
   }
 }
 </script>

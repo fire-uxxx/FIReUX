@@ -1,11 +1,10 @@
-import { doc, collection, query, where, onSnapshot } from 'firebase/firestore'
+import { doc, collection } from 'firebase/firestore'
 import {
   useCurrentUser,
   useFirestore,
   useDocument,
-  useCollection
+  useCollection,
 } from 'vuefire'
-import { ref } from 'vue'
 
 export function useUser() {
   const currentUser = useCurrentUser()
@@ -25,39 +24,6 @@ export function useUser() {
     return useCollection(collection(db, 'users'))
   }
 
-  async function onboardUser() {
-    const { createUser } = useUserCreate()
-    const hasAdmin = useAdminPresence()
-
-    if (!user.value) {
-      const newUserData = {
-        ...currentUser.value,
-        isAdmin: !hasAdmin.value // Auto-assign admin if no admins exist
-      }
-
-      console.log('[onboardUser] User does not exist, creating...')
-      await createUser(newUserData)
-    }
-
-    console.log('[onboardUser] ✅ Onboarding complete - Redirecting...')
-    return navigateTo('/dashboard', { replace: true }) // ✅ Auto-redirect
-  }
-
-  function useAdminPresence() {
-    const hasAdmin = ref(true)
-
-    const adminQuery = query(
-      collection(db, 'users'),
-      where('isAdmin', '==', true)
-    )
-
-    onSnapshot(adminQuery, (snapshot) => {
-      hasAdmin.value = !snapshot.empty
-    })
-
-    return hasAdmin
-  }
-
   return {
     ...useUserUpdate(),
     ...useUserDelete(),
@@ -65,8 +31,6 @@ export function useUser() {
     user,
     fetchUser,
     usersCollection,
-    onboardUser,
-    useAdminPresence,
     errorInfo
   }
 }

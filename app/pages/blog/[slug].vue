@@ -1,18 +1,17 @@
-<script setup>
-const { slug } = useRoute().params
-
-const { data: post } = await useAsyncData(() =>
-  queryCollection('blog')
-    .where({ _path: `/blog/${slug}` })
-    .first()
-)
-</script>
-
 <template>
   <div v-if="post">
-    <ContentRenderer :value="post" />
+    <OrganismsBlogFullPost :post="post" />
   </div>
   <div v-else>
     <h1>404 – Blog post not found</h1>
   </div>
 </template>
+
+<script setup>
+
+const route = useRoute()
+const { fetchBlogPost } = useBlogPosts()
+
+// Fetch the post based on the slug parameter from the URL
+const post = fetchBlogPost(route.params.slug)
+</script>

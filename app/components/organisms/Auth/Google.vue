@@ -14,8 +14,13 @@ const logoSrc = computed(() =>
 )
 
 const handleGoogleSignIn = async () => {
-  await signInWithGoogle(); // ✅ Sign in first
-  await onboardUser(); // ✅ Onboard the user immediately
+  const user = await signInWithGoogle()
+  if (user?.uid) {
+    console.log('[handleGoogleSignIn] ✅ Got UID:', user.uid)
+    await onboardUser(user.uid)
+  } else {
+    console.warn('[handleGoogleSignIn] ❌ No UID returned from Google sign-in')
+  }
 }
 </script>
 

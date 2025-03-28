@@ -1,10 +1,12 @@
 <template>
   <div class="user-cell">
-    <UAvatar :src="props.user.photoURL || '/placeholder-avatar.png'" size="lg" />
+    <UAvatar :src="props.user.avatar || '/placeholder-avatar.png'" size="lg" />
     <div class="info">
       <strong class="name">{{ props.user.display_name }}</strong>
       <span class="handle">@{{ props.user.handle }}</span>
-      <UBadge v-if="props.user?.isAdmin" variant="subtle" class="badge">Admin</UBadge>
+      <UBadge v-if="props.user?.isAdmin" variant="subtle" class="badge"
+        >Admin</UBadge
+      >
     </div>
   </div>
 </template>
@@ -39,6 +41,4 @@ const props = defineProps({
   font-size: 0.875rem;
   color: var(--text-secondary);
 }
-
-
 </style>

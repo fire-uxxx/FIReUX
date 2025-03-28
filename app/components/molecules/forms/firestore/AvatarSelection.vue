@@ -1,9 +1,14 @@
 <template>
   <div class="avatar-container">
-    <UAvatar :src="userPhotoURL" alt="User Avatar" class="avatar" />
+    <UAvatar :src="useravatar" alt="User Avatar" class="avatar" />
     <label class="upload-label">
       <UIcon name="i-lucide-camera" />
-      <input type="file" accept="image/*" class="file-input" @change="handleFileChange">
+      <input
+        type="file"
+        accept="image/*"
+        class="file-input"
+        @change="handleFileChange"
+      />
     </label>
   </div>
 </template>
@@ -11,35 +16,18 @@
 <script setup>
 const currentUser = useCurrentUser()
 const { user, updateUser } = useUser()
-const { uploadFile } = useStorage()
+const { uploadProfileImage } = useMediaStorage()
 
-const userPhotoURL = computed(() => user.value?.photoURL || '')
+const useravatar = computed(() => user.value?.avatar || '')
 
 async function handleFileChange(e) {
-  if (!e.target.files || !e.target.files[0]) return
-  
-  const file = e.target.files[0]
+  const file = e.target?.files?.[0]
   const uid = currentUser.value?.uid
-  
-  if (!uid) {
-    console.error("No user ID available")
-    return
-  }
-  
-  try {
-    // Define the storage path for the avatar
-    const path = `users/${uid}/avatar.jpg`
-    const downloadURL = await uploadFile(path, file)
-    
-    if (downloadURL) {
-      await updateUser({ photoURL: downloadURL })
-      console.log('Avatar updated successfully:', downloadURL)
-    } else {
-      console.error('Failed to upload avatar')
-    }
-  } catch (error) {
-    console.error('Error updating avatar:', error)
-  }
+  if (!file || !uid) return
+
+  const path = `users/${uid}/avatar.jpg`
+  const url = await uploadProfileImage({ source: file, path })
+  if (url) await updateUser({ avatar: url })
 }
 </script>
 

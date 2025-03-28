@@ -8,18 +8,15 @@
 </template>
 
 <script setup>
-
-
 const router = useRouter()
-const { user, createUser } = useUser()
-const { signOutUser } = useAuth()
+const { user, onboardUser } = useUser()
+const { signOutUser, currentUser } = useAuth()
 
 const handleClick = async () => {
   if (user.value) {
     router.push('/dashboard')
   } else {
-    await createUser()
-    router.push('/dashboard')
+    await onboardUser(currentUser.value.uid)
   }
 }
 

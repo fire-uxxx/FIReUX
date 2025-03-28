@@ -1,3 +1,7 @@
-# My First Page
+---
+title: Content Index
+description: Hello from content index!
+date: 2025-03-23
+---
 
-Here is some content.
+This is the content index.

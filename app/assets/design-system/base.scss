@@ -4,6 +4,11 @@
 
 /* 🔄 Base Styles */
 
+/* Global Box Sizing Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Reset Scrollbars */
 html, body {
   overflow-x: hidden;
@@ -15,11 +20,21 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-/* General Resets */
+/* Remove default margin and padding */
+body, h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+/* General Resets & Base Typography */
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--ui-bg, #fff);
+  color: var(--ui-text, #111);
 }
 
 /* Typography */

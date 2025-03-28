@@ -23,9 +23,9 @@
 </template>
 
 <script setup>
-const router = useRouter()
 const { signInWithEmailPassword, signUpWithEmailPassword } = useAuth()
 const { onboardUser } = useUser()
+
 const isSignUp = ref(true)
 const state = reactive({
   email: '',
@@ -36,14 +36,14 @@ const handleEmailAuth = async () => {
   const authMethod = isSignUp.value
     ? signUpWithEmailPassword
     : signInWithEmailPassword
+
   const user = await authMethod(state.email, state.password)
-  if (user) {
-    await onboardUser() // Ensure the FireUX user document is created
-    router.push('/dashboard')
+
+  if (user?.uid) {
+    await onboardUser(user.uid) // ✅ Ensure onboarding with UID
   }
 }
 </script>
-
 <style scoped>
 .switch-container {
   margin: var(--space-4) 0;

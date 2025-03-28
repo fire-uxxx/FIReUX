@@ -37,6 +37,7 @@ export function useAuth() {
       const result = await signInWithPopup(auth, provider)
       await setUserAppIdClaim(result.user)
       console.log('✅ Google Sign-In Success - User:', result.user)
+      return result.user // ✅ Ensure user is returned
     } catch (error) {
       console.error('❌ Google Sign-In Failed:', error.message)
     }
@@ -46,6 +47,7 @@ export function useAuth() {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       await setUserAppIdClaim(result.user)
+      console.log('✅ Email Sign-In Success - User:', result.user)
       return result.user
     } catch (error) {
       console.error('❌ Email Sign-In Failed:', error.message)
@@ -57,6 +59,7 @@ export function useAuth() {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
       await setUserAppIdClaim(result.user)
+      console.log('✅ Email Sign-Up Success - User:', result.user)
       return result.user
     } catch (error) {
       console.error('❌ Email Sign-Up Failed:', error.message)

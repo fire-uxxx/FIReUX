@@ -3,6 +3,17 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+
+    <UModal
+      :open="hasAdmin === false"
+      prevent-close
+      title="🚫 Blocked"
+      description="This app needs to be initialized by an admin."
+    >
+      <template #body>
+        <OrganismsAdminOnBoarding />
+      </template>
+    </UModal>
   </UApp>
 </template>
 
@@ -13,6 +24,7 @@ useHead({
   ]
 })
 
+const { hasAdmin } = useApp()
 </script>
 
 <style scoped></style>

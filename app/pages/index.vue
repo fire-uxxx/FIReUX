@@ -16,7 +16,9 @@
 </script>
 
 <style scoped>
-
+  .page {
+    gap: var(--space-12);
+  }
 @media (min-width: 768px) {
   .page {
     gap: var(--space-20);

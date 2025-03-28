@@ -1,19 +1,26 @@
-<script setup>
-const { data: posts } = await useAsyncData(() =>
-  queryCollection('blog')
-    .sort({ date: -1 })
-    .find()
-)
-</script>
-
 <template>
-  <div class="blog">
+  <div class="page">
     <h1>Blog</h1>
-    <ul v-if="posts && posts.length">
-      <li v-for="post in posts" :key="post._path">
-        <NuxtLink :to="post._path">{{ post.title }}</NuxtLink>
-      </li>
-    </ul>
-    <p v-else>No blog posts found.</p>
+    <p>Welcome to our blog. Stay tuned for updates!</p>
+    <OrganismsBlogList :posts="posts" />
   </div>
 </template>
+
+<script setup>
+const { blogPostsCollection } = useBlogPosts()
+
+// Fetching blog posts using the composable
+const posts = blogPostsCollection()
+</script>
+
+<style scoped>
+  .page {
+    gap: var(--space-3);
+  }
+@media (min-width: 768px) {
+  .page {
+    gap: var(--space-20);
+    max-width: 900px
+  }
+}
+</style>

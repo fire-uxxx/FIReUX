@@ -131,6 +131,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-03-17',
 
   content: {
-    documentDriven: true
+    documentDriven: true,
+    apiUrl: 'https://nuxt.studio', // The URL of the Nuxt Studio API
   },
 })

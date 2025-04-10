@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
   // ✅ Shared Firebase plugin
-  plugins: ['./plugins/firebase.client.js'],
+  plugins: ['./plugins/firebase.client.js', './plugins/inject-tracer.ts'],
 
   vite: {
     build: {
@@ -95,7 +95,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ['composables/**/**', 'components/**/**']
+    dirs: ['composables/**/**', 'components/**/**', 'models/**/**']
   },
 
   pwa: {

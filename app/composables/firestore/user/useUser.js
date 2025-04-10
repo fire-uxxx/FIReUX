@@ -1,27 +1,36 @@
-import { doc, collection } from 'firebase/firestore'
+import { computed } from 'vue'
+import { doc, collection, query, where } from 'firebase/firestore'
 import {
-  useCurrentUser,
   useFirestore,
   useDocument,
-  useCollection,
+  useCurrentUser,
+  useCollection
 } from 'vuefire'
+import { useRuntimeConfig } from 'nuxt/app'
+import type { User } from '~/models/user.model'
 
 export function useUser() {
   const currentUser = useCurrentUser()
   const db = useFirestore()
-  const errorInfo = null
+  const appId = useRuntimeConfig().public.APP_ID
 
   const userRef = computed(() =>
     currentUser.value ? doc(db, 'users', currentUser.value.uid) : null
   )
-  const { data: user } = useDocument(userRef)
+  const { data: user } = useDocument < User > userRef
 
-  function fetchUser(id) {
-    return useDocument(computed(() => (id ? doc(db, 'users', id) : null)))
+  function fetchUser(id: string) {
+    return (
+      useDocument < User > computed(() => (id ? doc(db, 'users', id) : null))
+    )
   }
 
   function usersCollection() {
-    return useCollection(collection(db, 'users'))
+    const q = query(
+      collection(db, 'users'),
+      where('appIds', 'array-contains', appId)
+    )
+    return useCollection < User > q
   }
 
   return {
@@ -31,6 +40,6 @@ export function useUser() {
     user,
     fetchUser,
     usersCollection,
-    errorInfo
+    errorInfo: null
   }
 }

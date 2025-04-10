@@ -7,5 +7,6 @@ export function useFirestoreManager() {
     ...useFirestoreCreate(),
     ...useFirestoreUpdate(),
     ...useFirestoreDelete(),
+    ...useFirestoreFetch(),
   }
 }

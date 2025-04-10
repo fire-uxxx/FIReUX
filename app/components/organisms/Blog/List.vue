@@ -1,27 +1,85 @@
 <template>
-  <div v-if="posts && posts.length > 0">
-    <div v-for="post in posts" :key="post.id">
-      <div class="post-item">
-        <OrganismsBlogPost :post="post" />
-      </div>
-    </div>
+  <div class="blog-list">
+    <OrganismsBlogCardsArticle
+      v-for="post in articlePosts"
+      :key="post.slug + '-article'"
+      :post="post"
+    />
+    <OrganismsBlogCardsProduct
+      v-for="post in productPosts"
+      :key="post.slug + '-product'"
+      :post="post"
+    />
   </div>
-  <p v-else>No posts available.</p>
 </template>
-
-<script setup>
-// Accepting posts as a prop from the parent component
-defineProps({
-  posts: {
-    type: Array,
-    default: () => [] // Default value for posts
-  }
-})
+<script setup lang="ts">
+const props = defineProps<{ posts: BlogPost[] }>()
+const articlePosts = computed(() =>
+  props.posts.filter(post => post.type === 'article')
+)
+const productPosts = computed(() =>
+  props.posts.filter(post => post.type === 'product')
+)
 </script>
+<style>
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
 
-<style scoped>
-.post-item {
-  margin-inline: var(--space-1); 
-  margin-bottom: var(--space-3);
+.blog-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.blog-card {
+  text-align: left;
+  padding: var(--space-4);
+  background: var(--ui-bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.blog-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.blog-card-text {
+  flex: 1;
+  margin-right: var(--space-2);
+}
+
+.blog-card-title {
+  font-weight: var(--font-weight-semibold);
+  font-size: 1.2rem;
+  margin-bottom: var(--space-1);
+}
+
+.blog-card-reading-time {
+  font-size: 0.75rem;
+  color: var(--ui-primary);
+}
+
+.blog-card-image {
+  flex-shrink: 0;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blog-card-thumbnail {
+  height: 15px;
+  width: auto;
+  object-fit: cover;
+}
+
+.blog-card-content {
+  font-size: 0.875rem;
+  color: var(--ui-secondary);
 }
 </style>

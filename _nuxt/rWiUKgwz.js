@@ -1,1 +1,0 @@
-import{j as s,G as a,e as o,w as n,h as _,t as c,M as p}from"./CoChPsuk.js";const r={class:"loading-message"},i={__name:"MoleculesLoading",props:{message:{type:String,default:"Loading..."}},setup(e){return(l,m)=>{const t=p;return o(),a(t,null,{default:n(()=>[_("p",r,c(e.message),1)]),_:1})}}},u=s(i,[["__scopeId","data-v-908bf17a"]]);export{u as _};

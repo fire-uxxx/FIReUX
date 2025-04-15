@@ -1,7 +1,3 @@
-import { addSluggedDocument } from '@/composables/firestore/useFirestoreCreate'
-import { useUser } from '@/composables/user/useUser'
-import type { BlogPost, Author } from '~/models/blog-post.model'
-
 export function useBlogPostCreate() {
   // Generate an SEO-friendly slug from the title
   function generateSlug(title: string): string {
@@ -20,7 +16,7 @@ export function useBlogPostCreate() {
     return `${minutes} min`
   }
 
-  // Safe inject inside function
+  // Safe inject inside function (uses auto-imported useUser)
   function getAuthor(): Author {
     const { user } = useUser()
     return {
@@ -38,6 +34,9 @@ export function useBlogPostCreate() {
     }
   }
 
+  // Retrieve addSluggedDocument from useFirestoreCreate via auto-import
+  const { addSluggedDocument } = useFirestoreCreate()
+
   // Create a new blog post in Firestore using slug as ID
   async function createBlogPost(postData: Partial<BlogPost>): Promise<string> {
     if (!postData.title || !postData.content) {
@@ -49,15 +48,25 @@ export function useBlogPostCreate() {
     const author = getAuthor()
     const { featuredImage, socialImage } = getImages()
 
+    // Build a complete BlogPost object by providing defaults for missing fields.
     const data: BlogPost = {
-      ...postData,
+      title: postData.title!, // non-null assertion because of the throw above
+      content: postData.content!,
+      metaDescription: postData.metaDescription ?? '',
       slug,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       author,
-      readingTime,
+      keywords: postData.keywords ?? [],
+      tags: postData.tags ?? [],
+      canonicalUrl: postData.canonicalUrl ?? '',
       featuredImage,
       socialImage,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      readingTime,
+      cta_link: postData.cta_link ?? '',
+      type: postData.type ?? 'article',
+      // Supply appId from postData if available, or else get it from your app context
+      appId: postData.appId ?? 'default-app-id'
     }
 
     const id = await addSluggedDocument('blogPosts', data)

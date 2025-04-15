@@ -12,9 +12,18 @@
           />
           <div class="main-section">
             <LayoutsSubHeader :icon="subHeaderIcon" :title="subHeaderTitle" />
-            <LayoutsDashboardGuard>
-              <NuxtPage />
-            </LayoutsDashboardGuard>
+            <pre>
+User Data:
+{{ userData }}
+            </pre>
+            <pre>
+Users Collection:
+{{ usersCollectionData }}
+            </pre>
+            <pre>
+Fetched User (Test):
+{{ fetchedUserData }}
+            </pre>
           </div>
         </main>
       </div>
@@ -22,40 +31,29 @@
   </ClientOnly>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 
 const route = useRoute()
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1024)
 
-const { user } = useUser()
-const { appLinks, mobileLinks } = useRoutes()
-
-const dashboardLinks = computed(() => {
-  const roles = user.value?.roles
-  const isAdmin = user.value?.isAdmin
-
-  // ⚡ 1. If roles exist, use role-based system
-  if (Array.isArray(roles) && roles.length) {
-    const uniqueLinks = new Map()
-
-    for (const role of roles) {
-      const links = ROLE_LINKS[role] || []
-      links.forEach(link => uniqueLinks.set(link.path, link))
-    }
-
-    return Array.from(uniqueLinks.values())
-  }
-
-  // 🔙 2. Fallback: use current isAdmin flag logic
-  if (isAdmin) return [ROUTE_LINKS.user, ROUTE_LINKS.admin]
-  return ROUTE_LINKS.user
-})
-
+const { appLinks, mobileLinks, dashboardLinks } = useRoutes()
 
 const subHeaderTitle = computed(() => route.meta?.title || 'Dashboard')
 const subHeaderIcon = computed(() => route.meta?.icon || 'i-lucide-layout-dashboard')
+
+// Get user-related data from the useUser composable
+const { user, fetchUser, usersCollection } = useUser()
+
+// Debug outputs: stringify the reactive user data and collection
+const userData = computed(() => JSON.stringify(user.value, null, 2))
+const usersCollectionData = computed(() => JSON.stringify(usersCollection.value, null, 2))
+// For testing, we now always fetch the user using the hard-coded id.
+const fetchedUserData = computed(() => {
+  const fetched = fetchUser('dUgYPUv4W9Q3vRWibEeFBraXXQB3')
+  return JSON.stringify(fetched.value, null, 2)
+})
 </script>
 
 <style scoped>
@@ -63,7 +61,6 @@ const subHeaderIcon = computed(() => route.meta?.icon || 'i-lucide-layout-dashbo
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 .layout-content {
   display: flex;
@@ -76,12 +73,6 @@ const subHeaderIcon = computed(() => route.meta?.icon || 'i-lucide-layout-dashbo
   display: flex;
   flex-direction: row;
   align-items: start;
-}
-.access-denied {
-  padding: var(--space-4);
-  text-align: center;
-  font-size: 1.2rem;
-  color: red;
 }
 .main-section {
   display: flex;

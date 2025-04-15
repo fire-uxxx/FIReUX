@@ -1,6 +1,6 @@
 import { doc, setDoc, addDoc, collection } from 'firebase/firestore'
 import { useFirestore as vuefireFirestore, useCurrentUser } from 'vuefire'
-import { useApp } from '@/composables/app/useApp'
+import { useApp } from '~/composables/app/_useApp'
 
 export function useFirestoreCreate() {
   const db = vuefireFirestore()
@@ -27,10 +27,15 @@ export function useFirestoreCreate() {
         slug
       })
 
-      console.log(`[addSluggedDocument] Created document in '${collectionName}' with ID: ${slug}`)
+      console.log(
+        `[addSluggedDocument] Created document in '${collectionName}' with ID: ${slug}`
+      )
       return slug
     } catch (error) {
-      console.error(`[addSluggedDocument] Error creating document in '${collectionName}' with ID: ${slug}`, error)
+      console.error(
+        `[addSluggedDocument] Error creating document in '${collectionName}' with ID: ${slug}`,
+        error
+      )
       throw error
     }
   }
@@ -40,7 +45,9 @@ export function useFirestoreCreate() {
     data: Record<string, unknown>
   ): Promise<string> {
     if (!collectionName || !data) {
-      return Promise.reject('[createDocument] Collection name and data are required.')
+      return Promise.reject(
+        '[createDocument] Collection name and data are required.'
+      )
     }
 
     try {
@@ -50,10 +57,15 @@ export function useFirestoreCreate() {
         created_at: new Date().toISOString()
       })
 
-      console.log(`[createDocument] Created document in '${collectionName}' with ID: ${docRef.id}`)
+      console.log(
+        `[createDocument] Created document in '${collectionName}' with ID: ${docRef.id}`
+      )
       return docRef.id
     } catch (error) {
-      console.error(`[createDocument] Error creating document in '${collectionName}':`, error)
+      console.error(
+        `[createDocument] Error creating document in '${collectionName}':`,
+        error
+      )
       throw error
     }
   }
@@ -63,7 +75,9 @@ export function useFirestoreCreate() {
     data: Record<string, unknown>
   ): Promise<string> {
     if (!collectionName || !data) {
-      return Promise.reject('[createObject] Collection name and data are required.')
+      return Promise.reject(
+        '[createObject] Collection name and data are required.'
+      )
     }
 
     try {
@@ -73,10 +87,15 @@ export function useFirestoreCreate() {
         created_at: new Date().toISOString()
       })
 
-      console.log(`[createObject] Created object in '${collectionName}' with ID: ${docRef.id}`)
+      console.log(
+        `[createObject] Created object in '${collectionName}' with ID: ${docRef.id}`
+      )
       return docRef.id
     } catch (error) {
-      console.error(`[createObject] Error creating object in '${collectionName}':`, error)
+      console.error(
+        `[createObject] Error creating object in '${collectionName}':`,
+        error
+      )
       throw error
     }
   }
@@ -99,10 +118,15 @@ export function useFirestoreCreate() {
         created_at: new Date().toISOString()
       })
 
-      console.log(`[createEntity] Created entity in '${collectionName}' with ID: ${documentId}`)
+      console.log(
+        `[createEntity] Created entity in '${collectionName}' with ID: ${documentId}`
+      )
       return documentId
     } catch (error) {
-      console.error(`[createEntity] Error creating entity in '${collectionName}':`, error)
+      console.error(
+        `[createEntity] Error creating entity in '${collectionName}':`,
+        error
+      )
       throw error
     }
   }

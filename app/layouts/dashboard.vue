@@ -12,18 +12,7 @@
           />
           <div class="main-section">
             <LayoutsSubHeader :icon="subHeaderIcon" :title="subHeaderTitle" />
-            <pre>
-User Data:
-{{ userData }}
-            </pre>
-            <pre>
-Users Collection:
-{{ usersCollectionData }}
-            </pre>
-            <pre>
-Fetched User (Test):
-{{ fetchedUserData }}
-            </pre>
+            <NuxtPage />
           </div>
         </main>
       </div>
@@ -32,28 +21,35 @@ Fetched User (Test):
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useWindowSize } from '@vueuse/core'
+import { useUserRead } from '@/composables/firestore/user/useUserRead'
 
 const route = useRoute()
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1024)
 
+// Retrieve navigation links using our routes composable.
 const { appLinks, mobileLinks, dashboardLinks } = useRoutes()
 
-const subHeaderTitle = computed(() => route.meta?.title || 'Dashboard')
-const subHeaderIcon = computed(() => route.meta?.icon || 'i-lucide-layout-dashboard')
-
-// Get user-related data from the useUser composable
-const { user, fetchUser, usersCollection } = useUser()
-
-// Debug outputs: stringify the reactive user data and collection
-const userData = computed(() => JSON.stringify(user.value, null, 2))
-const usersCollectionData = computed(() => JSON.stringify(usersCollection.value, null, 2))
-// For testing, we now always fetch the user using the hard-coded id.
-const fetchedUserData = computed(() => {
-  const fetched = fetchUser('dUgYPUv4W9Q3vRWibEeFBraXXQB3')
-  return JSON.stringify(fetched.value, null, 2)
+// Compute subheader title with a fallback.
+const subHeaderTitle = computed<string>(() => {
+  const title = route.meta?.title
+  return typeof title === 'string' ? title : 'Dashboard'
 })
+
+// Compute subheader icon with a fallback.
+const subHeaderIcon = computed<string>(() => {
+  const icon = route.meta?.icon
+  return typeof icon === 'string' ? icon : 'i-lucide-layout-dashboard'
+})
+
+// Use the new useUserRead composable to get current user info and admin status.
+const { user, isAdmin } = useUserRead()
+
+// For debugging purposes, log the current user and their admin status.
+console.log('Current user:', user.value)
+console.log('Is admin:', isAdmin.value)
 </script>
 
 <style scoped>

@@ -20,7 +20,7 @@
       </div>
       <OrganismsAdminOnboardingVariables />
       <div v-if="allEnvValid">
-        <UButton @click="saveAppDetails"  block>Create App</UButton>
+        <UButton block  @click="createApp">Create App</UButton>
       </div>
       <p v-else class="setup-reminder">
         ✅ All required environment variables must be set before you can create an app.<br>
@@ -35,6 +35,7 @@
 const pin = ref([])
 const isUnlocked = ref(false)
 const currentUser = useCurrentUser()
+const { createApp } = useApp()
 const { user } = useUser()
 
 // Environment check
@@ -61,17 +62,6 @@ function checkPin() {
   }
 }
 
-// Save app details
-const { createApp } = useFirestoreManager()
-
-async function saveAppDetails() {
-  try {
-    await createApp()
-    console.log('✅ App created successfully.')
-  } catch (error) {
-    console.error('❌ Failed to create app:', error)
-  }
-}
 </script>
 
 <style scoped>

@@ -1,25 +1,25 @@
 <template>
-  <ClientOnly>
-    <UApp>
-      <pre>Firestore User: {{ user }} end</pre>
-      <div class="actions">
-        <UButton @click="createUser()" variant="soft" color="primary">
-          Create User
-        </UButton>
-        <UButton @click="onboardUser()" variant="soft" color="info">
-          Onboard User
-        </UButton>
-        <UButton @click="updateUser({ display_name: 'Test Updated' })" variant="soft" color="warning">
-          Update User Info
-        </UButton>
-        <UButton @click="deleteUser" variant="soft" color="neutral">
-          Delete User
-        </UButton>
-      </div>
-    </UApp>
-  </ClientOnly>
+  <UApp>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <UModal
+      :open="hasAdmin === false"
+      prevent-close
+      title="🚫 Blocked"
+      description="This app needs to be initialized by an admin."
+    >
+      <template #body>
+        <OrganismsAdminOnBoarding />
+      </template>
+    </UModal>
+  </UApp>
 </template>
 
-<script setup lang="ts">
-const { user, createUser, onboardUser, updateUser, deleteUser } = useUser()
+<script setup>
+useHead({
+  link: [{ rel: 'manifest', href: '/manifest.webmanifest' }]
+})
+
+const { hasAdmin } = useApp()
 </script>

@@ -14,10 +14,12 @@ export function useAppDelete(appId: string, app: App) {
     }
     try {
       await deleteDoc(doc(db, 'apps', appId))
-      console.log(`Deleted app ${appId}`)
-    } catch (error) {
-      console.error(`Error deleting app ${appId}:`, error)
-      throw error
+      console.log(`✅ Deleted app ${appId} successfully`)
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      console.error(`❌ Error deleting app ${appId}:`, errorMessage)
+      throw new Error(errorMessage)
     }
   }
 

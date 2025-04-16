@@ -7,9 +7,8 @@ export interface User {
   email: string
   created_at: string
   appIds: string[]
-  // Add additional properties as needed.
+  adminAppIds?: string[]
 }
-
 
 // ~/models/user.model.ts
 

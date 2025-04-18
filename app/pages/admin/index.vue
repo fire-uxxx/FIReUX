@@ -1,9 +1,10 @@
 <template>
   <client-only>
-    <pre>{{ usersCollection }}</pre>
+    <!-- <pre>{{ usersCollection }}</pre> -->
 
     <div class="dashboard-page-grid">
-      <!-- Subscription Metrics Card -->
+      <!--
+      Subscription Metrics Card
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
@@ -21,19 +22,19 @@
           </template>
         </UCard>
       </div>
+      -->
+
     </div>
   </client-only>
 </template>
 
 <script setup lang="ts">
-  // These functions/types are assumed to be auto-imported: 
-  // useAdminMetrics, getRouteMetaForPath, definePageMeta, and User.
-  const { totalUsers, standardCount, proCount, noSubscriptionCount, loading, error } = useAdminMetrics()
+  // const { totalUsers, standardCount, proCount, noSubscriptionCount, loading, error } = useAdminMetrics()
 
   // Retrieve the 'users' collection via the generic Firestore fetch function.
-  const { collectionData: usersCollection } = useGenericFirestoreCollection<User>('users')
+  // const { collectionData: usersCollection } = useGenericFirestoreCollection<User>('users')
 
-  const { label, icon } = getRouteMetaForPath('/dashboard/admin')
+  const { label, icon } = getRouteMetaForPath('/admin')
 
   definePageMeta({
     layout: 'dashboard',

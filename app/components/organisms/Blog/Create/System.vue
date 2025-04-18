@@ -3,9 +3,9 @@
     <!-- Write Tab -->
     <template #write>
       <div class="tab">
-        <UInput v-model="fullBlogPost.title" placeholder="Blog Title" />
+        <UInput v-model="blogPost.title" placeholder="Blog Title" />
         <UInputMenu
-          v-model="fullBlogPost.type"
+          v-model="blogPost.type"
           :items="[
             { label: 'Article', value: 'article' },
             { label: 'Product', value: 'product' }
@@ -14,8 +14,8 @@
           value-key="value"
         />
         <UInputMenu
-          v-if="fullBlogPost.type === 'product'"
-          v-model="fullBlogPost.product_id"
+          v-if="blogPost.type === 'product'"
+          v-model="blogPost.product_id"
           :items="productItems"
           placeholder="Select Product"
           value-key="value"
@@ -23,40 +23,37 @@
         <div class="editor-container">
           <ClientOnly>
             <QuillEditor
-              v-model:content="fullBlogPost.content"
+              v-model:content="blogPost.content"
               content-type="html"
               theme="snow"
             />
           </ClientOnly>
         </div>
-        <OrganismsBlogCreateAdvanced v-model:blog-post="fullBlogPost" />
-        <OrganismsBlogCreateImages v-model:blog-post="fullBlogPost" />
+        <OrganismsBlogCreateAdvanced v-model:blog-post="blogPost" />
+        <OrganismsBlogCreateImages v-model:blog-post="blogPost" />
       </div>
     </template>
 
     <!-- Preview Tab -->
     <template #preview>
       <div class="tab">
-        <OrganismsBlogCreatePreview v-model:blog-post="fullBlogPost" />
+        <OrganismsBlogCreatePreview v-model:blog-post="blogPost" />
+        <div class="actions">
+          <UButton @click="handleCreate">Create Blog Post</UButton>
+          <pre v-if="createdPost">{{ createdPost }}</pre>
+        </div>
       </div>
     </template>
   </UTabs>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import type { BlogPost } from '@/models/blogPost.model'
 
-// Get the functions that generate slug and calculate reading time.
-const { generateSlug, computeReadingTime } = useBlogPostCreate()
+const { computeReadingTime, createBlogPost, getAuthor, getDefaultImages, generateSlug } = useBlogPosts()
 
-// Use Partial to allow an open object structure that will gradually get filled
-const blogPost = ref<Partial<BlogPost>>({})
-
-// Define default BlogPost
-const defaultBlogPost: BlogPost = {
+const blogPost = ref<BlogPost>({
   title: '',
   content: '',
   metaDescription: '',
@@ -69,43 +66,50 @@ const defaultBlogPost: BlogPost = {
   canonicalUrl: '',
   featuredImage: '',
   socialImage: '',
-  readingTime: '',
+  readingTime: '0 min',
   cta_link: '',
   type: 'article',
-  appId: ''
-}
-
-// Create computed property for full BlogPost
-const fullBlogPost = computed({
-  get: () => ({ ...defaultBlogPost, ...blogPost.value }),
-  set: (value: BlogPost) => { blogPost.value = value }
+  appId: '',
+  product_id: ''
 })
 
-// Tab selection state, defaulting to the "write" tab.
-const selectedTab = ref('write')
+onMounted(() => {
+  blogPost.value.author = getAuthor()
+  const { featuredImage, socialImage } = getDefaultImages()
+  blogPost.value.featuredImage = featuredImage
+  blogPost.value.socialImage = socialImage
+})
 
-// Define the UTabs items. These items correspond to the "Write" and "Preview" slots.
-const tabItems = ref([
+watch(() => blogPost.value.content, (content = '') => {
+  blogPost.value.readingTime = computeReadingTime(content)
+})
+
+watch(() => blogPost.value.title, (title = '') => {
+  blogPost.value.slug = generateSlug(title)
+})
+
+// Tab state
+const selectedTab = ref('write')
+const tabItems = ref<Array<{ label: string; icon: string; value: string; slot: string }>>([
   { label: 'Write', icon: 'i-lucide-edit', value: 'write', slot: 'write' },
   { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
-]) as Ref<Array<{ label: string; icon: string; value: string; slot: string }>>
+])
 
-// Optional: If product functionality is needed later, the placeholder array can be populated.
-const productItems: { label: string; value: string }[] = []
+// Placeholder for product dropdown
+const productItems = ref<{ label: string; value: string }[]>([])
 
-// When the user switches to the Preview tab, update derived properties.
-// This ensures that the preview is up-to-date with computed values.
-watch(selectedTab, newVal => {
-  if (newVal === 'preview') {
-    fullBlogPost.value.slug = generateSlug(fullBlogPost.value.title || '')
-    fullBlogPost.value.readingTime = computeReadingTime(fullBlogPost.value.content || '')
+const createdPost = ref<string>('')
+
+async function handleCreate() {
+  try {
+    const created = await createBlogPost(blogPost.value)
+    console.log('Blog post created', created)
+    createdPost.value = JSON.stringify(created, null, 2)
+  } catch (err) {
+    console.error('Error creating blog post:', err)
+    createdPost.value = `Error: ${err instanceof Error ? err.message : err}`
   }
-})
-
-// Alternatively, consider real-time updates using computed properties:
-// const slug = computed(() => generateSlug(blogPost.value.title))
-// const readingTime = computed(() => computeReadingTime(blogPost.value.content))
-// Then pass these computed values to the preview component or merge them into blogPost when needed.
+}
 </script>
 
 <style scoped lang="css">

@@ -1,6 +1,6 @@
 <template>
   <div class="user-cell">
-    <UAvatar :src="props.user.avatar || '/placeholder-avatar.png'" size="lg" />
+    <UAvatar :src="props.user.avatar" size="lg" />
     <div class="info">
       <strong class="name">{{ props.user.display_name }}</strong>
       <span class="handle">@{{ props.user.handle }}</span>

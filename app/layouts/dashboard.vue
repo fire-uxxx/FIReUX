@@ -11,7 +11,7 @@
             :items="dashboardLinks"
           />
           <div class="main-section">
-            <LayoutsSubHeader :icon="subHeaderIcon" :title="subHeaderTitle" />
+            <LayoutsSubHeader :icon-title="subHeader" />
             <NuxtPage />
           </div>
         </main>
@@ -21,35 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useWindowSize } from '@vueuse/core'
-import { useUserRead } from '@/composables/firestore/user/useUserRead'
 
-const route = useRoute()
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1024)
 
-// Retrieve navigation links using our routes composable.
-const { appLinks, mobileLinks, dashboardLinks } = useRoutes()
+const { appLinks, mobileLinks, dashboardLinks, subHeader } = useRoutes()
 
-// Compute subheader title with a fallback.
-const subHeaderTitle = computed<string>(() => {
-  const title = route.meta?.title
-  return typeof title === 'string' ? title : 'Dashboard'
-})
-
-// Compute subheader icon with a fallback.
-const subHeaderIcon = computed<string>(() => {
-  const icon = route.meta?.icon
-  return typeof icon === 'string' ? icon : 'i-lucide-layout-dashboard'
-})
-
-// Use the new useUserRead composable to get current user info and admin status.
-const { user, isAdmin } = useUserRead()
-
-// For debugging purposes, log the current user and their admin status.
-console.log('Current user:', user.value)
-console.log('Is admin:', isAdmin.value)
 </script>
 
 <style scoped>

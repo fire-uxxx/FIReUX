@@ -51,6 +51,5 @@ defineProps({
 
 .menu-link {
   text-decoration: none;
-  color: var(--text-primary);
 }
 </style>

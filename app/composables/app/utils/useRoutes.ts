@@ -102,6 +102,7 @@ export function useRoutes() {
   // Retrieve the isAdmin computed property from our user composable.
   // (Assume that useUser() returns { isAdmin } where isAdmin is a computed boolean.)
   const { isAdmin } = useUser()
+  const route = useRoute()
 
   // Public app links.
   const appLinks = computed<RouteLink[]>(() => {
@@ -133,5 +134,14 @@ export function useRoutes() {
     return groups
   })
 
-  return { appLinks, dashboardLinks, mobileLinks }
+
+ const subHeader = computed(() => {
+   const title = route.meta?.title
+   const icon = route.meta?.icon
+   return {
+     label: typeof title === 'string' ? title : 'Dashboard',
+     icon: typeof icon === 'string' ? icon : 'i-lucide-layout-dashboard'
+   }
+ })
+  return { appLinks, dashboardLinks, mobileLinks, subHeader }
 }

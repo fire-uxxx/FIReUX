@@ -1,26 +1,16 @@
+<!-- app/pages/blog/index.vue -->
 <template>
   <div class="page">
     <h1>Blog</h1>
     <p>Welcome to our blog. Stay tuned for updates!</p>
     <OrganismsBlogList :posts="posts" />
+
+    {{posts}}
   </div>
 </template>
 
-<script setup>
-const { blogPostsCollection } = useBlogPosts()
+<script setup lang="ts">
 
-// Fetching blog posts using the composable
-const posts = blogPostsCollection()
+// blogPostsCollection is already a Ref<BlogPost[]>
+const { blogPostsCollection: posts } = useBlogPosts()
 </script>
-
-<style scoped>
-  .page {
-    gap: var(--space-3);
-  }
-@media (min-width: 768px) {
-  .page {
-    gap: var(--space-20);
-    max-width: 900px
-  }
-}
-</style>

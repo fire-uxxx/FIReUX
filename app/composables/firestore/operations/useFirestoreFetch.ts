@@ -1,5 +1,5 @@
 import { useCollection, useDocument, useFirestore } from 'vuefire'
-import { collection, doc } from 'firebase/firestore'
+import { collection, doc, query, where } from 'firebase/firestore'
 import type { Ref } from 'vue'
 
 export function useFirestoreFetch() {
@@ -7,7 +7,12 @@ export function useFirestoreFetch() {
     collectionData: Ref<T[] | undefined>
   } {
     const db = useFirestore()
-    const colRef = collection(db, collectionName)
+    const config = useRuntimeConfig()
+    const appId = config.public.APP_ID
+    const colRef = query(
+      collection(db, collectionName),
+      where('appId', '==', appId)
+    )
     const { data: collectionData } = useCollection<T>(colRef)
     return { collectionData }
   }

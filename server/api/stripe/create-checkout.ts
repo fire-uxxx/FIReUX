@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3'
 import Stripe from 'stripe'
-import admin from '../utils/firebase'
+import admin from '../../utils/firebase'
 import { useRuntimeConfig } from '#imports' // Auto-imported in Nuxt 3
 
 export default defineEventHandler(async event => {

@@ -1,3 +1,5 @@
+// app/models/blogPost.model.ts
+
 // Define an Author interface for our blog posts.
 export interface Author {
   display_name: string
@@ -24,18 +26,5 @@ export interface BlogPost {
   cta_link: string
   type: 'article' | 'product'
   product_id?: string
-  appId: string // ✅ Add this line
-}
-
-// Define a default author which will be used as fallback values.
-const defaultAuthor: Author = {
-  display_name: '',
-  handle: '',
-  avatar: '',
-  id: ''
-}
-
-// Helper function to get an Author from a partial user object.
-export function getAuthor(user: Partial<Author>): Author {
-  return { ...defaultAuthor, ...user }
+  appId: string // ties this post to a specific app
 }

@@ -140,3 +140,29 @@ This flexibility allows you to grow from a single-template MVP to a full SaaS pl
 
 🔥 FIReUX powers FIReMVP & future SaaS templates.
 👉 Visit FIReUX for details.
+
+
+---
+
+## 🚀 Stripe Integration & Product Creation
+
+FIReUX now includes a streamlined product creation flow integrated with Stripe. This setup allows you to:
+
+- **Create Products:** Use our custom product creation page to add products with details such as name, description, price, image, and active status. The form sends data to a dedicated API endpoint (`/api/create-stripe-product`), which creates the product and its price on Stripe and writes a record to Firestore.
+
+- **Real-Time Sync with Firestore:**
+  Products created via the UI are stored in Firestore, enabling real-time updates and easy querying on your product page.
+
+- **Secure Stripe Integration:**
+  We recommend using a **restricted API key** for Stripe. When creating this key in your Stripe dashboard, select the option that best describes your use case: **"You're using this key in a project you're building."** Grant write permissions (which include read access) for Products and Prices. Optionally, enable additional permissions (such as Customers or Checkout Sessions) if your project evolves.
+
+- **Environment Variables:**
+  Update your `.env` file with your Stripe keys:
+
+  ```env
+  # Stripe Keys
+  STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+  STRIPE_SECRET_KEY=your_stripe_secret_key
+  ```
+
+This integration leverages our existing Firebase & Stripe-powered architecture, keeping your user data secure and providing a smooth product management experience. As you scale, you can further customize and extend these features to suit your multi-tenant SaaS needs.

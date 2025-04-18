@@ -1,11 +1,13 @@
 import { doc, setDoc, addDoc, collection } from 'firebase/firestore'
 import { useFirestore as vuefireFirestore, useCurrentUser } from 'vuefire'
-import { useApp } from '~/composables/app/_useApp'
+import { useRuntimeConfig } from '#app'
 
 export function useFirestoreCreate() {
   const db = vuefireFirestore()
   const currentUser = useCurrentUser()
-  const { appId } = useApp()
+  const {
+    public: { APP_ID }
+  } = useRuntimeConfig()
 
   // Create a new document using slug as the document ID
   async function addSluggedDocument(
@@ -21,7 +23,7 @@ export function useFirestoreCreate() {
     try {
       const docRef = doc(db, collectionName, slug)
       await setDoc(docRef, {
-        appId,
+        appId: APP_ID,
         ...rest,
         created_at: new Date().toISOString(),
         slug
@@ -52,7 +54,7 @@ export function useFirestoreCreate() {
 
     try {
       const docRef = await addDoc(collection(db, collectionName), {
-        appId,
+        appId: APP_ID,
         ...data,
         created_at: new Date().toISOString()
       })
@@ -82,7 +84,7 @@ export function useFirestoreCreate() {
 
     try {
       const docRef = await addDoc(collection(db, collectionName), {
-        appId,
+        appId: APP_ID,
         ...data,
         created_at: new Date().toISOString()
       })
@@ -112,7 +114,7 @@ export function useFirestoreCreate() {
 
     try {
       await setDoc(doc(db, collectionName, documentId), {
-        appId,
+        appId: APP_ID,
         ...data,
         id: documentId,
         created_at: new Date().toISOString()

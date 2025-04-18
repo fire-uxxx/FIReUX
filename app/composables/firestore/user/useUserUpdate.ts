@@ -26,6 +26,28 @@ export function useUserUpdate() {
       throw new Error(errorMessage)
     }
   }
+  
+  async function populateCurrentUser(): Promise<void> {
+    const authUser = currentUser.value
+    if (!authUser?.uid) {
+      throw new Error('No authenticated user found.')
+    }
+    const updates: Partial<User> = {}
+    if (authUser.email) {
+      updates.email = authUser.email
+    }
+    const display_name = generateDisplayName(
+      authUser.email ?? undefined,
+      authUser.displayName ?? undefined
+    )
+    updates.display_name = display_name
+    updates.handle = generateHandle(display_name)
+    if (authUser.photoURL) {
+      updates.avatar = authUser.photoURL
+    }
+    await updateUser(updates)
+    console.log(`✅ populateCurrentUser for user ${authUser.uid}:`, updates)
+  }
 
   // Helper function to update the user's email.
   async function updateEmail(email: string): Promise<void> {
@@ -91,9 +113,7 @@ export function useUserUpdate() {
     updateDisplayName,
     updateHandle,
     updateAvatar,
+    populateCurrentUser,
     updateUserFor,
-    generateDisplayName,
-    generateHandle,
-    randomUserId
   }
 }

@@ -1,19 +1,16 @@
 <template>
   <div class="subheader">
-    <UIcon :name="icon" class="subheader-icon" />
-    <h2 class="subheader-title">{{ title }}</h2>
+    <UIcon :name="iconTitle.icon" class="subheader-icon" />
+    <h2 class="subheader-title">{{ iconTitle.label }}</h2>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  icon: {
-    type: String,
-    default: 'i-lucide-info'
+  iconTitle: {
+    type: Object,
+    required: true,
+    validator: (val) => typeof val.label === 'string' && typeof val.icon === 'string'
   }
 })
 </script>
@@ -25,18 +22,15 @@ defineProps({
   align-items: center;
   gap: var(--space-2);
   padding: 0 var(--space-4);
-  border-bottom: 1px solid var(--border);
-  background-color: var(--background);
+  background-color: var(--ui-bg);
 }
 
 .subheader-icon {
   font-size: 1.2rem;
-  color: var(--primary);
 }
 
 .subheader-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text-primary);
 }
 </style>

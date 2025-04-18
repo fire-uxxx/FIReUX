@@ -111,7 +111,6 @@ defineProps({
   align-items: center;
   justify-content: center;
   padding: var(--space-2) var(--space-4);
-  background-color: var(--background);
   z-index: 100;
 }
 

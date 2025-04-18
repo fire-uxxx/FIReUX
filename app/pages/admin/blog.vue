@@ -2,11 +2,11 @@
   <ClientOnly>
     <div class="dashboard-page-grid">
       <!-- Blog Create Section -->
-      <OrganismsBlogCreate class="dashboard-grid-section" />
-  
+      <OrganismsBlogCreateSystem class="dashboard-grid-section" />
+
       <!-- Blog Post Count Section -->
       <!-- <OrganismsAdminBlogPostCount class="dashboard-grid-section" :post-count="postCount" /> -->
-      
+
       <!-- Last Blog Post Section -->
       <!-- <OrganismsAdminBlogLastPost class="dashboard-grid-section" :last-post="lastPost" /> -->
 
@@ -17,14 +17,14 @@
 </template>
 
 <script setup>
-const { label, icon } = getRouteMetaForPath('/admin/blog')
+  const { label, icon } = getRouteMetaForPath('/admin/blog')
 
-definePageMeta({
-  layout: 'dashboard',
-  layoutProps: {
-    dashboardType: 'admin-dashboard'
-  },
-  title: label,
-  icon: icon
-})
+  definePageMeta({
+    layout: 'dashboard',
+    layoutProps: {
+      dashboardType: 'admin-dashboard'
+    },
+    title: label,
+    icon: icon
+  })
 </script>

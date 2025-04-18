@@ -1,8 +1,11 @@
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { useFirestore, useCurrentUser } from 'vuefire'
 import { useRuntimeConfig, navigateTo } from 'nuxt/app'
+import { useUserUpdate } from './useUserUpdate'
 
 export function useUserCreate() {
+  const { populateCurrentUser } = useUserUpdate()
+
   async function createUser(): Promise<boolean> {
     const db = useFirestore()
     const currentUser = useCurrentUser()
@@ -21,7 +24,7 @@ export function useUserCreate() {
         id: uid,
         appIds: [APP_ID]
       })
-
+      await populateCurrentUser()
       await navigateTo('/dashboard', { replace: true })
       return true
     } catch (error) {

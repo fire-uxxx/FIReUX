@@ -1,30 +1,27 @@
-// composables/admin/useAdminMetrics.ts
-import { useFirestore as vuefireFirestore, useFirestoreCount } from 'vuefire'
-import { collection, query, where } from 'firebase/firestore'
+import { computed } from 'vue'
+import { collection } from 'firebase/firestore'
+import { useFirestore, useCollection } from 'vuefire'
 
-export function useAdminMetrics() {
-  const db = vuefireFirestore()
-  const usersCollection = collection(db, 'users')
 
-  // Using vuefire's composable to reactively bind count queries
-  // Count users with a 'standard' subscription
-  const standardCount = useFirestoreCount(
-    query(usersCollection, where('subscription.plan', '==', 'standard'))
-  )
+export function useSimpleAdminMetrics() {
+  const db = useFirestore()
 
-  // Count users with a 'pro' subscription
-  const proCount = useFirestoreCount(
-    query(usersCollection, where('subscription.plan', '==', 'pro'))
-  )
+  // Reactive collections
+  const { data: users } = useCollection<User>(collection(db, 'users'))
+  const { data: products } = useCollection<Product>(collection(db, 'products'))
+  const { data: blogs } = useCollection<BlogPost>(collection(db, 'blog'))
 
-  // Count users with no subscription (subscription field is null or not set)
-  const noSubscriptionCount = useFirestoreCount(
-    query(usersCollection, where('subscription', '==', null))
-  )
+  // Computed counts
+  const totalUsers = computed(() => users.value?.length ?? 0)
+  const totalProducts = computed(() => products.value?.length ?? 0)
+  const totalBlogs = computed(() => blogs.value?.length ?? 0)
 
   return {
-    standardCount,
-    proCount,
-    noSubscriptionCount
+    users,
+    products,
+    blogs,
+    totalUsers,
+    totalProducts,
+    totalBlogs
   }
 }

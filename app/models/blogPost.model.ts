@@ -9,7 +9,7 @@ export interface Author {
 }
 
 // Define the BlogPost interface.
-export interface BlogPost {
+export interface BlogPost extends Sluggable {
   title: string
   content: string
   metaDescription: string

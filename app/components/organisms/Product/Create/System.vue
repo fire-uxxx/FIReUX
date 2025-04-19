@@ -1,70 +1,102 @@
 <template>
-  <div class="product-create-container">
-    <h2>Create Product</h2>
-    <form @submit.prevent="handleCreate">
-      <UInput v-model="product.name" placeholder="Product Name" />
-      <UInput v-model="product.description" placeholder="Product Description" />
-      <UInput v-model.number="product.price" placeholder="Price" type="number" />
-      <UInput v-model="product.image" placeholder="Image URL" />
-      <div class="checkbox-group">
-        <label>
-          <input type="checkbox" v-model="product.active" /> Active
-        </label>
+  <UTabs v-model="selectedTab" :items="tabItems">
+    <template #write>
+      <div class="tab">
+        <UInput v-model="product.name" placeholder="Product Name" />
+        <div class="editor-container">
+          <ClientOnly>
+            <QuillEditor
+              v-model:content="product.description"
+              content-type="html"
+              theme="snow"
+            />
+          </ClientOnly>
+        </div>
+        <UInput v-model.number="product.price" placeholder="Price" type="number" />
+        <UInput v-model="product.image" placeholder="Image URL" />
+        <OrganismsProductCreateAdvanced v-model:product="product" />
+        <OrganismsProductCreateImages v-model:product="product" />
       </div>
-      <UButton type="submit">Create Product</UButton>
-    </form>
-    <pre v-if="createdProduct">{{ createdProduct }}</pre>
+    </template>
 
-  </div>
+    <template #preview>
+      <div class="tab">
+        <OrganismsProductCreatePreview v-model:product="product" />
+        <div class="actions">
+          <UButton @click="handleCreate">Create Product</UButton>
+        </div>
+      </div>
+    </template>
+  </UTabs>
 </template>
 
 <script setup lang="ts">
 
-// Initialize an empty product object
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+
+const { createProduct, generateSlug } = useProducts()
 const product = ref<Product>({
   id: '',
+  slug: '',
   name: '',
   description: '',
   price: 0,
   currency: 'USD',
   image: '',
+  galleryImages: [],
   active: false
 })
 
-// Create a ref to hold the created product JSON string
-const createdProduct = ref('')
-const { createProduct } = useProducts()
+watch(() => product.value.name, (name = '') => {
+  product.value.slug = generateSlug(name)
+})
 
-// Function to handle form submission
-const handleCreate = async () => {
+const selectedTab = ref('write')
+const tabItems = ref<Array<{ label: string; icon: string; value: string; slot: string }>>([
+  { label: 'Write', icon: 'i-lucide-edit', value: 'write', slot: 'write' },
+  { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
+])
+
+async function handleCreate() {
   try {
-    const response = await createProduct(product.value)
-    console.log('Product created', response)
-    createdProduct.value = JSON.stringify(response, null, 2)
+    const created = await createProduct(product.value)
+    console.log('Blog post created', created)
   } catch (err) {
-    console.error('Error creating product:', err)
-    createdProduct.value = `Error: ${err instanceof Error ? err.message : err}`
+    console.error('Error creating blog post:', err)
   }
 }
 </script>
 
-<style scoped>
-.product-create-container {
+<style scoped lang="css">
+.tab {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 720px;
-  margin: 0 auto;
 }
-
-.checkbox-group {
-  display: flex;
-  align-items: center;
+.tab > * {
+  margin-bottom: 1rem;
 }
-
-form {
+.tab > *:last-child {
+  margin-bottom: 0;
+}
+.editor-container {
+  margin-bottom: 1rem;
+}
+:deep(.ql-editor) {
+  min-height: 200px;
+}
+:deep(.ql-toolbar.ql-snow) {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding-inline: 0 !important;
+}
+:deep(.ql-container.ql-snow) {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.actions {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  margin-top: 1rem;
 }
 </style>

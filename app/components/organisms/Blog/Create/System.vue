@@ -1,6 +1,5 @@
 <template>
   <UTabs v-model="selectedTab" :items="tabItems">
-    <!-- Write Tab -->
     <template #write>
       <div class="tab">
         <UInput v-model="blogPost.title" placeholder="Blog Title" />
@@ -40,7 +39,6 @@
         <OrganismsBlogCreatePreview v-model:blog-post="blogPost" />
         <div class="actions">
           <UButton @click="handleCreate">Create Blog Post</UButton>
-          <pre v-if="createdPost">{{ createdPost }}</pre>
         </div>
       </div>
     </template>
@@ -98,16 +96,13 @@ const tabItems = ref<Array<{ label: string; icon: string; value: string; slot: s
 // Placeholder for product dropdown
 const productItems = ref<{ label: string; value: string }[]>([])
 
-const createdPost = ref<string>('')
 
 async function handleCreate() {
   try {
     const created = await createBlogPost(blogPost.value)
     console.log('Blog post created', created)
-    createdPost.value = JSON.stringify(created, null, 2)
   } catch (err) {
     console.error('Error creating blog post:', err)
-    createdPost.value = `Error: ${err instanceof Error ? err.message : err}`
   }
 }
 </script>

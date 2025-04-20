@@ -49,7 +49,13 @@
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
-const { computeReadingTime, createBlogPost, getAuthor, getDefaultImages, generateSlug } = useBlogPosts()
+const {
+  computeReadingTime,
+  createBlogPost,
+  getAuthor,
+  getDefaultImages,
+  generateSlug
+} = useBlogPosts()
 
 const blogPost = ref<BlogPost>({
   title: '',
@@ -78,24 +84,31 @@ onMounted(() => {
   blogPost.value.socialImage = socialImage
 })
 
-watch(() => blogPost.value.content, (content = '') => {
-  blogPost.value.readingTime = computeReadingTime(content)
-})
+watch(
+  () => blogPost.value.content,
+  (content = '') => {
+    blogPost.value.readingTime = computeReadingTime(content)
+  }
+)
 
-watch(() => blogPost.value.title, (title = '') => {
-  blogPost.value.slug = generateSlug(title)
-})
+watch(
+  () => blogPost.value.title,
+  (title = '') => {
+    blogPost.value.slug = generateSlug(title)
+  }
+)
 
 // Tab state
 const selectedTab = ref('write')
-const tabItems = ref<Array<{ label: string; icon: string; value: string; slot: string }>>([
+const tabItems = ref<
+  Array<{ label: string; icon: string; value: string; slot: string }>
+>([
   { label: 'Write', icon: 'i-lucide-edit', value: 'write', slot: 'write' },
   { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
 ])
 
 // Placeholder for product dropdown
 const productItems = ref<{ label: string; value: string }[]>([])
-
 
 async function handleCreate() {
   try {
@@ -108,29 +121,5 @@ async function handleCreate() {
 </script>
 
 <style scoped lang="css">
-.tab {
-  display: flex;
-  flex-direction: column;
-}
-.tab > * {
-  margin-bottom: 1rem;
-}
-.tab > *:last-child {
-  margin-bottom: 0;
-}
-.editor-container {
-  margin-bottom: 1rem;
-}
-:deep(.ql-editor) {
-  min-height: 200px;
-}
-:deep(.ql-toolbar.ql-snow) {
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  padding-inline: 0 !important;
-}
-:deep(.ql-container.ql-snow) {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
+/* Removed CSS for normalization */
 </style>

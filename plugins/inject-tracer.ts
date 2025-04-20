@@ -34,6 +34,30 @@ export default defineNuxtPlugin(() => {
         return // suppress repeat warnings
       }
 
+      const isVueFireSSRWarning =
+        typeof firstArg === 'string' &&
+        firstArg.includes(
+          '[VueFire SSR]: Could not get the path of the data source'
+        )
+
+      if (isVueFireSSRWarning) {
+        console.groupCollapsed(
+          '%c⚠️ [VueFire SSR Warning]',
+          'color: yellow; font-weight: bold;'
+        )
+        originalWarn('[VueFire SSR Warning Triggered]:', ...args)
+        console.log('%c🔍 Possible cause:', 'color: lightblue;')
+        console.log(
+          '- This warning is related to VueFire struggling to resolve a data source path during SSR.\n' +
+            '- Ensure that VueFire composables like useCollection or useDocument are used in valid contexts.\n' +
+            '- Check if Firebase operations are being conditionally handled for SSR.'
+        )
+        console.log('%c🔎 Stack trace for investigation:', 'color: lightgray;')
+        console.trace()
+        console.groupEnd()
+        return // suppress repeat warnings for VueFire SSR
+      }
+
       originalWarn(...args)
     }
   }

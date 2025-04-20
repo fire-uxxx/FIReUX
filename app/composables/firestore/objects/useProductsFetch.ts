@@ -1,6 +1,3 @@
-import { useFirestoreFetch } from '@/composables/firestore/operations/useFirestoreFetch'
-import type { Product } from '@/models/product.model'
-import type { Ref } from 'vue'
 
 export function useProductFetch(): {
   productCollection: Ref<Product[] | undefined>

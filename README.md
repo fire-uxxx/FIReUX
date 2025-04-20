@@ -97,8 +97,14 @@ This model allows multiple tenants to share a single Firebase backend, using cus
   ```
   apps/{appId}/users/{userId}
   apps/{appId}/jobs/{jobId}
+  apps/{appId}/products/{productId}
   ```
-- Apply Firestore Rules to restrict access by `appId`.
+- Apply Firestore Rules to restrict access by `appId`:
+  ```firestore
+  match /apps/{appId}/{collection}/{docId} {
+    allow read, write: if request.auth.token.appId == appId;
+  }
+  ```
 
 ⚠️ This approach requires strict rule management and deeper familiarity with Firebase security.
 
@@ -140,7 +146,6 @@ This flexibility allows you to grow from a single-template MVP to a full SaaS pl
 
 🔥 FIReUX powers FIReMVP & future SaaS templates.
 👉 Visit FIReUX for details.
-
 
 ---
 

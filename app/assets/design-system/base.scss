@@ -29,12 +29,11 @@ body, h1, h2, h3, h4, h5, h6, p {
 /* General Resets & Base Typography */
 body {
   font-family: var(--font-sans);
-  font-size: var(--text-base);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--ui-bg, #fff);
-  color: var(--ui-text, #111);
+  background-color: var(--ui-bg);
+  color: var(--ui-text);
 }
 
 /* Typography */

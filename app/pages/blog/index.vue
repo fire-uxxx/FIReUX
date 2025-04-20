@@ -4,13 +4,10 @@
     <h1>Blog</h1>
     <p>Welcome to our blog. Stay tuned for updates!</p>
     <OrganismsBlogList :posts="posts" />
-
-    {{posts}}
   </div>
 </template>
 
 <script setup lang="ts">
-
 // blogPostsCollection is already a Ref<BlogPost[]>
 const { blogPostsCollection: posts } = useBlogPosts()
 </script>

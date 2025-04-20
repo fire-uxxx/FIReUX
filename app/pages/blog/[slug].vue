@@ -1,6 +1,6 @@
 <template>
-  <div v-if="post">
-    <OrganismsBlogFullPost :post="post" />
+  <div v-if="post" class="page">
+    <OrganismsBlogCardsPage :post="post" />
   </div>
   <div v-else>
     <h1>404 – Blog post not found</h1>

@@ -20,10 +20,6 @@ export function useUser() {
 
   return {
     user,
-    isAdmin,
-    ...useUserUpdate(),
-    ...useUserDelete(),
-    ...useUserCreate(),
-    ...useUserFetch()
+    isAdmin
   }
 }

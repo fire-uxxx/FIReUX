@@ -2,7 +2,6 @@ import { doc, setDoc, addDoc, collection } from 'firebase/firestore'
 import { useFirestore as vuefireFirestore, useCurrentUser } from 'vuefire'
 import { useRuntimeConfig } from '#app'
 
-
 export function useFirestoreCreate() {
   const db = vuefireFirestore()
   const currentUser = useCurrentUser()
@@ -11,11 +10,11 @@ export function useFirestoreCreate() {
   } = useRuntimeConfig()
 
   // Create a new document using slug as the document ID
-  async function addSluggedDocument<T extends Sluggable>(
+  async function addSluggedDocument<T extends Partial<Sluggable>>(
     collectionName: string,
     data: T
   ): Promise<string> {
-    const { slug, ...rest } = data as { slug: string }
+    const { slug, ...rest } = data as { slug?: string }
 
     if (!slug) {
       return Promise.reject('[addSluggedDocument] Slug is required.')

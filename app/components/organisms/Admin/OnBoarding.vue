@@ -7,11 +7,17 @@
     </div>
 
     <div v-else-if="step === 'missingUser'" class="anon-warning">
-         <OrganismsAuthAuthenticated />
+      <OrganismsAuthAuthenticated />
     </div>
 
     <div v-else-if="step === 'pin'" class="pin-section">
-      <UPinInput v-model="pin" :length="4" type="number" placeholder="○" @complete="checkPin" />
+      <UPinInput
+        v-model="pin"
+        :length="4"
+        type="number"
+        placeholder="○"
+        @complete="checkPin"
+      />
     </div>
 
     <div v-else class="edit-component">
@@ -20,11 +26,13 @@
       </div>
       <OrganismsAdminOnboardingVariables />
       <div v-if="allEnvValid">
-        <UButton block  @click="createApp">Create App</UButton>
+        <UButton block @click="createApp">Create App</UButton>
       </div>
       <p v-else class="setup-reminder">
-        ✅ All required environment variables must be set before you can create an app.<br>
-        After updating your credentials, restart your server: <code>npm run dev</code>.
+        ✅ All required environment variables must be set before you can create
+        an app.<br />
+        After updating your credentials, restart your server:
+        <code>npm run dev</code>.
       </p>
     </div>
   </UContainer>
@@ -35,7 +43,6 @@
 const pin = ref([])
 const isUnlocked = ref(false)
 const currentUser = useCurrentUser()
-const { createApp } = useApp()
 const { user } = useUser()
 
 // Environment check
@@ -61,7 +68,6 @@ function checkPin() {
     isUnlocked.value = true
   }
 }
-
 </script>
 
 <style scoped>

@@ -1,18 +1,30 @@
 <template>
   <div class="preview">
     <h2>{{ blogPost.title }}</h2>
-    <p><em>By {{ blogPost.author.display_name }} • {{ blogPost.readingTime }}</em></p>
+    <p v-if="blogPost.author">
+      <em
+        >By {{ blogPost.author.display_name }} • {{ blogPost.readingTime }}</em
+      >
+    </p>
     <div v-if="blogPost.featuredImage" class="preview-image">
-      <img :src="blogPost.featuredImage" alt="Featured" />
+      <img :src="blogPost.featuredImage" alt="Featured" >
     </div>
-    <div v-html="blogPost.content" class="preview-content"></div>
+    <div class="preview-content">
+      <p v-for="(paragraph, index) in parsedContent" :key="index">
+        {{ paragraph }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { BlogPost } from '@/models/blogPost.model'
 
-defineProps<{ blogPost: BlogPost }>()
+const props = defineProps<{ blogPost: Partial<BlogPost> }>()
+
+const parsedContent = computed(() => {
+  return props.blogPost.content?.split('\n').filter(Boolean) || []
+})
 </script>
 
 <style scoped>

@@ -17,6 +17,34 @@ export function useMediaStorage() {
     return result
   }
 
+  const uploadBlogImage = async ({ file, slug, type }) => {
+    console.log(
+      `[MediaStorage] Uploading ${type} image for blog with slug: ${slug}`
+    )
+    if (!file || !(file instanceof File)) {
+      console.error('[MediaStorage] ❌ Invalid file input')
+      return null
+    }
+
+    const path = `blog/${slug}/${type}Image.jpg`
+    try {
+      const resizedBlob = await resizeImageBlob(file, 512)
+      console.log('[MediaStorage] ✅ Image blob resized:', resizedBlob)
+      const downloadUrl = await uploadBlob(resizedBlob, path)
+      console.log(
+        '[MediaStorage] ✅ Image uploaded successfully. Final URL:',
+        downloadUrl
+      )
+      return downloadUrl
+    } catch (err) {
+      console.error(
+        '[MediaStorage] ❌ Error uploading blog image:',
+        err.message
+      )
+      return null
+    }
+  }
+
   const processImageUrl = async ({ url = '', path, defaultImgPath }) => {
     console.log('[MediaStorage] 🌐 Starting processImageUrl')
     if (!path || typeof path !== 'string' || path.trim() === '') {
@@ -34,15 +62,24 @@ export function useMediaStorage() {
     } catch (err) {
       console.warn('[MediaStorage] ⚠️ Fallback to proxy due to:', err.message)
       try {
-        const proxyEndpoint = `/api/proxy-google-avatar-upload?photo_url=${encodeURIComponent(finalUrl)}&storagePath=${encodeURIComponent(path)}`
+        const proxyEndpoint = `/api/proxy-google-avatar-upload?photo_url=${encodeURIComponent(
+          finalUrl
+        )}&storagePath=${encodeURIComponent(path)}`
         const response = await fetch(proxyEndpoint)
         const result = await response.json()
-        if (!response.ok || !result.firebaseUrl) throw new Error(result.message || 'Proxy failed.')
+        if (!response.ok || !result.firebaseUrl)
+          throw new Error(result.message || 'Proxy failed.')
 
-        console.log('[MediaStorage] ✅ Proxy upload succeeded:', result.firebaseUrl)
+        console.log(
+          '[MediaStorage] ✅ Proxy upload succeeded:',
+          result.firebaseUrl
+        )
         return result.firebaseUrl
       } catch (proxyError) {
-        console.error('[MediaStorage] ❌ Proxy upload failed:', proxyError.message)
+        console.error(
+          '[MediaStorage] ❌ Proxy upload failed:',
+          proxyError.message
+        )
         return null
       }
     }
@@ -150,6 +187,7 @@ export function useMediaStorage() {
   return {
     uploadProfileImage,
     processImageUrl,
-    processImageFile
+    processImageFile,
+    uploadBlogImage
   }
 }

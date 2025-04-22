@@ -1,37 +1,36 @@
 <template>
   <div class="image-settings">
-    <UInput
-      v-model="local.featuredImage"
-      placeholder="Featured Image URL"
-      label="Featured Image"
-    />
-    <UInput
-      v-model="local.socialImage"
-      placeholder="Social Share Image URL"
-      label="Social Image"
-    />
+    <input
+      type="file"
+      accept="image/*"
+      @change="handleImageSelection('featuredImage', $event)"
+    >
+    <input
+      type="file"
+      accept="image/*"
+      @change="handleImageSelection('socialImage', $event)"
+    >
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import type { BlogPost } from '@/models/blogPost.model'
 
-const props = defineProps<{ blogPost: BlogPost }>()
-const emit = defineEmits<{ (e: 'update:blogPost', value: BlogPost): void }>()
+const props = defineProps<{ blogPost: Partial<BlogPost> }>()
+const emit = defineEmits<{
+  (e: 'update:blogPost', value: Partial<BlogPost>): void
+}>()
 
-const local = reactive({
-  featuredImage: props.blogPost.featuredImage,
-  socialImage: props.blogPost.socialImage
-})
-
-watch(local, () => {
-  emit('update:blogPost', {
-    ...props.blogPost,
-    featuredImage: local.featuredImage,
-    socialImage: local.socialImage
-  })
-})
+function handleImageSelection(
+  field: 'featuredImage' | 'socialImage',
+  event: Event
+) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (file) {
+    emit('update:blogPost', { ...props.blogPost, [field]: file })
+  }
+}
 </script>
 
 <style scoped>

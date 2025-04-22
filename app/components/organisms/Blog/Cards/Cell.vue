@@ -1,50 +1,31 @@
 <template>
-  <div class="card" @click="navigateToPost">
-    <header class="card-header">
-      <h3 class="card-title">{{ props.post.title }}</h3>
-      <p class="card-meta">{{ props.post.metaDescription }}</p>
-    </header>
-  </div>
+  <UCard class="card" variant="outline" @click="navigateToPost">
+    <template #header>
+      <h3>{{ post.title }}</h3>
+    </template>
+    <template #body>
+      <p>{{ post.metaDescription }}</p>
+      <img :src="post.featuredImage" :alt="post.title" />
+    </template>
+    <template #footer>
+      <p>Written by {{ post.author.display_name }}</p>
+    </template>
+  </UCard>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { defineProps } from 'vue'
+import type { BlogPost } from '@/models/blogPost.model'
 
-const props = defineProps<{ post: BlogPost }>()
-const router = useRouter()
+defineProps<{ post: BlogPost }>()
 
 function navigateToPost() {
-  router.push(`/blog/${props.post.slug}`)
+  // Logic to navigate to the blog post
 }
 </script>
 
 <style scoped>
 .card {
-  cursor: pointer;
-  padding: var(--space-4);
-  background: var(--ui-bg-elevated);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: scale(1.02);
-}
-
-.card-header {
-  margin-bottom: var(--space-2);
-}
-
-.card-title {
-  font-weight: var(--font-weight-semibold);
-  font-size: 1.2rem;
-  margin-bottom: var(--space-1);
-}
-
-.card-meta {
-  font-size: 0.875rem;
-  color: var(--ui-secondary);
+  @use '@/assets/design-system/components/card.scss' as *;
 }
 </style>

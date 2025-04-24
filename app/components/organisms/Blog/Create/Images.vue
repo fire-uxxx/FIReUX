@@ -14,8 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
-import type { BlogPost } from '@/models/blogPost.model'
+
 
 const props = defineProps<{ blogPost: Partial<BlogPost> }>()
 const emit = defineEmits<{

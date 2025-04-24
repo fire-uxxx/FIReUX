@@ -1,21 +1,31 @@
-import { defineNuxtPlugin, useRuntimeConfig } from '#app'
+import { defineNuxtPlugin } from '#app'
 import { initializeApp, getApps, getApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth'
 
 export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig().public
+  const {
+    public: {
+      FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID,
+      FIREBASE_STORAGE_BUCKET,
+      FIREBASE_MESSAGING_SENDER_ID,
+      FIREBASE_APP_ID,
+      FIREBASE_MEASUREMENT_ID
+    }
+  } = useRuntimeConfig()
 
   // ✅ Ensure only one Firebase app instance is initialized
   let app = getApps().length
     ? getApp()
     : initializeApp({
-        apiKey: config.FIREBASE_API_KEY,
-        authDomain: config.FIREBASE_AUTH_DOMAIN,
-        projectId: config.FIREBASE_PROJECT_ID,
-        storageBucket: config.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
-        appId: config.FIREBASE_APP_ID,
-        measurementId: config.FIREBASE_MEASUREMENT_ID
+        apiKey: FIREBASE_API_KEY,
+        authDomain: FIREBASE_AUTH_DOMAIN,
+        projectId: FIREBASE_PROJECT_ID,
+        storageBucket: FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+        appId: FIREBASE_APP_ID,
+        measurementId: FIREBASE_MEASUREMENT_ID
       })
 
   // ✅ Initialize Firebase Authentication

@@ -1,16 +1,20 @@
 export function useProducts() {
+  const { firestoreFetchCollection, firestoreFetchDoc } = useFirestoreManager()
 
-    function generateSlug(title: string): string {
-      return title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '')
-    }
+  function fetchProducts(): { collectionData: Ref<Product[] | undefined> } {
+    return firestoreFetchCollection<Product>('products')
+  }
+
+  function fetchProductById(id: string): Ref<Product | null | undefined> {
+    return firestoreFetchDoc<Product>('products', id)
+  }
+
   return {
-    ...useProductFetch(),
+    fetchProducts,
+    fetchProductById,
     ...useProductCreate(),
-    generateSlug,
-    // ...useProductDelete(),
-    // ...useProductUpdate()
+    ...useProductUpdate(),
+    ...useProductDelete(),
+    ...useProductUtils()
   }
 }

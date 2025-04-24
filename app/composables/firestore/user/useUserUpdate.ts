@@ -1,6 +1,5 @@
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc, arrayRemove } from 'firebase/firestore'
 import { useFirestore, useCurrentUser } from 'vuefire'
-import type { User } from '@/models/user.model'
 
 export function useUserUpdate() {
   const db = useFirestore()
@@ -113,6 +112,24 @@ export function useUserUpdate() {
     return Math.random().toString(36).substring(2, 10)
   }
 
+  async function updateDependents(
+    userId: string,
+    adminAppIds: string[]
+  ): Promise<void> {
+    try {
+      for (const appId of adminAppIds) {
+        const appRef = doc(db, 'apps', appId)
+        await updateDoc(appRef, {
+          admins: arrayRemove(userId)
+        })
+      }
+      console.log(`✅ Successfully updated dependents for user: ${userId}`)
+    } catch (error) {
+      console.error(`❌ Error updating dependents for user: ${userId}`, error)
+      throw error
+    }
+  }
+
   return {
     updateUser,
     updateEmail,
@@ -120,6 +137,7 @@ export function useUserUpdate() {
     updateHandle,
     updateAvatar,
     populateCurrentUser,
-    updateUserFor
+    updateUserFor,
+    updateDependents
   }
 }

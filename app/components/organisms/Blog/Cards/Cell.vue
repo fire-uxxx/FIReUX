@@ -14,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-import type { BlogPost } from '@/models/blogPost.model'
 
 defineProps<{ post: BlogPost }>()
 
@@ -25,7 +23,5 @@ function navigateToPost() {
 </script>
 
 <style scoped>
-.card {
-  @use '@/assets/design-system/components/card.scss' as *;
-}
+
 </style>

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     firebase: {
       gen: 2 // ✅ Using Firebase Gen 2 Functions
     },
-     prerender: {
+    prerender: {
       ignore: ['/']
     },
     devServer:
@@ -37,9 +37,16 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/content'
   ],
-  studio: {
-    enabled: true
+  // Run ESLint at build time and fail on any errors or warnings
+  eslint: {
+    lintOnStart: true,
+    failOnError: true,
+    failOnWarning: true,
+    fix: false
   },
+
+  studio: { enabled: true },
+
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
   // ✅ Shared Firebase plugin
@@ -64,8 +71,8 @@ export default defineNuxtConfig({
 
       // ✅ PWA Metadata for FIReUX
       DOMAIN: process.env.DOMAIN || 'https://fireux.app',
-      PWA_APP_NAME: process.env.PWA_APP_NAME || 'FIReUX',
-      PWA_APP_SHORT_NAME: process.env.PWA_APP_SHORT_NAME || 'FIReUX',
+      PWA_APP_NAME: process.env.PWA_APP_NAME,
+      PWA_APP_SHORT_NAME: process.env.PWA_APP_SHORT_NAME,
       PWA_THEME_COLOR: process.env.PWA_THEME_COLOR || '#FACC15',
       PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR || '#FAFAFA',
       // ✅ Stripe Public Key (safe to expose)
@@ -73,13 +80,13 @@ export default defineNuxtConfig({
       PIN: process.env.PIN,
       APP_ID: process.env.APP_ID,
       PROJECT_NAME: process.env.PROJECT_NAME
-
     },
     // ✅ Stripe Secret Key (kept private)
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
   },
 
   vuefire: {
+    ssr: true,
     config: {
       apiKey: process.env.FIREBASE_API_KEY,
       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -125,13 +132,15 @@ export default defineNuxtConfig({
       type: 'module'
     }
   },
+
   future: {
     compatibilityVersion: 4
   },
+
   compatibilityDate: '2025-03-17',
 
   content: {
     documentDriven: true,
-    apiUrl: 'https://nuxt.studio', // The URL of the Nuxt Studio API
-  },
+    apiUrl: 'https://nuxt.studio' // The URL of the Nuxt Studio API
+  }
 })

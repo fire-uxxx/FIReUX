@@ -39,6 +39,7 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const { createProduct, generateSlug } = useProducts()
+
 const product = ref<Product>({
   id: '',
   slug: '',
@@ -48,7 +49,8 @@ const product = ref<Product>({
   currency: 'USD',
   image: '',
   galleryImages: [],
-  active: false
+  active: false,
+  stock: 0 // Added missing stock property
 })
 
 watch(

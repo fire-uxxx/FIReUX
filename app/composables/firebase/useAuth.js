@@ -7,18 +7,19 @@ import {
   signOut,
   GoogleAuthProvider
 } from 'firebase/auth'
-import { useRuntimeConfig } from '#app'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export function useAuth() {
   const auth = useFirebaseAuth()
   const currentUser = useCurrentUser()
-  const config = useRuntimeConfig()
-  const setUserAppIdClaim = async (user) => {
+  const {
+    public: { APP_ID }
+  } = useRuntimeConfig()
+  const setUserAppIdClaim = async user => {
     try {
       const functions = getFunctions()
       const setCustomClaims = httpsCallable(functions, 'setAppIdClaim')
-      await setCustomClaims({ uid: user.uid, appId: config.public.APP_ID })
+      await setCustomClaims({ uid: user.uid, appId: APP_ID })
       await user.getIdToken(true)
     } catch (error) {
       console.error('❌ Failed to set custom claims:', error.message)

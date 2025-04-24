@@ -1,7 +1,3 @@
-import { useCurrentUser } from 'vuefire'
-import { useRuntimeConfig } from '#app'
-import type { Product } from '@/models/product.model'
-
 export function useProductCreate() {
   const currentUser = useCurrentUser()
   const {
@@ -17,8 +13,7 @@ export function useProductCreate() {
 
     const userId = currentUser.value.uid
 
-    const defaultProduct: Product = {
-      id: '',
+    const defaultProduct: Partial<Product> = {
       slug: '',
       name: 'Untitled Product',
       description: 'No description provided.',
@@ -29,7 +24,7 @@ export function useProductCreate() {
       active: true,
       metadata: {},
       prices: [],
-      productType: 'physical',
+      productType: ProductType.Physical,
       secondaryText: '',
       stock: 0
     }

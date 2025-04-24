@@ -1,12 +1,16 @@
 // composables/firestore/operations/useFirestoreUpdate.js
-import { doc, updateDoc, getFirestore } from 'firebase/firestore'
-import { getApp } from 'firebase/app'
+import { doc, updateDoc } from 'firebase/firestore'
+import { useFirestore } from 'vuefire'
+import type { FieldValue } from 'firebase/firestore'
 
 export function useFirestoreUpdate() {
-  const db = getFirestore(getApp(), process.env.VUEFIRE_DATABASE_ID)
+  const db = useFirestore()
 
-  // Update a document by its collection name and document ID
-  async function updateDocument(collectionName, documentId, updates) {
+  async function updateDocument(
+    collectionName: string,
+    documentId: string,
+    updates: { [key: string]: FieldValue | Partial<unknown> | undefined }
+  ) {
     if (!collectionName || !documentId || !updates) {
       return Promise.reject(
         '❌ Collection name, document ID, and updates are required.'

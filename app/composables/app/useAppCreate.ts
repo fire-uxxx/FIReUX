@@ -1,22 +1,10 @@
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { useFirestore, useCurrentUser } from 'vuefire'
-import { useRuntimeConfig, useNuxtApp } from 'nuxt/app'
-import { useAppUpdate } from './useAppUpdate'
 
-export function useAppCreate(appId: string) {
+export function useAppCreate(appId: string, appName: string) {
   return () => {
-    const nuxtApp = useNuxtApp() // Ensure we are in a valid Nuxt context
-    if (!nuxtApp) {
-      throw new Error('useAppCreate must be called within a Nuxt context.')
-    }
-
-    const config = useRuntimeConfig()
     const db = useFirestore()
     const currentUser = useCurrentUser()
-    const {
-      public: { PWA_APP_NAME }
-    } = config
-    const appName = PWA_APP_NAME?.trim() || ''
 
     async function createApp(): Promise<void> {
       if (!currentUser.value) {
@@ -48,7 +36,7 @@ export function useAppCreate(appId: string) {
         console.log(`Created app with id: ${appId}`)
 
         // Now add the current user as admin.
-        const { addAdmin } = useAppUpdate()
+        const { addAdmin } = useAppUpdate(appId)
         await addAdmin(uid)
         console.log(`Admin set for app ${appId} using user ${uid}`)
       } catch (error) {

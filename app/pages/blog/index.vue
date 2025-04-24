@@ -3,7 +3,8 @@
   <div class="page">
     <h1>Blog</h1>
     <p>Welcome to our blog. Stay tuned for updates!</p>
-    <OrganismsBlogList :posts="posts" />
+    {{ posts }}
+    <!-- <OrganismsBlogList :posts="posts" /> -->
   </div>
 </template>
 

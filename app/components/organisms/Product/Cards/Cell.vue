@@ -16,9 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-import { useRouter } from 'vue-router'
-import type { Product } from '@/models/product.model'
 
 const props = defineProps<{ product: Product }>()
 const router = useRouter()

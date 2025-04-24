@@ -1,24 +1,30 @@
-export async function useApp() {
-  const nuxtApp = useNuxtApp() // Ensure we are in a valid Nuxt context
-  if (!nuxtApp) {
-    throw new Error('useApp must be called within a Nuxt context.')
-  }
+import { doc } from 'firebase/firestore'
+import { useDocument, useFirestore } from 'vuefire'
+import type { Ref } from 'vue'
+import { computed } from 'vue'
 
+export function useApp(): {
+  app: Ref<App | null | undefined>
+  hasAdmin: Ref<boolean>
+} {
   const {
-    public: { APP_ID }
+    public: { APP_ID, PWA_APP_NAME }
   } = useRuntimeConfig()
-  const { firestoreFetchDoc } = useFirestoreFetch()
+  const db = useFirestore()
 
-  // Fetch the app document from the 'apps' collection by APP_ID.
-  const app: Ref<App | null | undefined> = await firestoreFetchDoc<App>(
-    'apps',
-    APP_ID
+  // Current app document reference
+  const appDocRef = computed(() => (APP_ID ? doc(db, 'apps', APP_ID) : null))
+  const { data: app } = useDocument<App>(appDocRef)
+
+  // Check if the current user is an admin
+  const hasAdmin = computed(
+    () => Array.isArray(app.value?.admins) && app.value?.admins.length > 0
   )
 
   return {
-    ...useAppCreate(APP_ID)(), // Defer execution of useAppCreate
-    ...useAppRead(app),
-    ...useAppUpdate(),
-    ...(app.value ? useAppDelete(APP_ID, app.value) : {})
+    app,
+    hasAdmin,
+    ...useAppCreate(APP_ID, PWA_APP_NAME),
+    ...useAppUpdate(APP_ID)
   }
 }

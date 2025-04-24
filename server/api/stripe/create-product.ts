@@ -3,22 +3,20 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3'
 import Stripe from 'stripe'
 import admin from '../../utils/firebase'
-import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async event => {
-  const config = useRuntimeConfig()
-  const stripeSecretKey = config.STRIPE_SECRET_KEY
+  const STRIPE_SECRET_KEY = useRuntimeConfig().STRIPE_SECRET_KEY
 
-  if (!stripeSecretKey) {
+  if (!STRIPE_SECRET_KEY) {
     setResponseStatus(event, 500)
     return { error: 'Missing Stripe Secret Key' }
   }
 
-  const stripe = new Stripe(stripeSecretKey, {
+  const stripe = new Stripe(STRIPE_SECRET_KEY, {
     apiVersion: '2025-02-24.acacia'
   })
 
-  if (event.req.method !== 'POST') {
+  if (event.node.req.method !== 'POST') {
     setResponseStatus(event, 405)
     return { error: 'Method Not Allowed' }
   }
@@ -46,12 +44,15 @@ export default defineEventHandler(async event => {
       currency: product.currency || 'usd'
     })
 
+    const slug = product.slug // Use the slug generated earlier in the frontend
+
     const db = admin.firestore()
     await db.collection(collection).add({
       userId,
       appId,
       stripeProductId: stripeProduct.id,
       stripePriceId: stripePrice.id,
+      slug,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
       status: 'active',
       ...product // Optional: store the original product info for convenience

@@ -1,6 +1,5 @@
 import { doc, setDoc, addDoc, collection } from 'firebase/firestore'
 import { useFirestore as vuefireFirestore, useCurrentUser } from 'vuefire'
-import { useRuntimeConfig } from '#app'
 
 export function useFirestoreCreate() {
   const db = vuefireFirestore()

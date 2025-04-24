@@ -1,7 +1,5 @@
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { useFirestore, useCurrentUser } from 'vuefire'
-import { useRuntimeConfig, navigateTo } from 'nuxt/app'
-import { useUserUpdate } from './useUserUpdate'
 
 export function useUserCreate() {
   const { populateCurrentUser } = useUserUpdate()

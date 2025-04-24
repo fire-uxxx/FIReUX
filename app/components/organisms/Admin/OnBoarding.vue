@@ -64,7 +64,11 @@ const step = computed(() => {
 // PIN logic
 function checkPin() {
   const input = pin.value.join('')
-  if (input === useRuntimeConfig().public.PIN) {
+  const {
+    public: { PIN }
+  } = useRuntimeConfig()
+
+  if (input === PIN) {
     isUnlocked.value = true
   }
 }

@@ -1,25 +1,23 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3'
 import Stripe from 'stripe'
 import admin from '../../utils/firebase'
-import { useRuntimeConfig } from '#imports' // Auto-imported in Nuxt 3
 
 export default defineEventHandler(async event => {
-  // Get runtime configuration
-  const config = useRuntimeConfig()
+  const {
+    public: { DOMAIN }
+  } = useRuntimeConfig()
 
-  // Ensure Stripe Secret Key is available
-  const stripeSecretKey = config.STRIPE_SECRET_KEY
-  if (!stripeSecretKey) {
+  const STRIPE_SECRET_KEY = useRuntimeConfig().STRIPE_SECRET_KEY
+
+  if (!STRIPE_SECRET_KEY) {
     console.error('Stripe Secret Key is missing in runtimeConfig.')
     setResponseStatus(event, 500)
     return { error: 'Internal Server Error: Stripe Secret Key is missing.' }
   }
 
-  // Define a constant currency
   const currency = 'usd'
 
-  // Initialize Stripe
-  const stripe = new Stripe(stripeSecretKey, {
+  const stripe = new Stripe(STRIPE_SECRET_KEY, {
     apiVersion: '2025-02-24.acacia'
   })
 
@@ -37,10 +35,8 @@ export default defineEventHandler(async event => {
       return { error: 'Missing required parameters', received: body }
     }
 
-    // Get the front-end URL from the public runtime config
-    const frontendUrl = config.public.DOMAIN || 'https://fallback-url.com/'
+    const frontendUrl = DOMAIN || 'https://fallback-url.com/'
 
-    // Create the Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -48,7 +44,7 @@ export default defineEventHandler(async event => {
           price_data: {
             currency,
             product_data: { name: product },
-            unit_amount: amount // in cents
+            unit_amount: amount
           },
           quantity: 1
         }
@@ -58,19 +54,17 @@ export default defineEventHandler(async event => {
       cancel_url: `${frontendUrl}/cancel`
     })
 
-    // Write a record to Firestore
     const db = admin.firestore()
     await db.collection(collection).add({
       userId,
       product,
-      amount, // stored in cents
+      amount,
       sessionId: session.id,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
       status: 'pending',
       currency
     })
 
-    // Return the session ID and URL for client redirection
     return {
       id: session.id,
       url: session.url

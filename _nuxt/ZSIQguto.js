@@ -1,0 +1,1 @@
+import{j as r,c as s,i as t,a3 as n}from"./DLnnSrV4.js";const o={};function a(e,c){return t(),s("tr",null,[n(e.$slots,"default")])}const _=Object.assign(r(o,[["render",a]]),{__name:"ProseTr"});export{_ as default};

@@ -1,0 +1,1 @@
+import{j as s,c as r,i as n,a3 as o}from"./DLnnSrV4.js";const t={};function a(e,c){return n(),r("li",null,[o(e.$slots,"default")])}const _=Object.assign(s(t,[["render",a]]),{__name:"ProseLi"});export{_ as default};

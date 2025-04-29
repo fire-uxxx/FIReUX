@@ -1,1 +1,0 @@
-import{j as n,c as o,i as c,g as s,f as a,bB as _}from"./DLnnSrV4.js";const d={},r={class:"design-layout"},i={class:"content"};function l(p,e){const t=_;return c(),o("div",r,[e[0]||(e[0]=s("div",{class:"pinstripe-background"},null,-1)),s("main",i,[a(t)])])}const u=n(d,[["render",l],["__scopeId","data-v-fd26b440"]]);export{u as default};

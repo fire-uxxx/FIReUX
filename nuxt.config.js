@@ -142,5 +142,9 @@ export default defineNuxtConfig({
   content: {
     documentDriven: true,
     apiUrl: 'https://nuxt.studio' // The URL of the Nuxt Studio API
+  },
+
+  build: {
+    transpile: ['reka-ui']
   }
 })

@@ -1,10 +1,11 @@
 export function useBlogPostCreate() {
-  const { addSluggedDocument } = useFirestoreCreate()
+  const { createDocument } = useFirestoreCreate()
 
   const createBlogPost = async (
     postData: Partial<BlogPost>
   ): Promise<string> => {
-    return addSluggedDocument('blogPosts', postData)
+    // Use auto-generated ID instead of slug
+    return createDocument('blogs', postData)
   }
 
   return { createBlogPost }

@@ -30,13 +30,38 @@ export default defineEventHandler(async event => {
       return { error: 'Missing required parameters', received: body }
     }
 
-    const stripeProduct = await stripe.products.create({
+    // Validate product name
+    if (!product.name || product.name.trim() === '') {
+      setResponseStatus(event, 400)
+      return { error: 'Missing or empty product name' }
+    }
+
+    // Validate image URL and build images array
+    const isValidUrl = (url: string) => {
+      try {
+        new URL(url)
+        return true
+      } catch {
+        return false
+      }
+    }
+    const images: string[] = []
+    if (product.image && isValidUrl(product.image.trim())) {
+      images.push(product.image.trim())
+    }
+
+    // Build Stripe product parameters
+    const productParams: Stripe.ProductCreateParams = {
       name: product.name,
       description: product.description,
-      images: [product.image],
       active: product.active,
       metadata: product.metadata || {}
-    })
+    }
+    if (images.length) {
+      productParams.images = images
+    }
+
+    const stripeProduct = await stripe.products.create(productParams)
 
     const stripePrice = await stripe.prices.create({
       product: stripeProduct.id,
@@ -44,15 +69,15 @@ export default defineEventHandler(async event => {
       currency: product.currency || 'usd'
     })
 
-    const slug = product.slug // Use the slug generated earlier in the frontend
-
+    const id = stripeProduct.id // Use Stripe-generated product ID
     const db = admin.firestore()
-    await db.collection(collection).add({
+    const docRef = db.collection(collection).doc(id)
+    await docRef.set({
       userId,
       appId,
-      stripeProductId: stripeProduct.id,
+      stripeProductId: id,
       stripePriceId: stripePrice.id,
-      slug,
+      slug: id,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
       status: 'active',
       ...product // Optional: store the original product info for convenience
@@ -60,7 +85,8 @@ export default defineEventHandler(async event => {
 
     return {
       product: stripeProduct,
-      price: stripePrice
+      price: stripePrice,
+      id
     }
   } catch (error) {
     console.error('Stripe Product Creation Error:', error)

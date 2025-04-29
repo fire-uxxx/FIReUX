@@ -17,16 +17,16 @@ export function useMediaStorage() {
     return result
   }
 
-  const uploadBlogImage = async ({ file, slug, type }) => {
+  const uploadImage = async ({ file, collection, id, type }) => {
     console.log(
-      `[MediaStorage] Uploading ${type} image for blog with slug: ${slug}`
+      `[MediaStorage] Uploading ${type} image for collection '${collection}' with id: ${id}`
     )
     if (!file || !(file instanceof File)) {
       console.error('[MediaStorage] ❌ Invalid file input')
       return null
     }
 
-    const path = `blog/${slug}/${type}Image.jpg`
+    const path = `${collection}/${id}/${type}Image.jpg`
     try {
       const resizedBlob = await resizeImageBlob(file, 512)
       console.log('[MediaStorage] ✅ Image blob resized:', resizedBlob)
@@ -188,6 +188,6 @@ export function useMediaStorage() {
     uploadProfileImage,
     processImageUrl,
     processImageFile,
-    uploadBlogImage
+    uploadImage
   }
 }

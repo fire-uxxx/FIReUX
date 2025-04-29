@@ -1,41 +1,75 @@
+<!-- app/components/organisms/Blog/Create/Images.vue -->
 <template>
-  <div class="image-settings">
-    <input
-      type="file"
-      accept="image/*"
-      @change="handleImageSelection('featuredImage', $event)"
-    >
-    <input
-      type="file"
-      accept="image/*"
-      @change="handleImageSelection('socialImage', $event)"
-    >
+  <div class="images-system">
+    <div class="image-wrapper featured">
+      <MoleculesFormsStateImagePicker
+        label="Featured Image"
+        :state-key="FEATURED_IMAGE_KEY"
+      />
+    </div>
+
+    <div class="image-wrapper social">
+      <MoleculesFormsStateImagePicker
+        label="Social Image"
+        :state-key="SOCIAL_IMAGE_KEY"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
-
-const props = defineProps<{ blogPost: Partial<BlogPost> }>()
-const emit = defineEmits<{
-  (e: 'update:blogPost', value: Partial<BlogPost>): void
-}>()
-
-function handleImageSelection(
-  field: 'featuredImage' | 'socialImage',
-  event: Event
-) {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (file) {
-    emit('update:blogPost', { ...props.blogPost, [field]: file })
-  }
-}
+// base keys for your two image slots (picker will append “Data” internally)
+const FEATURED_IMAGE_KEY = 'createBlogFeaturedImage'
+const SOCIAL_IMAGE_KEY = 'createBlogSocialImage'
 </script>
 
 <style scoped>
-.image-settings {
+.images-system {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .images-system {
+    flex-direction: row;
+  }
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--ui-bg-elevated);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ui-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Featured = 2:1 ratio */
+.image-wrapper.featured {
+  aspect-ratio: 2 / 1;
+  max-width: 600px;
+}
+
+/* Social = ~1.9:1 ratio (1200×630) */
+.image-wrapper.social {
+  aspect-ratio: 1200 / 630;
+  max-width: 600px;
+}
+
+/*
+  Any <img> inside .image-wrapper will:
+  • fill the container
+  • crop via object-fit
+  • stay centered
+*/
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 </style>

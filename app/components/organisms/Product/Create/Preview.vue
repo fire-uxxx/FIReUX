@@ -1,42 +1,152 @@
+<!-- app/components/organisms/Product/Create/Preview.vue -->
 <template>
-  <div class="product-preview">
-    <h3>{{ product.name }}</h3>
-    <div v-if="product.image" class="image-container">
-      <img :src="product.image" alt="Product image" />
+  <article class="preview-card">
+    <!-- NAME -->
+    <h1>
+      <span v-if="product.name">{{ product.name }}</span>
+      <em v-else class="warning">Missing product name</em>
+    </h1>
+
+    <!-- SLUG -->
+    <p>
+      <strong>Slug:</strong>
+      <span v-if="product.slug">{{ product.slug }}</span>
+      <em v-else class="warning">Missing slug</em>
+    </p>
+
+    <!-- DESCRIPTION (sanitized HTML) -->
+    <section v-html="sanitizedDescription" />
+    <em v-if="!product.description" class="warning">Missing description</em>
+
+    <!-- CONTENT (sanitized HTML) -->
+    <section v-html="sanitizedContent" />
+    <em v-if="!product.content" class="warning">Missing content</em>
+
+    <!-- PRICE -->
+    <p>
+      <strong>Price:</strong>
+      <span v-if="product.price != null">{{ formattedPrice }}</span>
+      <em v-else class="warning">Missing price</em>
+    </p>
+
+    <!-- STOCK -->
+    <p>
+      <strong>Stock:</strong>
+      <span v-if="product.stock != null">{{ product.stock }}</span>
+      <em v-else class="warning">Missing stock</em>
+    </p>
+
+    <!-- STATUS -->
+    <p>
+      <strong>Status:</strong>
+      <span v-if="product.active">Active</span>
+      <span v-else>Inactive</span>
+    </p>
+
+    <!-- CREATED AT -->
+    <p>
+      <strong>Created at:</strong>
+      <span v-if="createdAt">{{ createdAt }}</span>
+      <em v-else class="warning">Missing created_at</em>
+    </p>
+
+    <!-- UPDATED AT -->
+    <p>
+      <strong>Updated at:</strong>
+      <span v-if="updatedAt">{{ updatedAt }}</span>
+      <em v-else class="warning">Missing updated_at</em>
+    </p>
+
+    <!-- APP ID -->
+    <p>
+      <strong>App ID:</strong>
+      <span v-if="APP_ID">{{ APP_ID }}</span>
+      <em v-else class="warning">Missing appId</em>
+    </p>
+
+    <!-- MAIN IMAGE -->
+    <div v-if="mainImage" class="preview-image">
+      <img :src="mainImage" alt="Main product image preview" />
     </div>
-    <div class="description" v-html="product.description"></div>
-    <p><strong>Price:</strong> {{ formattedPrice }}</p>
-    <p v-if="product.secondaryText"><strong>Note:</strong> {{ product.secondaryText }}</p>
-    <p v-if="product.productType"><strong>Type:</strong> {{ product.productType }}</p>
-    <pre>{{ product }}</pre>
-  </div>
+    <em v-else class="warning">Missing main image</em>
+
+    <!-- GALLERY IMAGES -->
+    <div v-for="(img, idx) in galleryImages" :key="idx" class="preview-image">
+      <img :src="img" :alt="`Gallery image #${idx + 1} preview`" />
+      <em v-if="!img" class="warning">Missing gallery image #{{ idx + 1 }}</em>
+    </div>
+  </article>
 </template>
 
 <script setup lang="ts">
-import type { Product } from '@/models/product.model'
+import DOMPurify from 'dompurify'
+// entry state
+const product = useState<ProductEntry>('createProduct')
 
-const props = defineProps<{ product: Product }>()
+// preview-only Data-URLs from your pickers
+const mainImage = useState<string>('createProductMainImageFile', () => '')
+const galleryImage1 = useState<string>('createProductGallery1File', () => '')
+const galleryImage2 = useState<string>('createProductGallery2File', () => '')
+const galleryImage3 = useState<string>('createProductGallery3File', () => '')
+const galleryImage4 = useState<string>('createProductGallery4File', () => '')
 
-// Format price (assuming cents)
+// collect gallery slots into an array
+const galleryImages = [
+  galleryImage1.value,
+  galleryImage2.value,
+  galleryImage3.value,
+  galleryImage4.value
+]
+
+// sanitize HTML fields
+const sanitizedDescription = computed(() =>
+  DOMPurify.sanitize(product.value.description || '')
+)
+const sanitizedContent = computed(() =>
+  DOMPurify.sanitize(product.value.content || '')
+)
+
+// format cents → currency
 const formattedPrice = computed(() => {
+  if (product.value.price == null) return ''
+  const dollars = product.value.price / 100
   return new Intl.NumberFormat(undefined, {
     style: 'currency',
-    currency: props.product.currency
-  }).format(props.product.price / 100)
+    currency: (product.value.currency || 'USD').toUpperCase()
+  }).format(dollars)
 })
+
+// Timestamps for display-only
+const now = new Date().toISOString()
+const createdAt = now
+const updatedAt = now
+
+// App ID from runtime config
+const config = useRuntimeConfig()
+const APP_ID = config.public.APP_ID
 </script>
 
 <style scoped>
-.product-preview {
+.preview-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 1rem;
 }
-.image-container img {
-  max-width: 100%;
-  border-radius: 8px;
+
+.preview-image {
+  max-width: 400px;
 }
-.description {
-  white-space: pre-wrap;
+
+.preview-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-sm);
+}
+
+.warning {
+  color: var(--ui-danger);
+  font-style: italic;
 }
 </style>

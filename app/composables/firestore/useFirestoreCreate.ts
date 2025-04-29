@@ -9,37 +9,40 @@ export function useFirestoreCreate() {
   } = useRuntimeConfig()
 
   // Create a new document using slug as the document ID
-  async function addSluggedDocument<T extends Partial<Sluggable>>(
-    collectionName: string,
-    data: T
-  ): Promise<string> {
-    const { slug, ...rest } = data as { slug?: string }
+async function addSluggedDocument<T extends Partial<Sluggable>>(
+  collectionName: string,
+  data: T
+): Promise<string> {
+  const { slug, ...rest } = data as { slug?: string }
 
-    if (!slug) {
-      return Promise.reject('[addSluggedDocument] Slug is required.')
-    }
-
-    try {
-      const docRef = doc(db, collectionName, slug)
-      await setDoc(docRef, {
-        appId: APP_ID,
-        ...rest,
-        created_at: new Date().toISOString(),
-        slug
-      })
-
-      console.log(
-        `[addSluggedDocument] Created document in '${collectionName}' with ID: ${slug}`
-      )
-      return slug
-    } catch (error) {
-      console.error(
-        `[addSluggedDocument] Error creating document in '${collectionName}' with ID: ${slug}`,
-        error
-      )
-      throw error
-    }
+  if (!slug) {
+    return Promise.reject('[addSluggedDocument] Slug is required.')
   }
+
+  try {
+    const docRef = doc(db, collectionName, slug)
+    const now = new Date().toISOString()
+
+    await setDoc(docRef, {
+      appId: APP_ID,
+      ...rest,
+      created_at: now,
+      updated_at: now,
+      slug
+    })
+
+    console.log(
+      `[addSluggedDocument] Created document in '${collectionName}' with ID: ${slug}`
+    )
+    return slug
+  } catch (error) {
+    console.error(
+      `[addSluggedDocument] Error creating document in '${collectionName}' with ID: ${slug}`,
+      error
+    )
+    throw error
+  }
+}
 
   async function createDocument(
     collectionName: string,

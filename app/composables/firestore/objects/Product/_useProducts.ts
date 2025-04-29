@@ -1,17 +1,20 @@
 export function useProducts() {
   const { firestoreFetchCollection, firestoreFetchDoc } = useFirestoreManager()
 
-  function fetchProducts(): { collectionData: Ref<Product[] | undefined> } {
-    return firestoreFetchCollection<Product>('products')
-  }
+  // Expose products collection
+  const { collectionData: productsCollection } =
+    firestoreFetchCollection<Product>('products')
 
-  function fetchProductById(id: string): Ref<Product | null | undefined> {
+  // Fetch single product by id
+  function fetchProduct(id: string): Ref<Product | null | undefined> {
     return firestoreFetchDoc<Product>('products', id)
   }
+  const currency = 'EUR'
 
   return {
-    fetchProducts,
-    fetchProductById,
+    currency,
+    productsCollection,
+    fetchProduct,
     ...useProductCreate(),
     ...useProductUpdate(),
     ...useProductDelete(),

@@ -1,80 +1,86 @@
+<!-- app/components/organisms/Blog/Create/Advanced.vue -->
 <template>
   <UCollapsible>
     <UButton
       class="group"
-      label="Advanced"
+      label="Advanced Settings"
       trailing-icon="i-lucide-chevron-down"
+      block
       :ui="{
         trailingIcon:
           'group-data-[state=open]:rotate-180 transition-transform duration-200'
       }"
-      block
     />
+
     <template #content>
       <div class="advanced-settings">
-        <UInput
-          v-model="metaDescription"
-          placeholder="Meta Description"
-          label="Meta Description"
-        />
-        <UInput
-          v-model="keywordsInput"
-          placeholder="Keywords (comma separated)"
+        <!-- Meta Description -->
+        <UFormField label="Meta Description">
+          <UInput
+            v-model="post.metaDescription"
+            placeholder="A short summary for SEO"
+          />
+        </UFormField>
+
+        <!-- Keywords -->
+        <MoleculesFormsArrayOfStrings
+          v-model="post.keywords"
           label="Keywords"
+          item-placeholder="Keyword"
+          new-item-placeholder="Add new keyword"
         />
-        <UInput
-          v-model="tagsInput"
-          placeholder="Tags (comma separated)"
+        <!-- Tags -->
+        <MoleculesFormsArrayOfStrings
+          v-model="post.tags"
           label="Tags"
+          item-placeholder="Tag"
+          new-item-placeholder="Add new tag"
         />
-        <UInput
-          v-model="canonicalUrl"
-          placeholder="Canonical URL"
-          label="Canonical URL"
-        />
+
+        <!-- Canonical URL -->
+        <UFormField label="Canonical URL">
+          <div class="input-with-prefix">
+            <span class="prefix">https://</span>
+            <UInput
+              v-model="post.canonicalUrl"
+              placeholder="example.com/your-post"
+            />
+          </div>
+        </UFormField>
+
+        <!-- Call-to-Action URL -->
+        <UFormField label="Call-to-Action URL">
+          <div class="input-with-prefix">
+            <span class="prefix">https://</span>
+            <UInput
+              v-model="post.cta_link"
+              placeholder="example.com/get-started"
+            />
+          </div>
+        </UFormField>
+
+        <!-- CTA Button Text -->
+        <UFormField label="CTA Button Text">
+          <UInput
+            v-model="post.cta_text"
+            placeholder="e.g. Read More or Buy Now"
+          />
+        </UFormField>
       </div>
     </template>
   </UCollapsible>
 </template>
 
 <script setup lang="ts">
-
-const props = defineProps<{ blogPost: Partial<BlogPost> }>()
-
-// Create a local reactive copy of the blogPost prop
-const localBlogPost = reactive({ ...props.blogPost })
-
-// Simple string fields via toRef
-const metaDescription = toRef(localBlogPost, 'metaDescription')
-const canonicalUrl = toRef(localBlogPost, 'canonicalUrl')
-
-// Comma‑separated arrays via computed getters/setters
-const keywordsInput = computed<string>({
-  get: () => localBlogPost.keywords?.join(', ') || '',
-  set: val => {
-    localBlogPost.keywords = val
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean)
-  }
-})
-
-const tagsInput = computed<string>({
-  get: () => localBlogPost.tags?.join(', ') || '',
-  set: val => {
-    localBlogPost.tags = val
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean)
-  }
-})
+const post = useState<BlogPostEntry>('createBlogPost')
 </script>
 
 <style scoped>
-.advanced-settings {
+.input-with-prefix {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding-top: var(--space-4);
+  align-items: center;
+}
+.input-with-prefix .prefix {
+  margin-right: 0.5rem; /* adjust spacing as needed */
 }
 </style>

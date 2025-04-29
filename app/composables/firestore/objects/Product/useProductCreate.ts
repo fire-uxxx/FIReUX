@@ -1,5 +1,6 @@
 export function useProductCreate() {
   const currentUser = useCurrentUser()
+  // pull currency default
   const {
     public: { APP_ID }
   } = useRuntimeConfig()
@@ -8,28 +9,18 @@ export function useProductCreate() {
     product: Partial<Product>,
     collection = 'products'
   ) {
+    const { currency } = useProducts()
+
     if (!currentUser.value) throw new Error('[useProductCreate] No user')
     if (!APP_ID) throw new Error('[useProductCreate] No APP_ID')
 
     const userId = currentUser.value.uid
 
-    const defaultProduct: Partial<Product> = {
-      slug: '',
-      name: 'Untitled Product',
-      description: 'No description provided.',
-      price: 0,
-      currency: 'USD',
-      image: '/img/default-product.png',
-      galleryImages: [],
-      active: true,
-      metadata: {},
-      prices: [],
-      productType: ProductType.Physical,
-      secondaryText: '',
-      stock: 0
+    // combine incoming partial with default currency
+    const completeProductData: Partial<Product> = {
+      ...product,
+      currency
     }
-
-    const completeProductData = { ...defaultProduct, ...product }
 
     const response = await $fetch('/api/stripe/create-product', {
       method: 'POST',

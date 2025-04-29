@@ -1,107 +1,85 @@
+<!-- app/components/organisms/Product/Create/Images.vue -->
 <template>
-  <UCollapsible>
-    <UButton
-      class="group"
-      label="Images"
-      trailing-icon="i-lucide-chevron-down"
-      :ui="{
-        trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200'
-      }"
-      block
-    />
-    <template #content>
-      <div class="image-settings">
-        <!-- Hero Image -->
-        <UInput
-          v-model="local.image"
-          placeholder="Hero Image URL"
-          label="Hero Image"
-        />
+  <div class="images-system">
+    <!-- Main Product Image -->
+    <div class="image-wrapper main">
+      <MoleculesFormsStateImagePicker
+        label="Main Product Image"
+        :state-key="MAIN_IMAGE_KEY"
+      />
+    </div>
 
-        <!-- Gallery Images -->
-        <div class="gallery">
-          <label class="gallery-label">Gallery Images</label>
-          <div
-            v-for="(url, idx) in local.galleryImages"
-            :key="idx"
-            class="gallery-item"
-          >
-            <UInput
-              v-model="local.galleryImages[idx]"
-              placeholder="Image URL"
-            />
-            <UButton
-              size="sm"
-              @click="remove(idx)"
-            >
-              Remove
-            </UButton>
-          </div>
-          <UButton size="sm" @click="add">
-            Add Image
-          </UButton>
-        </div>
-      </div>
-    </template>
-  </UCollapsible>
+    <!-- Gallery Images -->
+    <div class="image-wrapper gallery">
+      <MoleculesFormsStateImagePicker
+        label="Gallery Image #1"
+        :state-key="GALLERY_IMAGE_KEY_1"
+      />
+    </div>
+    <div class="image-wrapper gallery">
+      <MoleculesFormsStateImagePicker
+        label="Gallery Image #2"
+        :state-key="GALLERY_IMAGE_KEY_2"
+      />
+    </div>
+    <div class="image-wrapper gallery">
+      <MoleculesFormsStateImagePicker
+        label="Gallery Image #3"
+        :state-key="GALLERY_IMAGE_KEY_3"
+      />
+    </div>
+    <div class="image-wrapper gallery">
+      <MoleculesFormsStateImagePicker
+        label="Gallery Image #4"
+        :state-key="GALLERY_IMAGE_KEY_4"
+      />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-
-const props = defineProps<{ product: Product }>()
-const emit  = defineEmits<{
-  (e: 'update:product', value: Product): void
-}>()
-
-// Local reactive copy of image data
-const local = reactive({
-  image: props.product.image,
-  galleryImages: [...(props.product.galleryImages ?? [])]
-})
-
-// When local changes, emit updated product
-watch(
-  local,
-  () => {
-    emit('update:product', {
-      ...props.product,
-      image: local.image,
-      galleryImages: local.galleryImages
-    })
-  },
-  { deep: true }
-)
-
-function add() {
-  local.galleryImages.push('')
-}
-
-function remove(index: number) {
-  local.galleryImages.splice(index, 1)
-}
+const MAIN_IMAGE_KEY = 'createProductMainImageFile'
+const GALLERY_IMAGE_KEY_1 = 'createProductGallery1File'
+const GALLERY_IMAGE_KEY_2 = 'createProductGallery2File'
+const GALLERY_IMAGE_KEY_3 = 'createProductGallery3File'
+const GALLERY_IMAGE_KEY_4 = 'createProductGallery4File'
 </script>
 
 <style scoped>
-.image-settings {
+.images-system {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding-top: var(--space-4);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.gallery {
-  margin-top: var(--space-4);
-}
-
-.gallery-label {
-  font-weight: 500;
-  margin-bottom: var(--space-2);
-}
-
-.gallery-item {
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--ui-bg-elevated);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ui-border);
   display: flex;
-  gap: var(--space-2);
   align-items: center;
-  margin-bottom: var(--space-2);
+  justify-content: center;
+}
+
+/* Main = square */
+.image-wrapper.main {
+  aspect-ratio: 1 / 1;
+  max-width: 400px;
+}
+
+/* Gallery = square thumbnails */
+.image-wrapper.gallery {
+  aspect-ratio: 1 / 1;
+  max-width: 200px;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 </style>

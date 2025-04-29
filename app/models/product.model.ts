@@ -1,24 +1,6 @@
-/**
- * Product interface representing a product in our system.
- * This model is inspired by Stripe's product structure.
- */
-export interface Product extends Sluggable {
-  id: string
-  slug: string
-  name: string
-  description: string
-  price: number // Price in cents
-  currency: string
-  image: string
-  galleryImages: string[]
-  active: boolean
-  metadata?: Record<string, unknown>
-  prices?: Price[]
-  productType?: ProductType // Use the enum for product type
-  secondaryText?: string
-  stock: number // Number of items in stock
-}
-
+// ------------------------------------------------------------------
+// Price details (inspired by Stripe)
+// ------------------------------------------------------------------
 export interface Price {
   id: string
   active: boolean
@@ -45,15 +27,53 @@ export enum ProductType {
   Service = 'service'
 }
 
-export interface Subscription {
+// ------------------------------------------------------------------
+// Stock-tracking modes
+// ------------------------------------------------------------------
+export type StockType = 'finite' | 'infinite' | 'manual'
+
+// ------------------------------------------------------------------
+// Full Product model
+// ------------------------------------------------------------------
+export interface Product extends Sluggable {
   id: string
-  customer: string
-  product: string
-  price: Price
-  status: 'active' | 'trialing' | 'canceled' | 'past_due' | 'unpaid' | string
-  start_date: number
-  current_period_start: number
-  current_period_end: number
-  trial_end?: number | null
+  slug: string
+  name: string
+  description: string
+  content: string
+  price: number // stored in cents
+  currency: string
+  image: string
+  galleryImages: string[]
+  active: boolean
   metadata?: Record<string, unknown>
+  prices?: Price[]
+  productType?: ProductType
+  secondaryText?: string
+
+  /**
+   * How stock is managed:
+   * - finite: use `stock` for exact count
+   * - infinite: never runs out
+   * - manual: you’ll toggle availability yourself
+   */
+  stockType: StockType
+
+  /**
+   * Quantity when in `finite` mode; ignored otherwise
+   */
+  stock: number
+
+  // Auto-generated fields
+  created_at: string
+  updated_at: string
+  appId: string
 }
+
+// ------------------------------------------------------------------
+// Entry type: exactly what the user fills in
+// ------------------------------------------------------------------
+export type ProductEntry = Omit<
+  Product,
+  'created_at' | 'updated_at' | 'appId' | 'currency'
+>

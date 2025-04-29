@@ -1,83 +1,135 @@
 <template>
-  <UTabs v-model="selectedTab" :items="tabItems">
-    <template #write>
-      <div class="tab">
-        <UInput v-model="product.name" placeholder="Product Name" />
-        <div class="editor-container">
-          <ClientOnly>
-            <QuillEditor
-              v-model:content="product.description"
-              content-type="html"
-              theme="snow"
-            />
-          </ClientOnly>
-        </div>
-        <UInput
-          v-model.number="product.price"
-          placeholder="Price"
-          type="number"
-        />
-        <UInput v-model="product.image" placeholder="Image URL" />
-        <OrganismsProductCreateAdvanced v-model:product="product" />
-        <OrganismsProductCreateImages v-model:product="product" />
-      </div>
-    </template>
+  <div class="root-container">
+    <UTabs v-model="selectedTab" :items="tabItems">
+      <template #write>
+        <OrganismsProductCreateWrite />
+      </template>
+      <template #preview>
+        <OrganismsProductCreatePreview />
+      </template>
+    </UTabs>
 
-    <template #preview>
-      <div class="tab">
-        <OrganismsProductCreatePreview v-model:product="product" />
-        <div class="actions">
-          <UButton @click="handleCreate">Create Product</UButton>
-        </div>
-      </div>
-    </template>
-  </UTabs>
+    <div class="actions">
+      <UButton @click="handleCreate">Create Product</UButton>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
+// which tab is active
+const selectedTab = ref<'write' | 'preview'>('write')
+const tabItems = [
+  { label: 'Write', icon: 'i-lucide-pencil', value: 'write', slot: 'write' },
+  { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
+]
 
-const { createProduct, generateSlug } = useProducts()
-
-const product = ref<Product>({
-  id: '',
-  slug: '',
-  name: '',
-  description: '',
-  price: 0,
-  currency: 'USD',
-  image: '',
-  galleryImages: [],
-  active: false,
-  stock: 0 // Added missing stock property
-})
-
-watch(
-  () => product.value.name,
-  (name = '') => {
-    product.value.slug = generateSlug(name)
-  }
+// Shared entry state (empty defaults)
+const product = useState<ProductEntry>(
+  'createProduct',
+  (): ProductEntry => ({
+    name: '',
+    description: '',
+    content: '',
+    price: 0,
+    image: '',
+    galleryImages: [],
+    active: true,
+    stock: 0,
+    slug: '',
+    id: ''
+  })
 )
 
-const selectedTab = ref('write')
-const tabItems = ref<
-  Array<{ label: string; icon: string; value: string; slot: string }>
->([
-  { label: 'Write', icon: 'i-lucide-edit', value: 'write', slot: 'write' },
-  { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
-])
+// File refs for images
+const mainImageFile = useState<File | null>(
+  'createProductMainImageFile',
+  () => null
+)
+const galleryFile1 = useState<File | null>(
+  'createProductGallery1File',
+  () => null
+)
+const galleryFile2 = useState<File | null>(
+  'createProductGallery2File',
+  () => null
+)
+const galleryFile3 = useState<File | null>(
+  'createProductGallery3File',
+  () => null
+)
+const galleryFile4 = useState<File | null>(
+  'createProductGallery4File',
+  () => null
+)
+
+// Firestore creation helper
+const { createProduct } = useProductCreate()
+
+// pull in generic uploader
+const { uploadImage } = useMediaStorage()
 
 async function handleCreate() {
+  // Require a main image before creating
+  if (!mainImageFile.value) {
+    console.error('Main product image is required')
+    // Optionally show UI feedback here
+    return
+  }
+
+  // derive a slug/id from the name
+  const slug = product.value.name.trim().replace(/\s+/g, '-').toLowerCase()
+  product.value.slug = slug
+  product.value.id = slug
+
+  // upload main image if file provided, otherwise leave blank
+  if (mainImageFile.value) {
+    product.value.image =
+      (await uploadImage({
+        file: mainImageFile.value,
+        collection: 'products',
+        id: slug,
+        type: 'main'
+      })) ?? ''
+  }
+
+  // upload up to four gallery images
+  product.value.galleryImages = []
+  const gallerySlots: Array<{ file: File | null; type: string }> = [
+    { file: galleryFile1.value, type: 'gallery1' },
+    { file: galleryFile2.value, type: 'gallery2' },
+    { file: galleryFile3.value, type: 'gallery3' },
+    { file: galleryFile4.value, type: 'gallery4' }
+  ]
+  for (const slot of gallerySlots) {
+    if (!slot.file) continue
+    const url = await uploadImage({
+      file: slot.file,
+      collection: 'products',
+      id: slug,
+      type: slot.type
+    })
+    if (url) product.value.galleryImages.push(url)
+  }
+
   try {
-    const created = await createProduct(product.value)
-    console.log('Blog post created', created)
+    const createdSlug = await createProduct(product.value)
+    console.log('Product created with slug:', createdSlug)
   } catch (err) {
-    console.error('Error creating blog post:', err)
+    console.error('Error creating product:', err)
   }
 }
 </script>
 
-<style scoped lang="css">
-/* Removed CSS for normalization */
+<style scoped>
+.root-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
 </style>

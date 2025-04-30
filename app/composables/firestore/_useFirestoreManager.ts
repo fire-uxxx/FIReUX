@@ -36,6 +36,7 @@ export function useFirestoreManager() {
     firestoreFetchDoc,
     ...useFirestoreCreate(),
     ...useFirestoreUpdate(),
-    ...useFirestoreDelete()
+    ...useFirestoreDelete(),
+    ...useFirestoreUtils()  
   }
 }

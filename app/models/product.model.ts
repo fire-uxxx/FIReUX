@@ -1,3 +1,5 @@
+// models/product.model.ts
+
 // ------------------------------------------------------------------
 // Price details (inspired by Stripe)
 // ------------------------------------------------------------------
@@ -21,6 +23,9 @@ export interface Price {
   unit_amount: number
 }
 
+// ------------------------------------------------------------------
+// Product type enumeration
+// ------------------------------------------------------------------
 export enum ProductType {
   Physical = 'physical',
   Digital = 'digital',
@@ -35,7 +40,7 @@ export type StockType = 'finite' | 'infinite' | 'manual'
 // ------------------------------------------------------------------
 // Full Product model
 // ------------------------------------------------------------------
-export interface Product extends Sluggable {
+export interface Product {
   id: string
   slug: string
   name: string
@@ -55,7 +60,7 @@ export interface Product extends Sluggable {
    * How stock is managed:
    * - finite: use `stock` for exact count
    * - infinite: never runs out
-   * - manual: you’ll toggle availability yourself
+   * - manual: toggle availability manually
    */
   stockType: StockType
 
@@ -76,4 +81,13 @@ export interface Product extends Sluggable {
 export type ProductEntry = Omit<
   Product,
   'created_at' | 'updated_at' | 'appId' | 'currency'
->
+> & {
+  // image & gallery URLs (optional until upload)
+  image?: string
+  galleryImages?: string[]
+
+  // Pricing extensions (optional)
+  pricingType?: 'one_time' | 'subscription'
+  interval?: 'day' | 'week' | 'month' | 'year'
+  intervalCount?: number
+}

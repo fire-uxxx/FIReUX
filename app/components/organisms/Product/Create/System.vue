@@ -1,3 +1,4 @@
+<!-- app/components/organisms/Product/Create/System.vue -->
 <template>
   <div class="root-container">
     <UTabs v-model="selectedTab" :items="tabItems">
@@ -10,113 +11,81 @@
     </UTabs>
 
     <div class="actions">
-      <UButton @click="handleCreate">Create Product</UButton>
+      <UButton
+        :loading="isCreating"
+        :disabled="isCreating"
+        @click="handleCreate"
+      >
+        Create Product
+      </UButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// which tab is active
+// Active tab
 const selectedTab = ref<'write' | 'preview'>('write')
 const tabItems = [
-  { label: 'Write', icon: 'i-lucide-pencil', value: 'write', slot: 'write' },
-  { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
+  { label: 'Write',   icon: 'i-lucide-pencil', value: 'write',   slot: 'write' },
+  { label: 'Preview', icon: 'i-lucide-eye',    value: 'preview', slot: 'preview' }
 ]
 
-// Shared entry state (empty defaults)
-const product = useState<ProductEntry>(
-  'createProduct',
-  (): ProductEntry => ({
-    name: '',
-    description: '',
-    content: '',
-    price: 0,
-    image: '',
-    galleryImages: [],
-    active: true,
-    stock: 0,
-    slug: '',
-    id: ''
-  })
-)
+// Shared state for product creation (now only Data-URL)
+const {
+  product,
+  mainImageData,
+  // resetCreateProductState
+} = useCreateProductState()
 
-// File refs for images
-const mainImageFile = useState<File | null>(
-  'createProductMainImageFile',
-  () => null
-)
-const galleryFile1 = useState<File | null>(
-  'createProductGallery1File',
-  () => null
-)
-const galleryFile2 = useState<File | null>(
-  'createProductGallery2File',
-  () => null
-)
-const galleryFile3 = useState<File | null>(
-  'createProductGallery3File',
-  () => null
-)
-const galleryFile4 = useState<File | null>(
-  'createProductGallery4File',
-  () => null
-)
+// Utilities: slug validation & image upload
+const {
+  generateSlug,
+  uploadMainImage,
+  createProduct
+} = useProducts()
 
-// Firestore creation helper
-const { createProduct } = useProductCreate()
-
-// pull in generic uploader
-const { uploadImage } = useMediaStorage()
+const isCreating = ref(false)
 
 async function handleCreate() {
-  // Require a main image before creating
-  if (!mainImageFile.value) {
-    console.error('Main product image is required')
-    // Optionally show UI feedback here
+  console.log('State Debug -- product:', product.value)
+  console.log('State Debug -- mainImageData:', mainImageData.value)
+
+  // Require main image data
+  if (!mainImageData.value) {
+    alert('Main product image is required')
     return
   }
 
-  // derive a slug/id from the name
-  const slug = product.value.name.trim().replace(/\s+/g, '-').toLowerCase()
-  product.value.slug = slug
-  product.value.id = slug
-
-  // upload main image if file provided, otherwise leave blank
-  if (mainImageFile.value) {
-    product.value.image =
-      (await uploadImage({
-        file: mainImageFile.value,
-        collection: 'products',
-        id: slug,
-        type: 'main'
-      })) ?? ''
+  // Require product name
+  if (!product.value.name?.trim()) {
+    alert('Product name is required')
+    return
   }
 
-  // upload up to four gallery images
-  product.value.galleryImages = []
-  const gallerySlots: Array<{ file: File | null; type: string }> = [
-    { file: galleryFile1.value, type: 'gallery1' },
-    { file: galleryFile2.value, type: 'gallery2' },
-    { file: galleryFile3.value, type: 'gallery3' },
-    { file: galleryFile4.value, type: 'gallery4' }
-  ]
-  for (const slot of gallerySlots) {
-    if (!slot.file) continue
-    const url = await uploadImage({
-      file: slot.file,
-      collection: 'products',
-      id: slug,
-      type: slot.type
-    })
-    if (url) product.value.galleryImages.push(url)
-  }
+  isCreating.value = true
 
-  try {
-    const createdSlug = await createProduct(product.value)
-    console.log('Product created with slug:', createdSlug)
-  } catch (err) {
-    console.error('Error creating product:', err)
+  // 1) Generate + validate slug
+  const slugResult = await generateSlug(product.value.name)
+  if (!slugResult.success) {
+    alert(slugResult.message)
+    isCreating.value = false
+    return
   }
+  product.value.slug = slugResult.slug
+
+  // 2) Upload main image
+  product.value.image = await uploadMainImage(
+    mainImageData.value,
+    product.value.slug
+  )
+
+  // 3) DEV: inspect full payload
+    await createProduct(product.value)
+
+  // 4) Reset for next create (if you re-enable)
+  // resetCreateProductState()
+
+  isCreating.value = false
 }
 </script>
 

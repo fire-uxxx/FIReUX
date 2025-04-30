@@ -1,6 +1,11 @@
+
+/**
+ * Handles product creation via Stripe + Firestore,
+ * then redirects to the new product page.
+ */
 export function useProductCreate() {
   const currentUser = useCurrentUser()
-  // pull currency default
+  const router = useRouter()
   const {
     public: { APP_ID }
   } = useRuntimeConfig()
@@ -22,6 +27,7 @@ export function useProductCreate() {
       currency
     }
 
+    // Call backend to create product in Stripe and Firestore
     const response = await $fetch('/api/stripe/create-product', {
       method: 'POST',
       body: {
@@ -31,6 +37,11 @@ export function useProductCreate() {
         product: completeProductData
       }
     })
+
+    // Redirect to the new product's page using slug
+    if (product.slug) {
+      router.push(`/admin/products/${product.slug}`)
+    }
 
     return response
   }

@@ -3,8 +3,8 @@
     <label :for="id" class="picker-label">{{ label }}</label>
     <!-- hidden file input -->
     <input
-      ref="inputRef"
       :id="id"
+      ref="inputRef"
       type="file"
       accept="image/*"
       class="hidden-input"
@@ -22,17 +22,14 @@
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps<{
   label: string
   stateKey: string
 }>()
 
-// shared Nuxt state, using the same key the parent initialized
+// Preview Data-URL state
 const dataRef = useState<string>(props.stateKey, () => '')
-const fileRef = useState<File | null>(props.stateKey + 'File', () => null)
 
-// file input ref for triggering dialog
 const inputRef = ref<HTMLInputElement | null>(null)
 const id = `upload-${props.stateKey}`
 
@@ -42,16 +39,13 @@ function trigger() {
 
 function onSelect(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0] ?? null
+
   if (!file) {
     dataRef.value = ''
-    fileRef.value = null
     return
   }
 
-  // hold onto the File for your upload step
-  fileRef.value = file
-
-  // generate a Data-URL for instant preview
+  // Generate Data-URL for preview
   const reader = new FileReader()
   reader.onload = () => {
     dataRef.value = reader.result as string
@@ -63,5 +57,15 @@ function onSelect(e: Event) {
 <style scoped>
 .hidden-input {
   display: none;
+}
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.image-container img {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
 }
 </style>

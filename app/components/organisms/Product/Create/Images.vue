@@ -5,44 +5,14 @@
     <div class="image-wrapper main">
       <MoleculesFormsStateImagePicker
         label="Main Product Image"
-        :state-key="MAIN_IMAGE_KEY"
-      />
-    </div>
-
-    <!-- Gallery Images -->
-    <div class="image-wrapper gallery">
-      <MoleculesFormsStateImagePicker
-        label="Gallery Image #1"
-        :state-key="GALLERY_IMAGE_KEY_1"
-      />
-    </div>
-    <div class="image-wrapper gallery">
-      <MoleculesFormsStateImagePicker
-        label="Gallery Image #2"
-        :state-key="GALLERY_IMAGE_KEY_2"
-      />
-    </div>
-    <div class="image-wrapper gallery">
-      <MoleculesFormsStateImagePicker
-        label="Gallery Image #3"
-        :state-key="GALLERY_IMAGE_KEY_3"
-      />
-    </div>
-    <div class="image-wrapper gallery">
-      <MoleculesFormsStateImagePicker
-        label="Gallery Image #4"
-        :state-key="GALLERY_IMAGE_KEY_4"
+        state-key="createProductMainImage"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const MAIN_IMAGE_KEY = 'createProductMainImageFile'
-const GALLERY_IMAGE_KEY_1 = 'createProductGallery1File'
-const GALLERY_IMAGE_KEY_2 = 'createProductGallery2File'
-const GALLERY_IMAGE_KEY_3 = 'createProductGallery3File'
-const GALLERY_IMAGE_KEY_4 = 'createProductGallery4File'
+// No additional keys needed since we only have one slot now
 </script>
 
 <style scoped>
@@ -68,12 +38,6 @@ const GALLERY_IMAGE_KEY_4 = 'createProductGallery4File'
 .image-wrapper.main {
   aspect-ratio: 1 / 1;
   max-width: 400px;
-}
-
-/* Gallery = square thumbnails */
-.image-wrapper.gallery {
-  aspect-ratio: 1 / 1;
-  max-width: 200px;
 }
 
 .image-wrapper img {

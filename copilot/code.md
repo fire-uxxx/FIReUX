@@ -48,6 +48,13 @@ src/
   import { doc, collection } from 'firebase/firestore'
   ```
 - **Path Aliases:** Always use `@/components/...` or `@/composables/...`, never deep relative paths.
+- **Nuxt UI Components Auto‑Import:** All `<U*>` components from `@nuxt/ui` are globally available (e.g., `UButton`, `UInput`, `UFormField`, `USelect`, `UInputNumber`, `USwitch`, `UIcon`, `UTabs`, `UCollapsible`, etc.), so no manual imports are needed.
+- **Models Auto‑Import:** Project types in `/app/models` (like `ProductEntry`, `BlogPostEntry`, `Price`, `ProductType`, `StockType`, etc.) are auto-imported and available in components—no `import type { ... }` needed.
+- **Quill Editor:** For WYSIWYG fields, explicitly import:
+  ```js
+  import { QuillEditor } from '@vueup/vue-quill'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css'
+  ```
 
 ## 5. Vue & Script Conventions
 

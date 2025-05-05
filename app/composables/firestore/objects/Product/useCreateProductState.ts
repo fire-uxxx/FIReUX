@@ -1,62 +1,86 @@
 import { useStorage } from '@vueuse/core'
-import { useState } from '#app'
-import { computed } from 'vue'
-import type { ProductEntry, StockType } from '@/models/product.model'
 
 export function useCreateProductState() {
-  // Persisted product state in localStorage (core fields)
-  const product = useStorage<ProductEntry>('createProduct', {
+  const now = new Date().toISOString()
+
+  const product = useStorage<Partial<FirebaseProduct>>('createProduct', {
+    id: '',
     name: '',
     description: '',
     content: '',
-    price: 0,
-    active: true,
-    stockType: 'finite' as StockType,
-    stock: 0,
-    slug: '',
-    id: '',
     image: '',
-    galleryImages: []
+    galleryImages: [],
+    active: true,
+    prices: [
+      {
+        id: '',
+        active: true,
+        billing_scheme: 'per_unit',
+        currency: 'eur',
+        unit_amount: 1200,
+        type: 'one_time'
+      }
+    ],
+    createdAt: now,
+    updatedAt: now,
+    slug: '',
+    creatorId: '',
+    appId: ''
   })
 
-  // Main image Data-URL (persisted for preview)
   const mainImageData = useState<string>('createProductMainImage', () => '')
 
-  // Auto-generated slug based on product name
-  const slug = computed(() =>
-    product.value.name.trim().replace(/\s+/g, '-').toLowerCase()
+  const currentUser = useCurrentUser()
+  const {
+    public: { APP_ID }
+  } = useRuntimeConfig()
+
+  const { generateSlug } = useProductUtils()
+
+  // Automatically update slug when name changes
+  watch(
+    () => product.value.name,
+    async newName => {
+      if (!newName) return
+      const slugResult = await generateSlug(newName)
+      if (slugResult.success) {
+        product.value.slug = slugResult.slug
+      }
+    }
   )
 
-  /**
-   * Reset creation state: clears storage and in-memory fields
-   */
-  function resetCreateProductState() {
-    if (import.meta.client) {
-      localStorage.removeItem('createProduct')
+  // Populate creatorId and appId when available
+  onMounted(() => {
+    if (currentUser.value?.uid) {
+      product.value.creatorId = currentUser.value.uid
     }
+    if (APP_ID) {
+      product.value.appId = APP_ID
+    }
+  })
 
-    // Reset persisted state
+  function resetCreateProductState() {
     product.value = {
+      id: '',
       name: '',
       description: '',
       content: '',
-      price: 0,
-      active: true,
-      stockType: 'finite' as StockType,
-      stock: 0,
-      slug: '',
-      id: '',
       image: '',
-      galleryImages: []
+      galleryImages: [],
+      active: true,
+      prices: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      slug: '',
+      creatorId: currentUser.value?.uid || '',
+      appId: APP_ID
     }
-
     mainImageData.value = ''
   }
 
   return {
     product,
     mainImageData,
-    slug,
     resetCreateProductState
   }
 }

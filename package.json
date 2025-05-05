@@ -27,7 +27,7 @@
     "nuxt": "^3.16.0",
     "nuxt-vuefire": "^1.0.5",
     "reka-ui": "^2.2.0",
-    "stripe": "^17.7.0",
+    "stripe": "^18.1.0",
     "vuefire": "^3.2.1"
   },
   "devDependencies": {

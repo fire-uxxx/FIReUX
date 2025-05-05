@@ -15,12 +15,7 @@ import {
  * Firestore utilities: generic slug existence check
  */
 export function useFirestoreUtils() {
-  /**
-   * Check if a slug already exists within a given Firestore collection
-   * @param collectionName - The name of the collection to check (e.g. 'products')
-   * @param slug - The slug to look up
-   * @returns true if the slug exists, false otherwise
-   */
+
   async function checkSlug(
     collectionName: string,
     slug: string

@@ -39,8 +39,26 @@ export function useProductUtils() {
     const url = await uploadImage(data, 'products', id, 'main')
     return url || ''
   }
+  function formatPrice(
+    cents: number | null | undefined,
+    currency: string
+  ): string {
+    const amount = cents ?? 0
+    return (amount / 100).toLocaleString(undefined, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2
+    })
+  }
+
+  /**
+   * Placeholder URL to use when a product has no image.
+   */
+  const placeholderImage = '/img/placeholder-product.png'
 
   return {
+    formatPrice,
+    placeholderImage,
     generateSlug,
     uploadMainImage
   }

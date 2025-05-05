@@ -1,46 +1,112 @@
+// ~/composables/admin/useProductCreate.ts
 
-/**
- * Handles product creation via Stripe + Firestore,
- * then redirects to the new product page.
- */
 export function useProductCreate() {
-  const currentUser = useCurrentUser()
   const router = useRouter()
-  const {
-    public: { APP_ID }
-  } = useRuntimeConfig()
+  const { updateDocument } = useFirestoreUpdate()
+  const { product, mainImageData } = useCreateProductState()
+  const { uploadImage } = useMediaStorage()
 
-  async function createProduct(
-    product: Partial<Product>,
-    collection = 'products'
-  ) {
-    const { currency } = useProducts()
+  type StripeCreateResponse =
+    | { success: true; id: string }
+    | {
+        success: false
+        error: string
+        message?: string
+        received?: Record<string, unknown>
+      }
 
-    if (!currentUser.value) throw new Error('[useProductCreate] No user')
-    if (!APP_ID) throw new Error('[useProductCreate] No APP_ID')
-
-    const userId = currentUser.value.uid
-
-    // combine incoming partial with default currency
-    const completeProductData: Partial<Product> = {
-      ...product,
-      currency
+  async function createProduct() {
+    if (!product.value.name?.trim()) {
+      return { success: false, error: 'Product name is required.' }
     }
 
-    // Call backend to create product in Stripe and Firestore
-    const response = await $fetch('/api/stripe/create-product', {
-      method: 'POST',
-      body: {
-        userId,
-        appId: APP_ID,
-        collection,
-        product: completeProductData
-      }
-    })
+    // Ensure all required fields are safely initialized
+    product.value.description = product.value.description || ''
+    product.value.active = product.value.active ?? true
+    product.value.prices = product.value.prices || []
+    product.value.appId = product.value.appId || ''
+    product.value.creatorId = product.value.creatorId || ''
+    product.value.createdAt =
+      product.value.createdAt || new Date().toISOString()
+    product.value.updatedAt =
+      product.value.updatedAt || new Date().toISOString()
+    product.value.slug = product.value.slug || ''
+    product.value.content = product.value.content || ''
 
-    // Redirect to the new product's page using slug
-    if (product.slug) {
-      router.push(`/admin/products/${product.slug}`)
+    const response: StripeCreateResponse = await $fetch(
+      '/api/stripe/create-product',
+      {
+        method: 'POST',
+        body: {
+          product: {
+            name: product.value.name,
+            description: product.value.description,
+            active: product.value.active,
+            prices: (product.value.prices || []).map(p => ({
+              billing_scheme: p.billing_scheme,
+              currency: p.currency,
+              unit_amount: p.unit_amount,
+              type: p.type,
+              interval: p.interval,
+              intervalCount: p.intervalCount,
+              metadata: p.metadata
+            }))
+          }
+        }
+      }
+    )
+
+    if (!response.success) {
+      console.error('❌ Stripe product creation failed:', response.error)
+      return {
+        success: false,
+        error: response.error || 'Unknown error'
+      }
+    }
+
+    if (!response.id) {
+      console.error('❌ No Stripe product ID returned')
+      return {
+        success: false,
+        error: 'No Stripe product ID returned'
+      }
+    }
+
+    // Upload main image (if present in state)
+    if (mainImageData.value) {
+      try {
+        const imageUrl = await uploadImage(
+          mainImageData.value,
+          'products',
+          response.id,
+          'main'
+        )
+        product.value.galleryImages = [imageUrl]
+        product.value.image = imageUrl
+      } catch (uploadError) {
+        console.error('❌ Failed to upload image:', uploadError)
+      }
+    }
+
+    try {
+      await updateDocument('products', response.id, {
+        appId: product.value.appId,
+        creatorId: product.value.creatorId,
+        createdAt: product.value.createdAt,
+        updatedAt: product.value.updatedAt,
+        slug: product.value.slug,
+        content: product.value.content,
+        image: product.value.image || '',
+        galleryImages: product.value.galleryImages || []
+      })
+
+      router.push(`/products/${product.value.slug}`)
+    } catch (err) {
+      console.error('❌ Failed to update Firestore:', err)
+      return {
+        success: false,
+        error: 'Failed to update Firestore'
+      }
     }
 
     return response

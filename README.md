@@ -171,3 +171,93 @@ FIReUX now includes a streamlined product creation flow integrated with Stripe. 
   ```
 
 This integration leverages our existing Firebase & Stripe-powered architecture, keeping your user data secure and providing a smooth product management experience. As you scale, you can further customize and extend these features to suit your multi-tenant SaaS needs.
+
+## 🔐 Stripe Webhook Setup for SaaS + Multi‑Tenant (FIReUX)
+
+This project supports multi‑app product enrichment by listening to Stripe webhooks and storing metadata in Firestore.
+
+1. ✅ Securely Store Your Webhook Secret
+
+   Instead of `.env`, use Firebase’s Secret Manager:
+
+   ```sh
+   firebase functions:secrets:set STRIPE_WEBHOOK_SECRET
+   ```
+
+   Paste in your Stripe secret (starts with `whsec_...`).
+
+2. 🔁 Configure Endpoint in Stripe Dashboard
+
+   In your Stripe Dashboard:
+
+   - Go to **Developers → Webhooks**
+   - Click **Add endpoint**
+   - **URL:**
+     ```text
+     https://us-central1-<your-project>.cloudfunctions.net/stripeWebhook
+     ```
+   - Select relevant events (e.g. `product.created`)
+   - Save and copy the signing secret into your Firebase Secret.
+
+3. 🧠 How Multi‑Tenant Enrichment Works
+
+   When creating products via Stripe, attach metadata to identify the app + user:
+
+   ```js
+   metadata: {
+     appId: 'fireux',
+     createdBy: 'user_abc123'
+   }
+   ```
+
+   Our webhook listens for `product.created` and writes to Firestore:
+
+   ```text
+   /products/{stripeProductId} → {
+     appId,
+     createdBy,
+     createdAt,
+     …
+   }
+   ```
+
+   This allows filtering and SaaS segregation of products in both frontend and backend.
+## 🔐 Required Firebase Secret: `APP_ID`
+
+Before deploying functions, you **must set the `APP_ID` secret** in your Firebase project. This is critical for identifying the app environment during webhook processing (e.g., Stripe product enrichment).
+
+### ✅ How to Set It
+
+Run this from the root of your project:
+
+```bash
+firebase functions:secrets:set APP_ID
+```
+
+When prompted, enter your internal app identifier, e.g.:
+
+```
+fireux
+```
+
+> ⚠️ If this secret is not set, Stripe webhooks (like `product.created`) will fail silently or log errors.
+
+### 🧪 Verify the Secret
+
+You can confirm the value at any time with:
+
+```bash
+firebase functions:secrets:access APP_ID
+```
+
+This should return:
+
+```
+"fireux"
+```
+
+### 🛠 When to Run
+
+- After cloning the project
+- When setting up a new Firebase project
+- Before deploying functions that depend on `APP_ID`

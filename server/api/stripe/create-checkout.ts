@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
   const currency = 'usd'
 
   const stripe = new Stripe(STRIPE_SECRET_KEY, {
-    apiVersion: '2025-02-24.acacia'
+    apiVersion: '2025-04-30.basil'
   })
 
   if (event.req.method !== 'POST') {
@@ -35,7 +35,7 @@ export default defineEventHandler(async event => {
       return { error: 'Missing required parameters', received: body }
     }
 
-    const frontendUrl = DOMAIN || 'https://fallback-url.com/'
+    const frontendUrl = DOMAIN || 'https://fireux.app/'
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

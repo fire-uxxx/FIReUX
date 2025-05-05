@@ -1,20 +1,45 @@
+// ~/composables/useProducts.ts
+
 export function useProducts() {
-  const { firestoreFetchCollection, firestoreFetchDoc } = useFirestoreManager()
+  const {
+    firestoreFetchCollection,
+    firestoreFetchDoc,
+    firestoreQueryOneByField,
+    firestoreFetchSubcollection
+  } = useFirestoreManager()
 
-  // Expose products collection
+  // Fetch all products (scoped by appId automatically)
   const { collectionData: productsCollection } =
-    firestoreFetchCollection<Product>('products')
+    firestoreFetchCollection<FirebaseProduct>('products')
 
-  // Fetch single product by id
-  function fetchProduct(id: string): Ref<Product | null | undefined> {
-    return firestoreFetchDoc<Product>('products', id)
+  // Fetch by document ID
+  function fetchProduct(id: string): Ref<FirebaseProduct | null | undefined> {
+    return firestoreFetchDoc<FirebaseProduct>('products', id)
   }
+
+  // Fetch by slug (scoped by appId automatically)
+  function fetchProductBySlug(slug: string): Promise<FirebaseProduct | null> {
+    return firestoreQueryOneByField<FirebaseProduct>('products', 'slug', slug)
+  }
+
   const currency = 'EUR'
+
+async function fetchProductPrices(productId: string): Promise<Price[] | []> {
+  if (!productId) return []
+  try {
+    return await firestoreFetchSubcollection<Price>('products', productId, 'prices')
+  } catch (error) {
+    console.error('Error fetching prices:', error)
+    return []
+  }
+}
 
   return {
     currency,
     productsCollection,
     fetchProduct,
+    fetchProductBySlug,
+    fetchProductPrices,
     ...useProductCreate(),
     ...useProductUpdate(),
     ...useProductDelete(),

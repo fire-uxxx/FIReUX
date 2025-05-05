@@ -14,7 +14,7 @@
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
-const props = defineProps<{ modelValue: string }>()
+const props = defineProps<{ modelValue: string | undefined }>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
@@ -25,7 +25,7 @@ const localValue = ref(props.modelValue || '')
 // Sync prop -> local
 watch(
   () => props.modelValue,
-  (newVal) => {
+  newVal => {
     if (newVal !== localValue.value) {
       localValue.value = newVal || ''
     }
@@ -33,7 +33,7 @@ watch(
 )
 
 // Sync local -> parent
-watch(localValue, (val) => {
+watch(localValue, val => {
   emit('update:modelValue', val)
 })
 </script>

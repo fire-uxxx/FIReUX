@@ -1,93 +1,34 @@
-// models/product.model.ts
-
-// ------------------------------------------------------------------
-// Price details (inspired by Stripe)
-// ------------------------------------------------------------------
 export interface Price {
   id: string
   active: boolean
-  billing_scheme: string
+  billing_scheme: 'per_unit' | 'tiered'
   currency: string
-  description?: string | null
-  interval?: string | null
-  interval_count?: number | null
-  metadata?: Record<string, unknown>
-  product: string
-  recurring?: unknown
-  tax_behavior: string
-  tiers?: unknown
-  tiers_mode?: string | null
-  transform_quantity?: unknown
-  trial_period_days?: number | null
-  type: string
   unit_amount: number
+  type: 'one_time' | 'recurring'
+  interval?: 'day' | 'week' | 'month' | 'year'
+  intervalCount?: number
+  metadata?: Record<string, unknown>
 }
 
-// ------------------------------------------------------------------
-// Product type enumeration
-// ------------------------------------------------------------------
-export enum ProductType {
-  Physical = 'physical',
-  Digital = 'digital',
-  Service = 'service'
-}
-
-// ------------------------------------------------------------------
-// Stock-tracking modes
-// ------------------------------------------------------------------
-export type StockType = 'finite' | 'infinite' | 'manual'
-
-// ------------------------------------------------------------------
-// Full Product model
-// ------------------------------------------------------------------
-export interface Product {
+export interface StripeProduct {
   id: string
-  slug: string
   name: string
   description: string
-  content: string
-  price: number // stored in cents
-  currency: string
   image: string
   galleryImages: string[]
   active: boolean
-  metadata?: Record<string, unknown>
-  prices?: Price[]
-  productType?: ProductType
-  secondaryText?: string
-
-  /**
-   * How stock is managed:
-   * - finite: use `stock` for exact count
-   * - infinite: never runs out
-   * - manual: toggle availability manually
-   */
-  stockType: StockType
-
-  /**
-   * Quantity when in `finite` mode; ignored otherwise
-   */
-  stock: number
-
-  // Auto-generated fields
-  created_at: string
-  updated_at: string
-  appId: string
+  prices: Price[]
 }
 
-// ------------------------------------------------------------------
-// Entry type: exactly what the user fills in
-// ------------------------------------------------------------------
-export type ProductEntry = Omit<
-  Product,
-  'created_at' | 'updated_at' | 'appId' | 'currency'
-> & {
-  // image & gallery URLs (optional until upload)
-  image?: string
-  galleryImages?: string[]
+export type StripeProductInput = Omit<StripeProduct, 'id' | 'prices'> & {
+  prices: Omit<Price, 'id' | 'active'>[] // Only fields needed to create a Stripe Price
+}
 
-  // Pricing extensions (optional)
-  pricingType?: 'one_time' | 'subscription'
-  interval?: 'day' | 'week' | 'month' | 'year'
-  intervalCount?: number
+export interface FirebaseProduct extends StripeProduct {
+  appId: string
+  slug: string
+  createdAt: Date | string
+  updatedAt: Date | string
+  creatorId: string
+  content: string
 }

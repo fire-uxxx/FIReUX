@@ -1,6 +1,9 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
+  // Treat the `app/` directory as the source root
+  srcDir: 'app/',
+
   // ✅ Enable SSR for SEO & better caching
   ssr: true,
 
@@ -77,12 +80,14 @@ export default defineNuxtConfig({
       PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR || '#FAFAFA',
       // ✅ Stripe Public Key (safe to expose)
       STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
       PIN: process.env.PIN,
       APP_ID: process.env.APP_ID,
       PROJECT_NAME: process.env.PROJECT_NAME
     },
     // ✅ Stripe Secret Key (kept private)
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY
   },
 
   vuefire: {

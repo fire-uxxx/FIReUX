@@ -7,10 +7,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const route = useRoute()
-const { fetchProduct } = useProducts()
+const { fetchProductBySlug } = useProducts()
 
-// Fetch the product based on the slug parameter from the URL
-const product = fetchProduct(route.params.slug)
+
+const product = await fetchProductBySlug(route.params.slug as string)
 </script>

@@ -1,1 +1,0 @@
-import{j as r,c as s,i as t,a4 as n}from"./dtMaA3lo.js";const o={};function a(e,c){return t(),s("tr",null,[n(e.$slots,"default")])}const _=Object.assign(r(o,[["render",a]]),{__name:"ProseTr"});export{_ as default};

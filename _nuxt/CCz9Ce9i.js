@@ -1,1 +1,0 @@
-import{j as r,c as n,i as o,a4 as s}from"./dtMaA3lo.js";const t={};function a(e,c){return o(),n("strong",null,[s(e.$slots,"default")])}const _=Object.assign(r(t,[["render",a]]),{__name:"ProseStrong"});export{_ as default};

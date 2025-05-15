@@ -1,3 +1,4 @@
+// ~/composables/useAuth.ts
 import { computed } from 'vue'
 import { useFirebaseAuth, useCurrentUser } from 'vuefire'
 import {
@@ -15,6 +16,7 @@ export function useAuth() {
   const {
     public: { APP_ID }
   } = useRuntimeConfig()
+
   const setUserAppIdClaim = async user => {
     try {
       const functions = getFunctions()
@@ -24,6 +26,12 @@ export function useAuth() {
     } catch (error) {
       console.error('❌ Failed to set custom claims:', error.message)
     }
+  }
+
+  const postProcessAuth = async user => {
+    const { ensureCoreUser } = useCoreUser()
+    await ensureCoreUser(user.uid, user.email ?? '') // ✅ Create Core User if missing
+    await setUserAppIdClaim(user) // ✅ Set custom claims for app access
   }
 
   const authState = computed(() =>
@@ -36,9 +44,9 @@ export function useAuth() {
     try {
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
-      await setUserAppIdClaim(result.user)
+      await postProcessAuth(result.user)
       console.log('✅ Google Sign-In Success - User:', result.user)
-      return result.user // ✅ Ensure user is returned
+      return result.user
     } catch (error) {
       console.error('❌ Google Sign-In Failed:', error.message)
     }
@@ -47,7 +55,7 @@ export function useAuth() {
   const signInWithEmailPassword = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
-      await setUserAppIdClaim(result.user)
+      await postProcessAuth(result.user)
       console.log('✅ Email Sign-In Success - User:', result.user)
       return result.user
     } catch (error) {
@@ -59,7 +67,7 @@ export function useAuth() {
   const signUpWithEmailPassword = async (email, password) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
-      await setUserAppIdClaim(result.user)
+      await postProcessAuth(result.user)
       console.log('✅ Email Sign-Up Success - User:', result.user)
       return result.user
     } catch (error) {

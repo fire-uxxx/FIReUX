@@ -1,21 +1,23 @@
 // ~/models/user.model.ts
 
-export interface User {
+// Core user identity (global, never app-specific)
+export interface CoreUser {
   id: string
+  email: string
+  created_at: string
+  app_ids: string[] // Apps this user has joined
+}
+// App-specific user profile (e.g., for FIReUX)
+export interface AppUserProfile {
   display_name: string
   handle: string
   avatar: string
-  email: string
+  bio?: string
   created_at: string
-  appIds: string[]
-  adminAppIds?: string[]
-
+  email: string
+  role?: 'user' | 'admin'
   subscription?: {
     plan: 'standard' | 'pro'
     started_at: string
   } | null
-  is_active?: boolean // Whether the user is currently active
-  role?: 'user' | 'admin' | 'moderator' // Role of the user in the system
-  login_count?: number // Total number of logins
-  profile_completion?: number // Percentage of profile completion (0-100)
 }

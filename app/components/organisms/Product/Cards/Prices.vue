@@ -1,51 +1,34 @@
 <template>
   <div class="product-prices">
+    <div v-if="prices.length === 0">No price available</div>
     <div
       v-for="(price, index) in prices"
       :key="index"
-      class="product-price-item"
-      @click="selectPrice(index)"
+      class="price-option"
       :class="{ selected: selectedIndex === index }"
+      @click="selectedIndex = index"
     >
-      <p>{{ formatPrice(price.unit_amount, price.currency) }}</p>
-      <UBadge :color="price.active ? 'success' : 'warning'" variant="subtle">
-        {{ price.active ? 'Active' : 'Inactive' }}
-      </UBadge>
-      <p class="price-type">{{ price.type }}</p>
+      {{ formatPrice(price.unit_amount, price.currency) }} - {{ price.type }}
     </div>
+    <pre>{{ JSON.stringify(prices, null, 2) }}</pre>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
 const props = defineProps<{
-  prices: Price[]
-  modelValue?: number | null
+  productId: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: number): void
-}>()
+const selectedIndex = defineModel<number>('selectedIndex', { default: 0 })
+const prices = ref<Price[]>([])
 
-const selectedIndex = ref<number | null>(props.modelValue ?? null)
-
-watch(
-  () => props.modelValue,
-  value => {
-    selectedIndex.value = value ?? null
-  }
-)
-
-function selectPrice(index: number) {
-  selectedIndex.value = index
-  emit('update:modelValue', index)
-}
+const { fetchProductPrices } = useProducts()
+prices.value = await fetchProductPrices(props.productId)
 
 function formatPrice(amount: number, currency: string) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: currency.toUpperCase(),
+    currency: currency.toUpperCase()
   }).format(amount / 100)
 }
 </script>
@@ -54,28 +37,16 @@ function formatPrice(amount: number, currency: string) {
 .product-prices {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
 }
-
-.product-price-item {
-  padding: 1rem;
+.price-option {
+  padding: 0.5rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-xs);
   cursor: pointer;
-  transition: background-color 0.2s;
 }
-
-.product-price-item:hover {
+.price-option.selected {
   background-color: var(--background-2);
-}
-
-.selected {
   border-color: var(--primary);
-  background-color: var(--background-1);
-}
-
-.price-type {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
 }
 </style>

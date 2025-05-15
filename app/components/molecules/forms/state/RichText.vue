@@ -1,13 +1,13 @@
 <template>
-  <UFormField label="Content">
-    <ClientOnly>
+  <ClientOnly>
+    <div class="quill-wrapper">
       <QuillEditor
         v-model:content="localValue"
         content-type="html"
         theme="snow"
       />
-    </ClientOnly>
-  </UFormField>
+    </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -19,10 +19,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-// Local 2-way bindable state
 const localValue = ref(props.modelValue || '')
 
-// Sync prop -> local
 watch(
   () => props.modelValue,
   newVal => {
@@ -32,7 +30,6 @@ watch(
   }
 )
 
-// Sync local -> parent
 watch(localValue, val => {
   emit('update:modelValue', val)
 })

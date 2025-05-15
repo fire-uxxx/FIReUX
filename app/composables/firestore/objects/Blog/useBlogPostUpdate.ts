@@ -1,6 +1,5 @@
-
 export function useBlogPostUpdate() {
-  const { updateDocument } = useFirestoreManager()
+  const { updateFirestoreDocument } = useFirestoreManager()
 
   async function updateBlogPost(
     postId: string,
@@ -11,7 +10,7 @@ export function useBlogPostUpdate() {
       throw new Error('Invalid update payload. Must be an object.')
 
     try {
-      await updateDocument('blogs', postId, updates)
+      await updateFirestoreDocument('blogs', postId, updates)
       console.log(
         `✅ BlogPost Updated Successfully: ${JSON.stringify(updates)}`
       )

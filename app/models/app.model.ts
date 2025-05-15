@@ -3,5 +3,5 @@ export interface App {
   app_name: string
   created_at: string
   created_by: string
-  admins: string[]
+  admin_ids: string[] // UIDs of admin users
 }

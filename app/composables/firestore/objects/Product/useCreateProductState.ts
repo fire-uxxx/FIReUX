@@ -1,43 +1,42 @@
+// ~/composables/admin/useCreateProductState.ts
 import { useStorage } from '@vueuse/core'
+import { useCurrentUser } from 'vuefire'
 
 export function useCreateProductState() {
   const now = new Date().toISOString()
-
-  const product = useStorage<Partial<FirebaseProduct>>('createProduct', {
-    id: '',
-    name: '',
-    description: '',
-    content: '',
-    image: '',
-    galleryImages: [],
-    active: true,
-    prices: [
-      {
-        id: '',
-        active: true,
-        billing_scheme: 'per_unit',
-        currency: 'eur',
-        unit_amount: 1200,
-        type: 'one_time'
-      }
-    ],
-    createdAt: now,
-    updatedAt: now,
-    slug: '',
-    creatorId: '',
-    appId: ''
-  })
-
-  const mainImageData = useState<string>('createProductMainImage', () => '')
 
   const currentUser = useCurrentUser()
   const {
     public: { APP_ID }
   } = useRuntimeConfig()
 
+  const defaultProduct: Partial<FirebaseProduct> = {
+    id: '',
+    name: '',
+    description: '',
+    content: '',
+    active: true,
+    prices: [],
+    created_at: now,
+    updated_at: now,
+    slug: '',
+    creator_id: currentUser.value?.uid || '',
+    app_id: APP_ID,
+    stock: null,
+    track_stock: false,
+    product_type: 'physical'
+  }
+
+  const product = useStorage<Partial<FirebaseProduct>>(
+    'createProduct',
+    defaultProduct
+  )
+
+  const mainImageData = useStorage<string>('createProductMainImage', '')
+
   const { generateSlug } = useProductUtils()
 
-  // Automatically update slug when name changes
+  // Auto-generate slug
   watch(
     () => product.value.name,
     async newName => {
@@ -49,14 +48,10 @@ export function useCreateProductState() {
     }
   )
 
-  // Populate creatorId and appId when available
+  // Populate creator_id and app_id on mount
   onMounted(() => {
-    if (currentUser.value?.uid) {
-      product.value.creatorId = currentUser.value.uid
-    }
-    if (APP_ID) {
-      product.value.appId = APP_ID
-    }
+    if (currentUser.value?.uid) product.value.creator_id = currentUser.value.uid
+    if (APP_ID) product.value.app_id = APP_ID
   })
 
   function resetCreateProductState() {
@@ -65,22 +60,42 @@ export function useCreateProductState() {
       name: '',
       description: '',
       content: '',
-      image: '',
-      galleryImages: [],
       active: true,
       prices: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       slug: '',
-      creatorId: currentUser.value?.uid || '',
-      appId: APP_ID
+      creator_id: currentUser.value?.uid || '',
+      app_id: APP_ID,
+      stock: null,
+      track_stock: false,
+      product_type: 'physical'
     }
     mainImageData.value = ''
   }
 
+  const productPayload = computed(() => {
+    const name = product.value.name?.trim()
+    if (!name) throw new Error('❌ Product name is required.')
+    if (!mainImageData.value) throw new Error('❌ Main image is required.')
+
+    return {
+      name,
+      description: product.value.description || '',
+      content: product.value.content || '',
+      active: product.value.active ?? true,
+      slug: product.value.slug || '',
+      stock: product.value.stock ?? null,
+      product_type: product.value.product_type ?? 'physical',
+      track_stock: product.value.track_stock ?? false,
+      images: [mainImageData.value]
+    }
+  })
+
   return {
     product,
     mainImageData,
-    resetCreateProductState
+    resetCreateProductState,
+    productPayload
   }
 }

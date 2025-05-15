@@ -7,7 +7,7 @@
 <script setup>
 const router = useRouter()
 const currentUser = useCurrentUser()
-const { user } = useUser()
+const { user } = useAppUser()
 
 const userAvatar = computed(() => {
   return (

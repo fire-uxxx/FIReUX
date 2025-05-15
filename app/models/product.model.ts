@@ -1,3 +1,5 @@
+// ~/models/product.model.ts
+
 export interface Price {
   id: string
   active: boolean
@@ -6,29 +8,34 @@ export interface Price {
   unit_amount: number
   type: 'one_time' | 'recurring'
   interval?: 'day' | 'week' | 'month' | 'year'
-  intervalCount?: number
+  interval_count?: number
   metadata?: Record<string, unknown>
 }
+
+export type StripePriceInput = Omit<Price, 'id' | 'active'>
 
 export interface StripeProduct {
   id: string
   name: string
   description: string
-  image: string
-  galleryImages: string[]
+  images: string[]
   active: boolean
   prices: Price[]
 }
 
 export type StripeProductInput = Omit<StripeProduct, 'id' | 'prices'> & {
-  prices: Omit<Price, 'id' | 'active'>[] // Only fields needed to create a Stripe Price
+  prices: StripePriceInput[]
 }
 
 export interface FirebaseProduct extends StripeProduct {
-  appId: string
+  app_id: string
   slug: string
-  createdAt: Date | string
-  updatedAt: Date | string
-  creatorId: string
+  created_at: Date | string
+  updated_at: Date | string
+  creator_id: string
   content: string
+  product_type: 'physical' | 'digital' | 'service'
+  stock: number | null
+  track_stock: boolean
+  main_image: string // ← for internal use in Firestore
 }

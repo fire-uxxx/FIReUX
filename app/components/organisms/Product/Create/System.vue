@@ -30,7 +30,7 @@ const tabItems = [
 
 // Composable state
 const {
-  product,
+  product
   // resetCreateProductState // optionally re-enable for reset after create
 } = useCreateProductState()
 
@@ -57,17 +57,3 @@ async function handleCreate() {
   isCreating.value = false
 }
 </script>
-
-<style scoped>
-.root-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.actions {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
-}
-</style>

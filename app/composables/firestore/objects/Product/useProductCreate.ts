@@ -1,115 +1,78 @@
-// ~/composables/admin/useProductCreate.ts
+// ~/composables/firestore/objects/Product/useProductCreate.ts
+
+import { useCurrentUser } from 'vuefire'
 
 export function useProductCreate() {
-  const router = useRouter()
-  const { updateDocument } = useFirestoreUpdate()
-  const { product, mainImageData } = useCreateProductState()
+  const {
+    public: { APP_ID }
+  } = useRuntimeConfig()
+
+  const { product, productPayload, mainImageData, resetCreateProductState } =
+    useCreateProductState()
+  const { pricesPayload, resetCreatePricesState } = useCreatePricesState()
   const { uploadImage } = useMediaStorage()
+  const { updateProduct } = useProductUpdate()
 
   type StripeCreateResponse =
-    | { success: true; id: string }
-    | {
-        success: false
-        error: string
-        message?: string
-        received?: Record<string, unknown>
-      }
+    | { success: true; id: string; message: string }
+    | { success: false; error: string }
+
+  const now = new Date().toISOString()
 
   async function createProduct() {
-    if (!product.value.name?.trim()) {
-      return { success: false, error: 'Product name is required.' }
-    }
-
-    // Ensure all required fields are safely initialized
-    product.value.description = product.value.description || ''
-    product.value.active = product.value.active ?? true
-    product.value.prices = product.value.prices || []
-    product.value.appId = product.value.appId || ''
-    product.value.creatorId = product.value.creatorId || ''
-    product.value.createdAt =
-      product.value.createdAt || new Date().toISOString()
-    product.value.updatedAt =
-      product.value.updatedAt || new Date().toISOString()
-    product.value.slug = product.value.slug || ''
-    product.value.content = product.value.content || ''
-
-    const response: StripeCreateResponse = await $fetch(
-      '/api/stripe/create-product',
-      {
-        method: 'POST',
-        body: {
-          product: {
-            name: product.value.name,
-            description: product.value.description,
-            active: product.value.active,
-            prices: (product.value.prices || []).map(p => ({
-              billing_scheme: p.billing_scheme,
-              currency: p.currency,
-              unit_amount: p.unit_amount,
-              type: p.type,
-              interval: p.interval,
-              intervalCount: p.intervalCount,
-              metadata: p.metadata
-            }))
-          }
-        }
-      }
-    )
-
-    if (!response.success) {
-      console.error('❌ Stripe product creation failed:', response.error)
-      return {
-        success: false,
-        error: response.error || 'Unknown error'
-      }
-    }
-
-    if (!response.id) {
-      console.error('❌ No Stripe product ID returned')
-      return {
-        success: false,
-        error: 'No Stripe product ID returned'
-      }
-    }
-
-    // Upload main image (if present in state)
-    if (mainImageData.value) {
-      try {
-        const imageUrl = await uploadImage(
-          mainImageData.value,
-          'products',
-          response.id,
-          'main'
-        )
-        product.value.galleryImages = [imageUrl]
-        product.value.image = imageUrl
-      } catch (uploadError) {
-        console.error('❌ Failed to upload image:', uploadError)
-      }
-    }
+    const currentUser = useCurrentUser()
+    while (!currentUser.value) await new Promise(r => setTimeout(r, 50))
 
     try {
-      await updateDocument('products', response.id, {
-        appId: product.value.appId,
-        creatorId: product.value.creatorId,
-        createdAt: product.value.createdAt,
-        updatedAt: product.value.updatedAt,
+      // Upload and assign image
+      const imageUrl = await uploadImage(
+        mainImageData.value,
+        'products',
+        product.value.id || '',
+        'main'
+      )
+
+      product.value.main_image = imageUrl
+
+      const stripePayload = {
+        ...productPayload.value,
+        images: [imageUrl],
+        prices: pricesPayload.value
+      }
+
+      const response: StripeCreateResponse = await $fetch(
+        '/api/stripe/create-product',
+        {
+          method: 'POST',
+          body: { product: stripePayload }
+        }
+      )
+
+      if (!response.success || !response.id) {
+        console.error('❌ Stripe product creation failed:', response)
+        return { success: false, error: 'Stripe product creation failed' }
+      }
+
+      await updateProduct(response.id, {
+        main_image: product.value.main_image,
+        app_id: APP_ID,
+        creator_id: currentUser.value?.uid || '',
         slug: product.value.slug,
         content: product.value.content,
-        image: product.value.image || '',
-        galleryImages: product.value.galleryImages || []
+        product_type: product.value.product_type,
+        stock: product.value.stock,
+        track_stock: product.value.track_stock,
+        created_at: now
       })
 
-      router.push(`/products/${product.value.slug}`)
-    } catch (err) {
-      console.error('❌ Failed to update Firestore:', err)
-      return {
-        success: false,
-        error: 'Failed to update Firestore'
-      }
-    }
+      resetCreateProductState()
+      resetCreatePricesState()
 
-    return response
+      return { success: true, id: response.id }
+    } catch (error) {
+      console.error('❌ Product creation error:', error)
+      return { success: false, error: 'Unexpected error occurred.' }
+    }
   }
 
   return { createProduct }

@@ -54,5 +54,5 @@ definePageMeta({
   icon: icon
 })
 
-const { user } = useUser()
+const { user } = useAppUser()
 </script>

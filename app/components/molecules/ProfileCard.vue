@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-const { user } = useUser()
+const { user } = useAppUser()
 </script>
 
 <style scoped>

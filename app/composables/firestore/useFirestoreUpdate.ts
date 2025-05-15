@@ -1,15 +1,15 @@
-// composables/firestore/operations/useFirestoreUpdate.js
-import { doc, updateDoc } from 'firebase/firestore'
+// ~/composables/firestore/operations/useFirestoreUpdate.ts
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { useFirestore } from 'vuefire'
 import type { FieldValue } from 'firebase/firestore'
 
 export function useFirestoreUpdate() {
   const db = useFirestore()
 
-  async function updateDocument(
+  async function updateFirestoreDocument(
     collectionName: string,
     documentId: string,
-    updates: { [key: string]: FieldValue | Partial<unknown> | undefined }
+    updates: { [key: string]: FieldValue | Partial<unknown> | undefined | null }
   ) {
     if (!collectionName || !documentId || !updates) {
       return Promise.reject(
@@ -18,6 +18,9 @@ export function useFirestoreUpdate() {
     }
 
     try {
+      const { waitForCurrentUser } = useFirestoreManager()
+      await waitForCurrentUser()
+      updates.updated_at = serverTimestamp()
       await updateDoc(doc(db, collectionName, documentId), updates)
       console.log(
         `✅ Document updated in '${collectionName}' with ID: ${documentId}`
@@ -29,6 +32,6 @@ export function useFirestoreUpdate() {
   }
 
   return {
-    updateDocument
+    updateFirestoreDocument
   }
 }

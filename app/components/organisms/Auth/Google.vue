@@ -1,12 +1,12 @@
 <template>
   <button class="google-btn" @click="handleGoogleSignIn">
-    <img :src="logoSrc" alt="Sign in with Google" >
+    <img :src="logoSrc" alt="Sign in with Google" />
   </button>
 </template>
 
 <script setup>
 const { signInWithGoogle } = useAuth()
-const { onboardUser } = useUser()
+const { onboardAppUser } = useAppUser()
 const isDark = computed(() => useColorMode().value === 'dark')
 
 const logoSrc = computed(() =>
@@ -17,7 +17,7 @@ const handleGoogleSignIn = async () => {
   const user = await signInWithGoogle()
   if (user?.uid) {
     console.log('[handleGoogleSignIn] ✅ Got UID:', user.uid)
-    await onboardUser(user.uid)
+    await onboardAppUser()
   } else {
     console.warn('[handleGoogleSignIn] ❌ No UID returned from Google sign-in')
   }

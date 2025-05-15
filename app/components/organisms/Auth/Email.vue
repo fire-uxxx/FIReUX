@@ -2,7 +2,7 @@
   <div class="email-auth">
     <UForm :state="state" class="form" @submit="handleEmailAuth">
       <UInput v-model="state.email" placeholder="Email" block />
-      <div class="input-spacing"/>
+      <div class="input-spacing" />
       <UInput
         v-model="state.password"
         type="password"
@@ -23,8 +23,9 @@
 </template>
 
 <script setup>
+
 const { signInWithEmailPassword, signUpWithEmailPassword } = useAuth()
-const { onboardUser } = useUser()
+const { onboardAppUser } = useAppUser()
 
 const isSignUp = ref(true)
 const state = reactive({
@@ -40,7 +41,7 @@ const handleEmailAuth = async () => {
   const user = await authMethod(state.email, state.password)
 
   if (user?.uid) {
-    await onboardUser(user.uid) // ✅ Ensure onboarding with UID
+    await onboardAppUser(user.uid) // ✅ Ensure onboarding with UID
   }
 }
 </script>

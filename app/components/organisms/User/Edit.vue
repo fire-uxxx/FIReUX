@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-const { user } = useUser()
-const { updateUser } = useUserUpdate()
+const { user } = useAppUser()
+const { updateUser } = useAppUserUpdate()
 const { saveField } = useEditHandler(updateUser)
 </script>

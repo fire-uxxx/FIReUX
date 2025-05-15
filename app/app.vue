@@ -4,13 +4,13 @@
       <NuxtPage />
     </NuxtLayout>
     <UModal
-      :open="hasAdmin === false"
+      :open="isInitialised === false"
       prevent-close
       title="🚫 Blocked"
-      description="This app needs to be initialized by an admin."
+      description="This app needs to be initialized."
     >
       <template #body>
-        <OrganismsAdminOnBoarding />
+        <OrganismsAppOnboarding />
       </template>
     </UModal>
   </UApp>
@@ -21,5 +21,6 @@ useHead({
   link: [{ rel: 'manifest', href: '/manifest.webmanifest' }]
 })
 
-const { hasAdmin } = useApp()
+const { isInitialised } = useApp()
+
 </script>

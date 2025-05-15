@@ -22,7 +22,7 @@ export function useBlogPostUtils() {
 
   // Get the current user as an Author object
   function getAuthor(): Author {
-    const { user } = useUser()
+    const { user } = useAppUser()
     return {
       display_name: user.value?.display_name || '',
       handle: user.value?.handle || '',

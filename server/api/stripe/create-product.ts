@@ -1,15 +1,13 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3'
 import Stripe from 'stripe'
+import admin from '../../utils/firebase'
 
 export default defineEventHandler(async event => {
   const STRIPE_SECRET_KEY = useRuntimeConfig().STRIPE_SECRET_KEY
 
   if (!STRIPE_SECRET_KEY) {
     setResponseStatus(event, 500)
-    return {
-      success: false,
-      error: 'Missing Stripe Secret Key'
-    }
+    return { success: false, error: 'Missing Stripe Secret Key' }
   }
 
   const stripe = new Stripe(STRIPE_SECRET_KEY, {
@@ -18,10 +16,7 @@ export default defineEventHandler(async event => {
 
   if (event.node.req.method !== 'POST') {
     setResponseStatus(event, 405)
-    return {
-      success: false,
-      error: 'Method Not Allowed'
-    }
+    return { success: false, error: 'Method Not Allowed' }
   }
 
   try {
@@ -39,6 +34,7 @@ export default defineEventHandler(async event => {
 
     const images = product.image ? [product.image] : []
 
+    // 1. Create Stripe product
     const stripeProduct = await stripe.products.create({
       name: product.name,
       description: product.description,
@@ -48,6 +44,7 @@ export default defineEventHandler(async event => {
 
     const firstPrice = product.prices[0]
 
+    // 2. Create Stripe price
     await stripe.prices.create({
       product: stripeProduct.id,
       unit_amount: firstPrice.unit_amount,
@@ -62,10 +59,34 @@ export default defineEventHandler(async event => {
           : undefined
     })
 
+    // 3. Wait for Firestore document to exist
+    const firestore = admin.firestore()
+    const docRef = firestore.doc(`products/${stripeProduct.id}`)
+
+    const maxWaitMs = 5000
+    const pollIntervalMs = 100
+    const startTime = Date.now()
+
+    while (true) {
+      const docSnap = await docRef.get()
+      if (docSnap.exists) break
+
+      if (Date.now() - startTime > maxWaitMs) {
+        setResponseStatus(event, 504)
+        return {
+          success: false,
+          error: 'Timeout: Firestore document not created in time.'
+        }
+      }
+
+      await new Promise(resolve => setTimeout(resolve, pollIntervalMs))
+    }
+
+    // 4. Return success
     return {
       success: true,
-      message: 'Product and price created successfully',
-      id: stripeProduct.id
+      id: stripeProduct.id,
+      message: 'Product, price, and Firestore sync completed.'
     }
   } catch (error) {
     console.error('Stripe Product Creation Error:', error)

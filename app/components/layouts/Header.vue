@@ -60,7 +60,7 @@ import { ref, computed, watch } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import { useRouter, useRoute } from 'vue-router'
 
-const { user } = useUser()
+const { user } = useCoreUser()
 const router = useRouter()
 
 // Navigation Handlers
@@ -77,13 +77,15 @@ const isMobile = computed(() => width.value < 1024)
 const mobileMenuOpen = ref(false)
 const toggleMobileNav = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value
-
 }
 const route = useRoute()
 
-watch(() => route.fullPath, () => {
-  mobileMenuOpen.value = false
-})
+watch(
+  () => route.fullPath,
+  () => {
+    mobileMenuOpen.value = false
+  }
+)
 
 // Define props, renaming localLinks to mobileLinks
 // Note: Now we expect both appLinks and mobileLinks to be passed in
@@ -100,7 +102,6 @@ defineProps({
 })
 
 // Compute a route title from meta or route name
-
 </script>
 
 <style scoped>

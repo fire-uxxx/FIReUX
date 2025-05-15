@@ -101,7 +101,7 @@ export function getRouteMetaForPath(path: string): {
 export function useRoutes() {
   // Retrieve the isAdmin computed property from our user composable.
   // (Assume that useUser() returns { isAdmin } where isAdmin is a computed boolean.)
-  const { isAdmin } = useUser()
+  const { isAdmin } = useAppUser()
   const route = useRoute()
 
   // Public app links.

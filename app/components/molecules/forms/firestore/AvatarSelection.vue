@@ -15,7 +15,7 @@
 
 <script setup>
 const currentUser = useCurrentUser()
-const { user, updateUser } = useUser()
+const { user, updateUser } = useAppUser()
 const { uploadProfileImage } = useMediaStorage()
 
 const useravatar = computed(() => user.value?.avatar || '')

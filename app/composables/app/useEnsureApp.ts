@@ -1,10 +1,12 @@
-import { getDoc, doc } from 'firebase/firestore'
+import { getDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { useFirestore } from 'vuefire'
 
 export function useAppEnsure() {
   const db = useFirestore()
   const { waitForCurrentUser, createDocumentWithId } = useFirestoreManager()
-  const { public: { APP_ID } } = useRuntimeConfig()
+  const {
+    public: { APP_ID, PWA_APP_NAME }
+  } = useRuntimeConfig()
 
   async function ensureApp() {
     const currentUser = await waitForCurrentUser()
@@ -20,18 +22,30 @@ export function useAppEnsure() {
 
     if (appSnap.exists()) {
       const createdAt = appSnap.data()?.created_at || 'unknown date'
-      console.log(`✅ [ensureApp] App with ID '${APP_ID}' already exists. Please choose a different name. Continuing with established app '${APP_ID}' created on ${createdAt}.`)
+      console.log(
+        `✅ [ensureApp] App '${APP_ID}' already exists. Created on ${createdAt}.`
+      )
       return
     }
 
-    const collectionName = 'apps'
-    const appData = {
+    const appData: Partial<App> = {
       id: APP_ID,
-      created_at: new Date().toISOString(),
+      app_name: PWA_APP_NAME,
       admin_ids: [uid]
     }
+    // Create the app document (includes created_at, created_in automatically)
+    await createDocumentWithId('apps', APP_ID, appData)
 
-    return await createDocumentWithId(collectionName, APP_ID, appData)
+    // ✅ Update Core User to reflect admin role
+    const coreUserRef = doc(db, 'users', uid)
+    await updateDoc(coreUserRef, {
+      adminOf: arrayUnion(APP_ID)
+    })
+
+    console.log(
+      `🎉 [ensureApp] App '${APP_ID}' created and user '${uid}' added as admin.`
+    )
+    return APP_ID
   }
 
   return { ensureApp }

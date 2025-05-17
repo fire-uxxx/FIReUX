@@ -9,27 +9,36 @@ export function useFirestoreCreate() {
   async function createDocumentWithId(
     collectionName: string,
     documentId: string,
-    data: Record<string, unknown>
+    data: Record<string, unknown>,
+    includeUser: boolean = true
   ): Promise<string> {
-    const { waitForCurrentUser } = useFirestoreManager();
-    const currentUser = await waitForCurrentUser();
+    const baseData: Record<string, unknown> = {
+      created_in: APP_ID,
+      ...data,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+
+    if (includeUser) {
+      const { waitForCurrentUser } = useFirestoreManager()
+      const currentUser = await waitForCurrentUser()
+      baseData.created_by = currentUser.uid
+    }
 
     try {
-      await setDoc(doc(db, collectionName, documentId), {
-        app_id: APP_ID,
-        creator_id: currentUser.uid,
-        ...data,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
-      console.log(`[createDocumentWithId] Created document in '${collectionName}' with ID: ${documentId}`)
+      await setDoc(doc(db, collectionName, documentId), baseData)
+      console.log(
+        `[createDocumentWithId] ✅ Created document in '${collectionName}' with ID: ${documentId}`
+      )
       return documentId
     } catch (error) {
-      console.error(`[createDocumentWithId] Error creating document in '${collectionName}':`, error)
+      console.error(
+        `[createDocumentWithId] ❌ Error creating document in '${collectionName}':`,
+        error
+      )
       throw error
     }
   }
-
   /**
    * The parent must provide the full object shape for Core User creation.
    */

@@ -72,22 +72,29 @@ export default defineNuxtConfig({
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
 
-      // ✅ PWA Metadata for FIReUX
-      DOMAIN: process.env.DOMAIN || 'https://fireux.app',
+      DOMAIN: process.env.DOMAIN,
       PWA_APP_NAME: process.env.PWA_APP_NAME,
       PWA_APP_SHORT_NAME: process.env.PWA_APP_SHORT_NAME,
-      PWA_THEME_COLOR: process.env.PWA_THEME_COLOR || '#FACC15',
-      PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR || '#FAFAFA',
-      // ✅ Stripe Public Key (safe to expose)
+      PWA_THEME_COLOR: process.env.PWA_THEME_COLOR,
+      PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR,
       STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
       PIN: process.env.PIN,
       APP_ID: process.env.APP_ID,
-      PROJECT_NAME: process.env.PROJECT_NAME
+      PROJECT_NAME: process.env.PROJECT_NAME,
+      AUTHOR_NAME: process.env.AUTHOR_NAME,
+      OPENAI_API_KEY_NAME: process.env.OPENAI_API_KEY_NAME,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+      NODE_ENV: process.env.NODE_ENV
     },
-    // ✅ Stripe Secret Key (kept private)
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    stripeSecretKey: process.env.STRIPE_SECRET_KEY
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    NODE_ENV: process.env.NODE_ENV,
+    AUTHOR_NAME: process.env.AUTHOR_NAME,
+    OPENAI_API_KEY_NAME: process.env.OPENAI_API_KEY_NAME,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY
   },
 
   vuefire: {

@@ -1,76 +1,47 @@
 <template>
   <UContainer>
-    <!-- Authentication & PIN Gate -->
     <div v-if="!isUnlocked">
-      <OrganismsAuthSystem />
-
-      <div v-if="showPin" class="pin-section">
-        <p class="pin-instruction">🔒 Enter the developer PIN to continue.</p>
-        <UPinInput
-          v-model="pin"
-          :length="4"
-          type="number"
-          placeholder="○"
-          @complete="checkPin"
-        />
-      </div>
+      <template v-if="coreUser === undefined">
+        <p>Loading user data...</p>
+      </template>
+      <template v-else-if="coreUser === null">
+        <OrganismsAuthSystem />
+      </template>
+      <template v-else>
+        <div class="pin-section">
+          <p class="pin-instruction">🔒 Enter the developer PIN to continue.</p>
+          <UPinInput
+            v-model="pin"
+            :length="4"
+            type="number"
+            placeholder="○"
+            @complete="checkPin"
+          />
+        </div>
+      </template>
     </div>
 
-    <!-- Onboarding Section -->
     <div v-else class="edit-component">
-      <div class="logo-wrapper">
-        <LogoType size="medium" />
-      </div>
+      <LogoType size="medium" class="logo-wrapper" />
       <OrganismsAppOnboardingVariables />
-      <div v-if="allEnvValid">
-        <UButton block @click="createAppHandler">Create App</UButton>
-      </div>
+
+      <UButton v-if="envData?.isValid" block @click="createAppHandler">Create App</UButton>
+
       <p v-else class="setup-reminder">
-        ✅ All required environment variables must be set before you can create an app.<br />
-        After updating your credentials, restart your server: 
-        <code>npm run dev</code>.
+        ⚠️ Some required environment variables are missing. Please set them before creating an app.<br />
+        After updating your credentials, <strong>restart your server:</strong><br />
+        <input class="copy-code" readonly value="npm run dev" @click="event.target.select()" />
       </p>
     </div>
   </UContainer>
 </template>
 
 <script setup>
-const pin = ref([])
-const isUnlocked = ref(false)
+const { coreUser } = useCoreUser()
+const { pin, isUnlocked, checkPin, createAppHandler } = useApp()
+const { data: envData } = await useFetch('/api/env-check', { server: false })
 
-// Always show the PIN for now
-const showPin = true
-
-// Environment Check (true/false)
-const { data: allEnvValid } = await useFetch('/api/env-check')
-
-// PIN Logic
-const {
-  public: { PIN }
-} = useRuntimeConfig()
-
-function checkPin() {
-  if (pin.value.join('') === PIN) {
-    isUnlocked.value = true
-  }
-}
-
-// Create App Handler
-function createAppHandler() {
-  const {
-    public: { APP_ID, PWA_APP_NAME }
-  } = useRuntimeConfig()
-
-  const appId = APP_ID
-  const appName = PWA_APP_NAME
-  const { createApp } = useAppCreate(appId, appName)()
-
-  createApp()
-    .then(() => console.log('🎉 App created successfully!'))
-    .catch(error => console.error('❌ Error creating app:', error))
-}
 </script>
-
 <style scoped>
 .pin-section {
   display: flex;
@@ -103,5 +74,29 @@ function createAppHandler() {
   font-size: 0.95em;
   color: var(--text-secondary);
   text-align: center;
+}
+
+.copy-code {
+  margin-top: var(--space-2);
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  background: var(--ui-bg);
+  color: var(--text-primary);
+  font-family: monospace;
+  width: auto;
+  cursor: pointer;
+}
+
+.debug-panel {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: #222;
+  color: #0f0;
+  font-family: monospace;
+  border: 1px solid #444;
+  border-radius: var(--radius-s);
+  width: 100%;
+  overflow-x: auto;
 }
 </style>

@@ -9,6 +9,8 @@ export function useAppUserEnsure() {
   } = useRuntimeConfig()
 
   async function ensureAppUser() {
+    const { generateHandle } = useAppUserUtils()
+
     const user = await waitForCurrentUser()
     const uid = user.uid
 
@@ -22,17 +24,13 @@ export function useAppUserEnsure() {
     const isAdmin = appSnap.exists() && appSnap.data().admin_ids?.includes(uid)
     const role = isAdmin ? 'admin' : 'user'
 
-    const { generateHandle } = useAppUser()
-
-    const appUserData = {
-      id: uid,
-      created_at: new Date().toISOString(),
+    const appUserData: Partial<AppUserProfile> = {
+      uid,
       role,
       display_name: user?.displayName ?? '',
       avatar: user?.photoURL ?? '',
       handle: generateHandle(user?.displayName ?? ''),
-      bio: '',
-      is_complete: false
+      bio: ''
     }
 
     const appUserDocRef = doc(db, `users/${uid}/apps`, APP_ID)
@@ -49,7 +47,7 @@ export function useAppUserEnsure() {
 
     const coreUserRef = doc(db, 'users', uid)
     await updateDoc(coreUserRef, {
-      app_ids: arrayUnion(APP_ID)
+      userOf: arrayUnion(APP_ID)
     })
 
     console.log(

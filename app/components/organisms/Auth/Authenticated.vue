@@ -1,7 +1,7 @@
 <template>
-  <div v-if="userReady" class="button-group">
+  <div v-if="coreUser !== undefined && appUser !== undefined" class="button-group">
     <UButton block @click="handleClick">
-      {{ user ? 'Go to Dashboard' : 'Create FireUX User' }}
+      {{ coreUser ? (appUser ? 'Go to Dashboard' : 'Create App User') : 'Create Core User' }}
     </UButton>
     <UButton block @click="handleSignOut">Sign Out</UButton>
   </div>
@@ -9,14 +9,17 @@
 
 <script setup>
 const router = useRouter()
-const { user, userReady, ensureAppUser } = useAppUser()
+const { coreUser, ensureCoreUser } = useCoreUser()
+const { appUser, ensureAppUser } = useAppUser()
 const { signOutUser } = useAuth()
 
 const handleClick = async () => {
-  if (user.value) {
-    router.push('/dashboard')
-  } else {
+  if (!coreUser.value) {
+    await ensureCoreUser()
+  } else if (!appUser.value) {
     await ensureAppUser()
+  } else {
+    router.push('/dashboard')
   }
 }
 

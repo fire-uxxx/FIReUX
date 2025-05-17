@@ -3,12 +3,16 @@
 // Core user identity (global, never app-specific)
 export interface CoreUser {
   id: string
-  email: string
+  email?: string
   created_at: string
-  app_ids: string[] // Apps this user has joined
+  updated_at: string
+  userOf: string[] // Apps this user has joined as user
+  adminOf: string[] // Apps this user has created/admins
+  created_in: string // App where this core user was created
 }
 // App-specific user profile (e.g., for FIReUX)
 export interface AppUserProfile {
+  uid: string // ✅ Explicitly store the UID for convenience
   display_name: string
   handle: string
   avatar: string

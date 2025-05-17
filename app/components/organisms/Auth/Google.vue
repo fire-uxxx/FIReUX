@@ -6,7 +6,7 @@
 
 <script setup>
 const { signInWithGoogle } = useAuth()
-const { onboardAppUser } = useAppUser()
+const { onboardUser } = useAppUser()
 const isDark = computed(() => useColorMode().value === 'dark')
 
 const logoSrc = computed(() =>
@@ -17,7 +17,7 @@ const handleGoogleSignIn = async () => {
   const user = await signInWithGoogle()
   if (user?.uid) {
     console.log('[handleGoogleSignIn] ✅ Got UID:', user.uid)
-    await onboardAppUser()
+    await onboardUser(user.uid)
   } else {
     console.warn('[handleGoogleSignIn] ❌ No UID returned from Google sign-in')
   }

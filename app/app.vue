@@ -3,6 +3,7 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+
     <UModal
       :open="isInitialised === false"
       prevent-close
@@ -22,5 +23,8 @@ useHead({
 })
 
 const { isInitialised } = useApp()
-
 </script>
+
+<style scoped>
+/* No debug styles needed */
+</style>

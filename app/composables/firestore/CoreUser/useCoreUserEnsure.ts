@@ -1,4 +1,3 @@
-
 import { getDoc, doc } from 'firebase/firestore'
 
 export function useCoreUserEnsure() {
@@ -14,18 +13,18 @@ export function useCoreUserEnsure() {
 
     if (coreUserSnap.exists()) {
       const createdAt = coreUserSnap.data()?.created_at || 'unknown date'
-      console.log(`✅ [ensureCoreUser] Core user with ID '${uid}' already exists. Continuing with established user created on ${createdAt}.`)
+      console.log(
+        `✅ [ensureCoreUser] Core user with ID '${uid}' already exists. Continuing with established user created on ${createdAt}.`
+      )
       return
     }
 
-    const coreUserData = {
+    const coreUserData: Partial<CoreUser> = {
       id: uid,
-      created_at: new Date().toISOString(),
-      app_ids: []
+      adminOf: []
     }
 
-    return await createDocumentWithId(collectionName, uid, coreUserData)
-  }
+    return await createDocumentWithId(collectionName, uid, coreUserData, false)  }
 
   return { ensureCoreUser }
 }

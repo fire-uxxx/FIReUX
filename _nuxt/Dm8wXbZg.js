@@ -1,0 +1,1 @@
+import{_ as a}from"./DPJQ6Rjp.js";import{D as c,d as r,g as e,w as m,E as u,e as t,G as p,f as l,H as f,I as i}from"./4YAIRecq.js";const d={class:"page"},y={__name:"auth",setup(x){const n=c();return(h,k)=>{const o=a,s=i,_=u;return t(),r("div",d,[e(_,null,{default:m(()=>[e(o),f(n)?(t(),p(s,{key:0})):l("",!0)]),_:1})])}}};export{y as default};

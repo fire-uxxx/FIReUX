@@ -1,0 +1,1 @@
+import{u as s}from"./DFExDl4x.js";import{S as n,d as a,e as l,h as e,B as r,t as p,H as u}from"./4YAIRecq.js";const d={class:"page"},g=n({__name:"index",setup(i){const{blogPostsCollection:t}=s();return(m,o)=>(l(),a("div",d,[o[0]||(o[0]=e("h1",null,"Blog",-1)),o[1]||(o[1]=e("p",null,"Welcome to our blog. Stay tuned for updates!",-1)),r(" "+p(u(t)),1)]))}});export{g as default};

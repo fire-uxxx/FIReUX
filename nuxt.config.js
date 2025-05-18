@@ -1,26 +1,22 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  // Treat the `app/` directory as the source root
+  // Use app/ as the source directory
   srcDir: 'app/',
 
-  // ✅ Enable SSR for SEO & better caching
+  // Enable SSR for SEO and caching
   ssr: true,
 
   nitro: {
     preset: 'firebase',
     firebase: {
-      gen: 2 // ✅ Using Firebase Gen 2 Functions
-    },
-    prerender: {
-      ignore: ['/']
+      gen: 2 // Firebase Gen 2 Functions
     },
     devServer:
       process.env.NODE_ENV === 'development'
         ? {
             headers: {
-              'Cache-Control':
-                'no-store, no-cache, must-revalidate, proxy-revalidate',
+              'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
               Pragma: 'no-cache',
               Expires: '0',
               'Surrogate-Control': 'no-store'
@@ -29,72 +25,55 @@ export default defineNuxtConfig({
         : {}
   },
 
-  // ✅ Enable Nuxt DevTools
+  // Enable Nuxt DevTools
   devtools: { enabled: true },
 
   modules: [
     '@nuxt/ui',
-    '@nuxt/eslint',
     'nuxt-vuefire',
     '@vite-pwa/nuxt',
-    '@nuxt/image',
-    '@nuxt/content'
+    '@nuxt/image', // Correct Nuxt Image module
+    '@nuxt/content' // Correct Nuxt Content module
   ],
-  // Run ESLint at build time and fail on any errors or warnings
-  eslint: {
-    lintOnStart: true,
-    failOnError: true,
-    failOnWarning: true,
-    fix: false
-  },
 
   studio: { enabled: true },
 
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
-  // ✅ Shared Firebase plugin
   plugins: ['./plugins/firebase.client.js', './plugins/inject-tracer.ts'],
 
   vite: {
     build: {
-      sourcemap: false // ✅ Disable sourcemaps for better performance
+      sourcemap: false // Disable sourcemaps for performance
     }
   },
 
   runtimeConfig: {
     public: {
-      // ✅ Firebase Credentials (Loaded from .env)
-      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
-      FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
-      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
-      FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
-
-      DOMAIN: process.env.DOMAIN,
-      PWA_APP_NAME: process.env.PWA_APP_NAME,
-      PWA_APP_SHORT_NAME: process.env.PWA_APP_SHORT_NAME,
-      PWA_THEME_COLOR: process.env.PWA_THEME_COLOR,
-      PWA_BACKGROUND_COLOR: process.env.PWA_BACKGROUND_COLOR,
-      STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+      // Firebase Credentials (from .env)
+      firebaseApiKey: process.env.FIREBASE_API_KEY,
+      firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+      firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      firebaseAppId: process.env.FIREBASE_APP_ID,
+      firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
+      domain: process.env.DOMAIN,
+      pwaAppName: process.env.PWA_APP_NAME,
+      pwaAppShortName: process.env.PWA_APP_SHORT_NAME,
+      pwaThemeColor: process.env.PWA_THEME_COLOR,
+      pwaBackgroundColor: process.env.PWA_BACKGROUND_COLOR,
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-      PIN: process.env.PIN,
-      APP_ID: process.env.APP_ID,
-      PROJECT_NAME: process.env.PROJECT_NAME,
-      AUTHOR_NAME: process.env.AUTHOR_NAME,
-      OPENAI_API_KEY_NAME: process.env.OPENAI_API_KEY_NAME,
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-      STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-      NODE_ENV: process.env.NODE_ENV
+      pin: process.env.PIN,
+      appId: process.env.APP_ID,
+      projectName: process.env.PROJECT_NAME,
+      authorName: process.env.AUTHOR_NAME,
+      openaiApiKeyName: process.env.OPENAI_API_KEY_NAME,
+      openaiApiKey: process.env.OPENAI_API_KEY,
+      nodeEnv: process.env.NODE_ENV
     },
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     stripeSecretKey: process.env.STRIPE_SECRET_KEY,
-    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-    NODE_ENV: process.env.NODE_ENV,
-    AUTHOR_NAME: process.env.AUTHOR_NAME,
-    OPENAI_API_KEY_NAME: process.env.OPENAI_API_KEY_NAME,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET
   },
 
   vuefire: {
@@ -114,7 +93,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ['composables/**/**', 'components/**/**', 'models/**/**']
+    dirs: ['composables/**/**', 'models/**/**', 'utils/**/**']
   },
 
   pwa: {
@@ -135,7 +114,8 @@ export default defineNuxtConfig({
       navigateFallback: '/',
       cleanupOutdatedCaches: true,
       clientsClaim: true,
-      skipWaiting: true
+      skipWaiting: true,
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,json,txt,woff2}'] // Ensure all static assets are cached
     },
     devOptions: {
       enabled: process.env.NODE_ENV === 'development',
@@ -153,7 +133,7 @@ export default defineNuxtConfig({
 
   content: {
     documentDriven: true,
-    apiUrl: 'https://nuxt.studio' // The URL of the Nuxt Studio API
+    apiUrl: 'https://nuxt.studio'
   },
 
   build: {

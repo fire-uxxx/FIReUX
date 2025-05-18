@@ -1,6 +1,7 @@
 <template>
   <client-only>
-    <div v-if="user" class="dashboard-page-grid">
+    <div v-if="appUser" class="dashboard-page-grid">
+      
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
@@ -12,7 +13,7 @@
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-            <OrganismsUserCell :user="user" />
+            <OrganismsUserCell :user="appUser" />
           </template>
         </UCard>
       </div>
@@ -20,21 +21,21 @@
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-            <OrganismsUserSummary :user="user" />
+            <OrganismsUserSummary :user="appUser" />
           </template>
         </UCard>
       </div>
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-            <OrganismsUserFollows :user="user" />
+            <OrganismsUserFollows :user="appUser" />
           </template>
         </UCard>
       </div>
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-            <OrganismsUserNotifications :notifications="user.notifications" />
+            <OrganismsUserNotifications :notifications="appUser.notifications" />
           </template>
         </UCard>
       </div>
@@ -54,5 +55,5 @@ definePageMeta({
   icon: icon
 })
 
-const { user } = useAppUser()
+const { appUser } = useAppUser()
 </script>

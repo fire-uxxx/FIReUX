@@ -8,6 +8,9 @@ export function useEditHandler(updateFunction, options = {}) {
   const debouncedSave = debounce(async (label, field, value) => {
     try {
       saveStatus.value = 'saving'
+      if (typeof updateFunction !== 'function') {
+        throw new Error('updateFunction is not a valid function.')
+      }
       await updateFunction({ [field]: value })
       saveStatus.value = 'saved'
 
@@ -32,6 +35,9 @@ export function useEditHandler(updateFunction, options = {}) {
   async function saveField(label, field, newValue) {
     try {
       saveStatus.value = 'saving'
+      if (typeof updateFunction !== 'function') {
+        throw new Error('updateFunction is not a valid function.')
+      }
       await updateFunction({ [field]: newValue })
       saveStatus.value = 'saved'
 

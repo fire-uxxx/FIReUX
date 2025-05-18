@@ -6,7 +6,7 @@ export function useCoreUserEnsure() {
   async function ensureCoreUser() {
     const currentUser = await waitForCurrentUser()
     const uid = currentUser.uid
-    const collectionName = 'users'
+    const collectionName = 'core-users'
     const db = useFirestore()
     const coreUserDocRef = doc(db, collectionName, uid)
     const coreUserSnap = await getDoc(coreUserDocRef)
@@ -19,12 +19,21 @@ export function useCoreUserEnsure() {
       return
     }
 
-    const coreUserData: Partial<CoreUser> = {
-      id: uid,
-      adminOf: []
+    const { uploadUserAvatar } = useMediaStorage()
+    let avatar = currentUser?.photoURL || ''
+
+    if (!avatar) {
+      avatar = await uploadUserAvatar('img/default-avatar.png', uid)
     }
 
-    return await createDocumentWithId(collectionName, uid, coreUserData, false)  }
+    const coreUserData: Partial<CoreUser> = {
+      id: uid,
+      adminOf: [],
+      avatar
+    }
+
+    return await createDocumentWithId(collectionName, uid, coreUserData, false)
+  }
 
   return { ensureCoreUser }
 }

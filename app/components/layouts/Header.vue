@@ -14,14 +14,21 @@
 
         <!-- Right Section: User Profile / Sign-In & Mobile Menu -->
         <div class="right-section">
-          <!-- Show avatar if a valid user exists -->
+          <!-- Show avatar if App User exists -->
           <MoleculesProfileAvatar
-            v-if="user"
+            v-if="appUser"
             class="clickable-avatar"
             @click="navigateToDashboard"
           />
-          <!-- Otherwise, show Sign In button -->
-          <UButton v-else size="sm" @click="navigateToAuth"> Sign In </UButton>
+          <!-- Otherwise, show Sign In if no Core User -->
+          <UButton v-else-if="!coreUser" size="sm" @click="navigateToAuth">
+            Sign In
+          </UButton>
+          <!-- Show Join App if Core User exists but no App User -->
+          <UButton v-else size="sm" @click="handleJoinApp">
+            Join App
+          </UButton>
+
           <UIcon
             v-if="isMobile && !mobileMenuOpen"
             name="lucide:menu"
@@ -60,48 +67,33 @@ import { ref, computed, watch } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import { useRouter, useRoute } from 'vue-router'
 
-const { user } = useCoreUser()
 const router = useRouter()
+const { coreUser } = useCoreUser()
+const { appUser } = useAppUser()
+const { ensureAppUser } = useAppUserEnsure()
 
-// Navigation Handlers
-const navigateToAuth = () => {
-  router.push('/auth')
-}
-const navigateToDashboard = () => {
-  router.push('/dashboard')
+// Navigation
+const navigateToAuth = () => router.push('/auth')
+const navigateToDashboard = () => router.push('/dashboard')
+
+// Handle Join App Logic
+const handleJoinApp = async () => {
+  await ensureAppUser()
 }
 
-// Mobile Menu Handling
+// Mobile Navigation
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1024)
 const mobileMenuOpen = ref(false)
-const toggleMobileNav = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value
-}
+const toggleMobileNav = () => (mobileMenuOpen.value = !mobileMenuOpen.value)
+
 const route = useRoute()
-
-watch(
-  () => route.fullPath,
-  () => {
-    mobileMenuOpen.value = false
-  }
-)
-
-// Define props, renaming localLinks to mobileLinks
-// Note: Now we expect both appLinks and mobileLinks to be passed in
+watch(() => route.fullPath, () => (mobileMenuOpen.value = false))
 
 defineProps({
-  appLinks: {
-    type: Array,
-    default: () => []
-  },
-  mobileLinks: {
-    type: Array,
-    default: () => []
-  }
+  appLinks: { type: Array, default: () => [] },
+  mobileLinks: { type: Array, default: () => [] }
 })
-
-// Compute a route title from meta or route name
 </script>
 
 <style scoped>
@@ -123,20 +115,17 @@ defineProps({
   max-width: 1200px;
 }
 
-/* Left Section (Logo) */
 .left-section {
   display: flex;
   align-items: center;
 }
 
-/* Right Section (Avatar, Sign-In Button & Mobile Menu) */
 .right-section {
   display: flex;
   align-items: center;
   gap: var(--space-4);
 }
 
-/* Clickable Avatar */
 .clickable-avatar {
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -145,14 +134,12 @@ defineProps({
   transform: scale(1.05);
 }
 
-/* Mobile Menu */
 .slideover-header {
   display: flex;
   justify-content: flex-end;
   padding-right: var(--space-2);
 }
 
-/* Route Title in Mobile Menu */
 .route-title {
   margin: var(--space-2) 0;
   text-align: center;

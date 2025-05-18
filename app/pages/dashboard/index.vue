@@ -8,7 +8,7 @@
                 <p>Short text.</p>
               </template>
             </UCard>
-          </div>
+          </div>  
           <div class="dashboard-grid-section">
             <UCard>
               <template #default>

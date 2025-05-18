@@ -7,19 +7,20 @@
 <script setup>
 const router = useRouter()
 const currentUser = useCurrentUser()
-const { user } = useAppUser()
+const { appUser } = useAppUser()
 
 const userAvatar = computed(() => {
-  return (
-    user.value?.avatar || currentUser.value?.avatar || 'img/default-avatar.png'
-  )
+  console.log('App User Avatar:', appUser.value?.avatar)
+  return appUser.value?.avatar
 })
 
-const userAlt = computed(
-  () => user.value?.display_name || currentUser.value?.displayName || 'Guest'
-)
+const userAlt = computed(() => {
+  console.log('App User Display Name:', appUser.value?.display_name)
+  return appUser.value?.display_name
+})
 
 const navigate = () => {
+  console.log('Navigate triggered. Current User:', currentUser.value)
   if (currentUser.value?.isAnonymous) {
     router.push('/auth')
   } else {

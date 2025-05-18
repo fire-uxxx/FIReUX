@@ -27,6 +27,7 @@ export function useAppUser() {
     appUser,
     isAdmin,
     ...useAppUserUtils(),
-    ...useAppUserEnsure()
+    ...useAppUserEnsure(),
+    ...useAppUserUpdate()
   }
 }

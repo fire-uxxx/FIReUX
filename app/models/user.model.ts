@@ -3,7 +3,8 @@
 // Core user identity (global, never app-specific)
 export interface CoreUser {
   id: string
-  email?: string
+  email: string
+  avatar: string
   created_at: string
   updated_at: string
   userOf: string[] // Apps this user has joined as user
@@ -16,7 +17,7 @@ export interface AppUserProfile {
   display_name: string
   handle: string
   avatar: string
-  bio?: string
+  bio: string
   created_at: string
   email: string
   role?: 'user' | 'admin'

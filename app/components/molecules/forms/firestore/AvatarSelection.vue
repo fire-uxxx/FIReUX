@@ -15,18 +15,17 @@
 
 <script setup>
 const currentUser = useCurrentUser()
-const { user, updateUser } = useAppUser()
-const { uploadProfileImage } = useMediaStorage()
+const { appUser, updateUser } = useAppUser()
+const { uploadUserAvatar } = useMediaStorage()
 
-const useravatar = computed(() => user.value?.avatar || '')
+const useravatar = computed(() => appUser.value?.avatar || '')
 
 async function handleFileChange(e) {
   const file = e.target?.files?.[0]
   const uid = currentUser.value?.uid
   if (!file || !uid) return
 
-  const path = `users/${uid}/avatar.jpg`
-  const url = await uploadProfileImage({ source: file, path })
+  const url = await uploadUserAvatar(file, uid)
   if (url) await updateUser({ avatar: url })
 }
 </script>

@@ -13,6 +13,7 @@ export function useAppUserEnsure() {
 
     const user = await waitForCurrentUser()
     const uid = user.uid
+    const { coreUser } = useCoreUser()
 
     if (!uid || !APP_ID) {
       console.warn('🐶 [ensureAppUser] Missing UID or APP_ID. Aborting.')
@@ -28,7 +29,7 @@ export function useAppUserEnsure() {
       uid,
       role,
       display_name: user?.displayName ?? '',
-      avatar: user?.photoURL ?? '',
+      avatar: coreUser.value?.avatar || user?.photoURL || 'img/default-avatar.png',
       handle: generateHandle(user?.displayName ?? ''),
       bio: ''
     }

@@ -1,1 +1,0 @@
-import{_ as n,d as o,e as a,h as s,g as c,bC as _}from"./4YAIRecq.js";const d={},r={class:"design-layout"},i={class:"content"};function l(p,e){const t=_;return a(),o("div",r,[e[0]||(e[0]=s("div",{class:"pinstripe-background"},null,-1)),s("main",i,[c(t)])])}const f=n(d,[["render",l],["__scopeId","data-v-fd26b440"]]);export{f as default};

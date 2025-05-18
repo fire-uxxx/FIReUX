@@ -1,0 +1,1 @@
+import{u as o}from"./CXiE4mg0.js";import{S as r,d as n,h as s,t as a,H as u,e as c}from"./Bj7_qyUA.js";const p={class:"products-page"},_=r({__name:"index",setup(d){const{productsCollection:t}=o();return(l,e)=>(c(),n("div",p,[e[0]||(e[0]=s("h1",null,"Debug Products",-1)),s("pre",null,a(u(t)),1)]))}});export{_ as default};

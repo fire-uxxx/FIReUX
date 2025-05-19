@@ -14,14 +14,14 @@ export function useAuth() {
   const auth = useFirebaseAuth()
   const currentUser = useCurrentUser()
   const {
-    public: { APP_ID }
+    public: { appId }
   } = useRuntimeConfig()
 
   const setUserAppIdClaim = async user => {
     try {
       const functions = getFunctions()
       const setCustomClaims = httpsCallable(functions, 'setAppIdClaim')
-      await setCustomClaims({ uid: user.uid, appId: APP_ID })
+      await setCustomClaims({ uid: user.uid, appId })
       await user.getIdToken(true)
     } catch (error) {
       console.error('❌ Failed to set custom claims:', error.message)

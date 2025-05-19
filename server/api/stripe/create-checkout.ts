@@ -4,12 +4,12 @@ import admin from '../../utils/firebase'
 
 export default defineEventHandler(async event => {
   const {
-    public: { DOMAIN }
+    public: { domain }
   } = useRuntimeConfig()
 
-  const STRIPE_SECRET_KEY = useRuntimeConfig().STRIPE_SECRET_KEY
+  const stripeSecretKey = useRuntimeConfig().stripeSecretKey
 
-  if (!STRIPE_SECRET_KEY) {
+  if (!stripeSecretKey) {
     console.error('Stripe Secret Key is missing in runtimeConfig.')
     setResponseStatus(event, 500)
     return { error: 'Internal Server Error: Stripe Secret Key is missing.' }
@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
 
   const currency = 'usd'
 
-  const stripe = new Stripe(STRIPE_SECRET_KEY, {
+  const stripe = new Stripe(stripeSecretKey, {
     apiVersion: '2025-04-30.basil'
   })
 
@@ -35,7 +35,7 @@ export default defineEventHandler(async event => {
       return { error: 'Missing required parameters', received: body }
     }
 
-    const frontendUrl = DOMAIN || 'https://fireux.app/'
+    const frontendUrl = domain || 'https://fireux.app/'
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

@@ -4,7 +4,7 @@ import { useCurrentUser } from 'vuefire'
 
 export function useProductCreate() {
   const {
-    public: { APP_ID }
+    public: { appId }
   } = useRuntimeConfig()
 
   const { product, productPayload, mainImageData, resetCreateProductState } =
@@ -55,7 +55,7 @@ export function useProductCreate() {
 
       await updateProduct(response.id, {
         main_image: product.value.main_image,
-        app_id: APP_ID,
+        app_id: appId,
         creator_id: currentUser.value?.uid || '',
         slug: product.value.slug,
         content: product.value.content,

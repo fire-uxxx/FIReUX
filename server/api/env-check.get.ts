@@ -13,17 +13,20 @@ export default defineEventHandler(() => {
   }
 
   const requiredVars = {
-    FIREBASE_API_KEY: runtimeConfig.public.FIREBASE_API_KEY,
-    FIREBASE_AUTH_DOMAIN: runtimeConfig.public.FIREBASE_AUTH_DOMAIN,
-    FIREBASE_PROJECT_ID: runtimeConfig.public.FIREBASE_PROJECT_ID,
-    FIREBASE_STORAGE_BUCKET: runtimeConfig.public.FIREBASE_STORAGE_BUCKET,
-    FIREBASE_APP_ID: runtimeConfig.public.FIREBASE_APP_ID,
-    STRIPE_PUBLISHABLE_KEY: runtimeConfig.public.STRIPE_PUBLISHABLE_KEY,
-    STRIPE_SECRET_KEY: runtimeConfig.STRIPE_SECRET_KEY,
-    APP_ID: runtimeConfig.public.APP_ID,
-    DOMAIN: runtimeConfig.public.DOMAIN,
-    PWA_APP_NAME: runtimeConfig.public.PWA_APP_NAME,
-    PIN: runtimeConfig.public.PIN
+    firebaseApiKey: runtimeConfig.public.firebaseApiKey,
+    firebaseAuthDomain: runtimeConfig.public.firebaseAuthDomain,
+    firebaseProjectId: runtimeConfig.public.firebaseProjectId,
+    firebaseStorageBucket: runtimeConfig.public.firebaseStorageBucket,
+    firebaseAppId: runtimeConfig.public.firebaseAppId,
+    stripePublishableKey: runtimeConfig.public.stripePublishableKey,
+    stripeSecretKey: runtimeConfig.stripeSecretKey,
+    appId: runtimeConfig.public.appId,
+    domain: runtimeConfig.public.domain,
+    pwaAppName: runtimeConfig.public.pwaAppName,
+    pwaAppShortName: runtimeConfig.public.pwaAppShortName,
+    pwaThemeColor: runtimeConfig.public.pwaThemeColor,
+    pwaBackgroundColor: runtimeConfig.public.pwaBackgroundColor,
+    pin: runtimeConfig.public.pin
   }
 
   const missingVars = Object.entries(requiredVars)

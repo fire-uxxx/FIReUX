@@ -3,14 +3,14 @@ import Stripe from 'stripe'
 import admin from '../../utils/firebase'
 
 export default defineEventHandler(async event => {
-  const STRIPE_SECRET_KEY = useRuntimeConfig().STRIPE_SECRET_KEY
+  const stripeSecretKey = useRuntimeConfig().stripeSecretKey
 
-  if (!STRIPE_SECRET_KEY) {
+  if (!stripeSecretKey) {
     setResponseStatus(event, 500)
     return { success: false, error: 'Missing Stripe Secret Key' }
   }
 
-  const stripe = new Stripe(STRIPE_SECRET_KEY, {
+  const stripe = new Stripe(stripeSecretKey, {
     apiVersion: '2025-04-30.basil'
   })
 

@@ -3,9 +3,10 @@ import { useFirestore as vuefireFirestore } from 'vuefire'
 
 export function useFirestoreCreate() {
   const db = vuefireFirestore()
-  const { public: { APP_ID } } = useRuntimeConfig()
+  const {
+    public: { appId }
+  } = useRuntimeConfig()
 
- 
   async function createDocumentWithId(
     collectionName: string,
     documentId: string,
@@ -13,7 +14,7 @@ export function useFirestoreCreate() {
     includeUser: boolean = true
   ): Promise<string> {
     const baseData: Record<string, unknown> = {
-      created_in: APP_ID,
+      created_in: appId,
       ...data,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -42,9 +43,9 @@ export function useFirestoreCreate() {
   /**
    * The parent must provide the full object shape for Core User creation.
    */
-  
+
   return {
-    createDocumentWithId,
+    createDocumentWithId
 
     /*
     async function addSluggedDocument<T extends Partial<Sluggable>>(
@@ -65,7 +66,7 @@ export function useFirestoreCreate() {
         const now = new Date().toISOString()
 
         await setDoc(docRef, {
-          app_id: APP_ID,
+          app_id: appId,
           creator_id: currentUser.uid,
           slug,
           ...rest,
@@ -101,7 +102,7 @@ export function useFirestoreCreate() {
 
       try {
         const docRef = await addDoc(collection(db, collectionName), {
-          app_id: APP_ID,
+          app_id: appId,
           creator_id: currentUser.uid,
           ...data,
           created_at: new Date().toISOString(),
@@ -136,7 +137,7 @@ export function useFirestoreCreate() {
 
       try {
         const docRef = await addDoc(collection(db, collectionName), {
-          app_id: APP_ID,
+          app_id: appId,
           creator_id: currentUser.uid,
           ...data,
           created_at: new Date().toISOString(),

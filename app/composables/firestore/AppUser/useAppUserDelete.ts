@@ -1,40 +1,39 @@
 import { doc, deleteDoc, updateDoc, arrayRemove } from 'firebase/firestore'
 import { useFirestore } from 'vuefire'
+import { useFirestoreManager } from '@/composables/firestore/_useFirestoreManager'
 
 export function useAppUserDelete() {
   const {
-    public: { APP_ID }
+    public: { appId }
   } = useRuntimeConfig()
 
   const db = useFirestore()
-  const { waitForUser } = useAppUser()
+  const { waitForCurrentUser } = useFirestoreManager()
 
   async function deleteAppUserProfile(): Promise<void> {
-    const uid = await waitForUser()
+    const user = await waitForCurrentUser()
+    const uid = user.uid
 
     try {
       // 🔥 Delete app-specific profile
-      const profileRef = doc(db, `users/${uid}/profiles`, APP_ID)
+      const profileRef = doc(db, `users/${uid}/profiles`, appId)
       await deleteDoc(profileRef)
-      console.log(`✅ Deleted profile for app ${APP_ID}`)
+      console.log(`✅ Deleted profile for app ${appId}`)
 
-      // 🗂️ Remove app ID from core user
+      // 🗂️ Remove app ID from core user (userOf array)
       const coreUserRef = doc(db, 'users', uid)
       await updateDoc(coreUserRef, {
-        app_ids: arrayRemove(APP_ID) as unknown as CoreUser['app_ids']
+        userOf: arrayRemove(appId)
       })
-      console.log(`✅ Removed app ID ${APP_ID} from core user ${uid}`)
+      console.log(`✅ Removed app ID ${appId} from core user ${uid}`)
 
       // 🔒 Remove user from app's admin list (admin_ids on App model)
-      const appRef = doc(db, 'apps', APP_ID)
+      const appRef = doc(db, 'apps', appId)
       await updateDoc(appRef, {
-        admin_ids: arrayRemove(uid) as unknown as App['admin_ids']
+        admin_ids: arrayRemove(uid)
       })
-      console.log(`✅ Removed user ${uid} from admins of app ${APP_ID}`)
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error)
-      console.error('❌ Error deleting user profile from app:', message)
-      throw new Error(message)
+    } catch (error) {
+      console.error('❌ Error deleting app user profile:', error)
     }
   }
 

@@ -1,25 +1,41 @@
 import { useCollection, useDocument, useFirestore } from 'vuefire'
-import { collection, doc, query, where, limit, getDocs } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  query,
+  where,
+  limit,
+  getDocs
+} from 'firebase/firestore'
 
 export function useFirestoreRead() {
   const db = useFirestore()
-  const { public: { APP_ID } } = useRuntimeConfig()
+  const {
+    public: { appId }
+  } = useRuntimeConfig()
 
-  async function firestoreFetchCollection<T>(collectionName: string): Promise<{ collectionData: Ref<T[] | undefined> }> {
+  async function firestoreFetchCollection<T>(
+    collectionName: string
+  ): Promise<{ collectionData: Ref<T[] | undefined> }> {
     const { waitForCurrentUser } = useFirestoreManager()
     await waitForCurrentUser()
 
     const colRef = query(
       collection(db, collectionName),
-      where('app_id', '==', APP_ID)
+      where('app_id', '==', appId)
     )
 
-    const { data: collectionData } = useCollection<T>(colRef, { ssrKey: collectionName })
+    const { data: collectionData } = useCollection<T>(colRef, {
+      ssrKey: collectionName
+    })
 
     return { collectionData }
   }
 
-  async function firestoreFetchDoc<T>(collectionName: string, id: string): Promise<Ref<T | null | undefined>> {
+  async function firestoreFetchDoc<T>(
+    collectionName: string,
+    id: string
+  ): Promise<Ref<T | null | undefined>> {
     const { waitForCurrentUser } = useFirestoreManager()
     await waitForCurrentUser()
 
@@ -38,7 +54,7 @@ export function useFirestoreRead() {
 
     const q = query(
       collection(db, collectionName),
-      where('app_id', '==', APP_ID),
+      where('app_id', '==', appId),
       where(field, '==', value),
       limit(1)
     )

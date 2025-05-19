@@ -25,7 +25,7 @@
 <script setup>
 
 const { signInWithEmailPassword, signUpWithEmailPassword } = useAuth()
-const { onboardUser } = useAppUser()
+const { ensureAppUser } = useAppUserEnsure()
 
 const isSignUp = ref(true)
 const state = reactive({
@@ -41,7 +41,7 @@ const handleEmailAuth = async () => {
   const user = await authMethod(state.email, state.password)
 
   if (user?.uid) {
-    await onboardUser(user.uid) // ✅ Ensure onboarding with UID
+    await ensureAppUser() // ✅ Ensure app user after authentication
   }
 }
 </script>

@@ -12,7 +12,7 @@ exports.server = functions.https.onRequest((req, res) => {
   app.handle(req, res);
 });
 
-exports.setAppIdClaim = onCall(async (request) => {
+exports.setAppIdClaim = onCall({ cors: true }, async (request) => {
   const { uid, app_id } = request.data;
 
   logger.info('🔐 Incoming setAppIdClaim request', { uid, app_id });

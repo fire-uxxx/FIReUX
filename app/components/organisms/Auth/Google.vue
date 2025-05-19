@@ -5,8 +5,12 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const { signInWithGoogle } = useAuth()
-const { onboardUser } = useAppUser()
+const { isInitialized } = useApp()
+const { ensureAppUser } = useAppUserEnsure()
 const isDark = computed(() => useColorMode().value === 'dark')
 
 const logoSrc = computed(() =>
@@ -17,7 +21,9 @@ const handleGoogleSignIn = async () => {
   const user = await signInWithGoogle()
   if (user?.uid) {
     console.log('[handleGoogleSignIn] ✅ Got UID:', user.uid)
-    await onboardUser(user.uid)
+    if (isInitialized) {
+      await ensureAppUser(() => router.push('/dashboard'))
+    }
   } else {
     console.warn('[handleGoogleSignIn] ❌ No UID returned from Google sign-in')
   }

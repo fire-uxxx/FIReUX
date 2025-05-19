@@ -67,7 +67,7 @@
     <!-- APP ID -->
     <p>
       <strong>App ID:</strong>
-      <span v-if="APP_ID">{{ APP_ID }}</span>
+      <span v-if="appId">{{ appId }}</span>
       <em v-else class="warning">Missing appId</em>
     </p>
 
@@ -150,7 +150,7 @@ const updatedAt = now
 
 // App ID from runtime config
 const config = useRuntimeConfig()
-const APP_ID = config.public.APP_ID
+const appId = config.public.appId
 
 // Sanitize the HTML before injecting
 const sanitizedContent = computed(() =>

@@ -1,5 +1,6 @@
 <template>
   <UApp>
+    <AppDebug v-if="isDevEnv" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -18,6 +19,11 @@
 </template>
 
 <script setup>
+const {
+  public: { nodeEnv }
+} = useRuntimeConfig()
+const isDevEnv = nodeEnv === 'development'
+
 useHead({
   link: [{ rel: 'manifest', href: '/manifest.webmanifest' }]
 })

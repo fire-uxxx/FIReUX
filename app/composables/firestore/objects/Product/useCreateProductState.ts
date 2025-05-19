@@ -7,7 +7,7 @@ export function useCreateProductState() {
 
   const currentUser = useCurrentUser()
   const {
-    public: { APP_ID }
+    public: { appId }
   } = useRuntimeConfig()
 
   const defaultProduct: Partial<FirebaseProduct> = {
@@ -21,7 +21,7 @@ export function useCreateProductState() {
     updated_at: now,
     slug: '',
     creator_id: currentUser.value?.uid || '',
-    app_id: APP_ID,
+    app_id: appId,
     stock: null,
     track_stock: false,
     product_type: 'physical'
@@ -51,7 +51,7 @@ export function useCreateProductState() {
   // Populate creator_id and app_id on mount
   onMounted(() => {
     if (currentUser.value?.uid) product.value.creator_id = currentUser.value.uid
-    if (APP_ID) product.value.app_id = APP_ID
+    if (appId) product.value.app_id = appId
   })
 
   function resetCreateProductState() {
@@ -66,7 +66,7 @@ export function useCreateProductState() {
       updated_at: new Date().toISOString(),
       slug: '',
       creator_id: currentUser.value?.uid || '',
-      app_id: APP_ID,
+      app_id: appId,
       stock: null,
       track_stock: false,
       product_type: 'physical'

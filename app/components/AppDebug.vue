@@ -29,7 +29,12 @@ const isOpen = ref(false)
 const toggleOpen = () => { isOpen.value = !isOpen.value }
 
 const copyToClipboard = () => {
-  const content = JSON.stringify({ currentUser, app, coreUser, appUser }, null, 2)
+  const content = JSON.stringify({
+    currentUser: currentUser.value,
+    app: app.value,
+    coreUser: coreUser.value,
+    appUser: appUser.value
+  }, null, 2)
   navigator.clipboard.writeText(content)
 }
 </script>

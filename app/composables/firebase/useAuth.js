@@ -8,30 +8,26 @@ import {
   signOut,
   GoogleAuthProvider
 } from 'firebase/auth'
-import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export function useAuth() {
   const auth = useFirebaseAuth()
   const currentUser = useCurrentUser()
-  const {
-    public: { appId }
-  } = useRuntimeConfig()
 
-  const setUserAppIdClaim = async user => {
-    try {
-      const functions = getFunctions()
-      const setCustomClaims = httpsCallable(functions, 'setAppIdClaim')
-      await setCustomClaims({ uid: user.uid, appId })
-      await user.getIdToken(true)
-    } catch (error) {
-      console.error('❌ Failed to set custom claims:', error.message)
-    }
-  }
+  // const setUserAppIdClaim = async user => {
+  //   try {
+  //     const functions = getFunctions()
+  //     const setCustomClaims = httpsCallable(functions, 'setAppIdClaim')
+  //     await setCustomClaims({ uid: user.uid, appId })
+  //     await user.getIdToken(true)
+  //   } catch (error) {
+  //     console.error('❌ Failed to set custom claims:', error.message)
+  //   }
+  // }
 
   const postProcessAuth = async user => {
     const { ensureCoreUser } = useCoreUser()
     await ensureCoreUser(user.uid, user.email ?? '') // ✅ Create Core User if missing
-    await setUserAppIdClaim(user) // ✅ Set custom claims for app access
+    // await setUserAppIdClaim(user) // ✅ Set custom claims for app access
   }
 
   const authState = computed(() =>

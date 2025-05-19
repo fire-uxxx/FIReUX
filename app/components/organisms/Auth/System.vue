@@ -1,11 +1,13 @@
 <template>
   <UContainer class="widget center-content">
     <ClientOnly>
-      <OrganismsAuthAuthenticated v-if="authState === 'AUTHENTICATED'" />
-      <div v-else class="auth-central">
-        <OrganismsAuthGoogle />
-        <OrganismsAuthEmail />
-      </div>
+      <Transition name="fade">
+        <OrganismsAuthAuthenticated v-if="authState === 'AUTHENTICATED'" />
+        <div v-else class="auth-central">
+          <OrganismsAuthGoogle />
+          <OrganismsAuthEmail />
+        </div>
+      </Transition>
     </ClientOnly>
   </UContainer>
 </template>
@@ -34,5 +36,13 @@ const { authState } = useAuth()
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+/* Fade transition styles */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>

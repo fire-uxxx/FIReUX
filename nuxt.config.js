@@ -16,7 +16,8 @@ export default defineNuxtConfig({
       process.env.NODE_ENV === 'development'
         ? {
             headers: {
-              'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+              'Cache-Control':
+                'no-store, no-cache, must-revalidate, proxy-revalidate',
               Pragma: 'no-cache',
               Expires: '0',
               'Surrogate-Control': 'no-store'
@@ -26,14 +27,13 @@ export default defineNuxtConfig({
   },
 
   // Enable Nuxt DevTools
-  devtools: { enabled: true },
+  // devtools: { enabled: true },
 
   modules: [
     '@nuxt/ui',
     'nuxt-vuefire',
     '@vite-pwa/nuxt',
-    '@nuxt/image', // Correct Nuxt Image module
-    '@nuxt/content' // Correct Nuxt Content module
+    '@nuxt/image' // Correct Nuxt Image module
   ],
 
   studio: { enabled: true },
@@ -130,11 +130,6 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-03-17',
-
-  content: {
-    documentDriven: true,
-    apiUrl: 'https://nuxt.studio'
-  },
 
   build: {
     transpile: ['reka-ui']

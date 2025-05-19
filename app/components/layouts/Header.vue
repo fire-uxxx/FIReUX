@@ -14,21 +14,21 @@
 
         <!-- Right Section: User Profile / Sign-In & Mobile Menu -->
         <div class="right-section">
-          <!-- Show avatar if App User exists -->
-          <MoleculesProfileAvatar
-            v-if="appUser"
-            class="clickable-avatar"
-            @click="navigateToDashboard"
-          />
-          <!-- Otherwise, show Sign In if no Core User -->
-          <UButton v-else-if="!coreUser" size="sm" @click="navigateToAuth">
-            Sign In
-          </UButton>
-          <!-- Show Join App if Core User exists but no App User -->
-          <UButton v-else size="sm" @click="handleJoinApp">
-            Join App
-          </UButton>
-
+          <template v-if="route.path !== '/auth'">
+            <template v-if="appUser">
+              <MoleculesProfileAvatar />
+            </template>
+            <template v-else-if="!coreUser">
+              <UButton size="sm" @click="navigateToAuth">
+                Sign In
+              </UButton>
+            </template>
+            <template v-else>
+              <UButton size="sm" @click="handleJoinApp">
+                Join App
+              </UButton>
+            </template>
+          </template>
           <UIcon
             v-if="isMobile && !mobileMenuOpen"
             name="lucide:menu"
@@ -63,18 +63,19 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
 import { useWindowSize } from '@vueuse/core'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 
-const router = useRouter()
+
 const { coreUser } = useCoreUser()
 const { appUser } = useAppUser()
+
+const router = useRouter()
+const route = useRoute()
 const { ensureAppUser } = useAppUserEnsure()
 
 // Navigation
 const navigateToAuth = () => router.push('/auth')
-const navigateToDashboard = () => router.push('/dashboard')
 
 // Handle Join App Logic
 const handleJoinApp = async () => {
@@ -86,9 +87,6 @@ const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1024)
 const mobileMenuOpen = ref(false)
 const toggleMobileNav = () => (mobileMenuOpen.value = !mobileMenuOpen.value)
-
-const route = useRoute()
-watch(() => route.fullPath, () => (mobileMenuOpen.value = false))
 
 defineProps({
   appLinks: { type: Array, default: () => [] },
@@ -124,27 +122,6 @@ defineProps({
   display: flex;
   align-items: center;
   gap: var(--space-4);
-}
-
-.clickable-avatar {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-.clickable-avatar:hover {
-  transform: scale(1.05);
-}
-
-.slideover-header {
-  display: flex;
-  justify-content: flex-end;
-  padding-right: var(--space-2);
-}
-
-.route-title {
-  margin: var(--space-2) 0;
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
 }
 
 .mobile-menu-wrapper {

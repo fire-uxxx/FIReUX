@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const { signInWithGoogle } = useAuth()
-const { isInitialized } = useApp()
+const { isInitialised } = useApp()
 const { ensureAppUser } = useAppUserEnsure()
 const isDark = computed(() => useColorMode().value === 'dark')
 
@@ -21,7 +21,7 @@ const handleGoogleSignIn = async () => {
   const user = await signInWithGoogle()
   if (user?.uid) {
     console.log('[handleGoogleSignIn] ✅ Got UID:', user.uid)
-    if (isInitialized) {
+    if (isInitialised.value) {
       await ensureAppUser(() => router.push('/dashboard'))
     }
   } else {

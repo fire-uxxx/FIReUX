@@ -1,7 +1,6 @@
 <template>
   <client-only>
     <div v-if="appUser" class="dashboard-page-grid">
-      
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
@@ -35,7 +34,9 @@
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-            <OrganismsUserNotifications :notifications="appUser.notifications" />
+            <OrganismsUserNotifications
+              :notifications="appUser.notifications"
+            />
           </template>
         </UCard>
       </div>
@@ -46,14 +47,14 @@
 <script setup>
 const { label, icon } = getRouteMetaForPath('/dashboard/profile')
 
-definePageMeta({
+definePageMeta(() => ({
   layout: 'dashboard',
   layoutProps: {
     dashboardType: 'user-dashboard'
   },
   title: label,
   icon: icon
-})
+}))
 
 const { appUser } = useAppUser()
 </script>

@@ -3,13 +3,15 @@
     <div class="dashboard-page-grid">
       <!-- Product Create Section -->
       <OrganismsProductCreateSystem class="dashboard-grid-section" />
-  
+
       <!-- Future sections can be added here, such as product stats or links -->
     </div>
   </ClientOnly>
 </template>
 
 <script setup>
+import { getRouteMetaForPath } from '~/composables/utils/useRoutes'
+
 const { label, icon } = getRouteMetaForPath('/admin/products')
 
 definePageMeta({

@@ -17,14 +17,16 @@
 </template>
 
 <script setup>
-  const { label, icon } = getRouteMetaForPath('/admin/blog')
+import { getRouteMetaForPath } from '~/composables/utils/useRoutes'
 
-  definePageMeta({
-    layout: 'dashboard',
-    layoutProps: {
-      dashboardType: 'admin-dashboard'
-    },
-    title: label,
-    icon: icon
-  })
+const { label, icon } = getRouteMetaForPath('/admin/blog')
+
+definePageMeta({
+  layout: 'dashboard',
+  layoutProps: {
+    dashboardType: 'admin-dashboard'
+  },
+  title: label,
+  icon: icon
+})
 </script>

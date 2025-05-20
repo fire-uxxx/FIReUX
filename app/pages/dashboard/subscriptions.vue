@@ -5,7 +5,10 @@
         <UCard>
           <template #default>
             <h2>Subscription Plan</h2>
-            <p>You're currently on the Basic Plan. Upgrade anytime for more features.</p>
+            <p>
+              You're currently on the Basic Plan. Upgrade anytime for more
+              features.
+            </p>
           </template>
         </UCard>
       </div>
@@ -30,6 +33,8 @@
 </template>
 
 <script setup>
+import { getRouteMetaForPath } from '~/composables/utils/useRoutes'
+
 const { label, icon } = getRouteMetaForPath('/dashboard/subscriptions')
 
 definePageMeta({

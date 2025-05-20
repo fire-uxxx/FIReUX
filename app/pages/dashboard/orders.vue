@@ -30,10 +30,12 @@
 </template>
 
 <script setup>
+import { getRouteMetaForPath } from '~/composables/utils/useRoutes'
+
 const { label, icon } = getRouteMetaForPath('/dashboard/orders')
 
 definePageMeta({
-  layout: 'dashboard', // ✅ Applies the dashboard layout
+  layout: 'dashboard',
   layoutProps: {
     dashboardType: 'user-dashboard'
   },

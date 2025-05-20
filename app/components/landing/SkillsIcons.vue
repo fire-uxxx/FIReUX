@@ -4,25 +4,26 @@
     <Icon
       v-for="skill in skills"
       :key="skill.name"
-      :icon="skill.icon"
+      :name="skill.icon"
       class="icon"
     />
   </div>
 </template>
 
 <script setup>
-import { Icon } from '@iconify/vue'
-
 // Define your skills here:
 const skills = [
   { name: 'Nuxt.js', icon: 'skill-icons:nuxtjs-dark' },
   { name: 'Tailwind CSS', icon: 'skill-icons:tailwindcss-dark' },
   { name: 'SCSS', icon: 'skill-icons:sass' },
   { name: 'Firebase', icon: 'vscode-icons:file-type-firebase' },
-//   { name: 'Node.js', icon: 'skill-icons:nodejs' },
-//   { name: 'Stripe', icon: 'skill-icons:stripe' },
-//   { name: 'Vue.js', icon: 'skill-icons:vuejs' },
-  { name: 'pwa', icon: 'logos:pwa' }
+  { name: 'PWA', icon: 'logos:pwa' },
+  { name: 'JavaScript', icon: 'skill-icons:javascript' },
+  { name: 'TypeScript', icon: 'skill-icons:typescript' },
+  { name: 'GitHub', icon: 'skill-icons:github-dark' },
+  { name: 'CSS3', icon: 'skill-icons:css' },
+  { name: 'HTML5', icon: 'skill-icons:html' },
+  { name: 'Node.js', icon: 'vscode-icons:file-type-node' }
 ]
 </script>
 

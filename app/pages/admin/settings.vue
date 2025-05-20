@@ -21,7 +21,10 @@
         <UCard>
           <template #default>
             <h2>Metric 3</h2>
-            <p>This metric contains a moderate amount of text to see how it adjusts.</p>
+            <p>
+              This metric contains a moderate amount of text to see how it
+              adjusts.
+            </p>
           </template>
         </UCard>
       </div>
@@ -30,8 +33,9 @@
           <template #default>
             <h2>Metric 4</h2>
             <p>
-              This section has a much longer piece of text to observe how it wraps 
-              inside the grid layout and whether it affects alignment with other cards.
+              This section has a much longer piece of text to observe how it
+              wraps inside the grid layout and whether it affects alignment with
+              other cards.
             </p>
           </template>
         </UCard>
@@ -49,9 +53,13 @@
           <template #default>
             <h2>Metric 6</h2>
             <p>
-              This one includes an image to see if media elements break the grid.
+              This one includes an image to see if media elements break the
+              grid.
             </p>
-            <img src="https://via.placeholder.com/150" alt="Placeholder Image" />
+            <img
+              src="https://via.placeholder.com/150"
+              alt="Placeholder Image"
+            />
           </template>
         </UCard>
       </div>
@@ -60,6 +68,7 @@
 </template>
 
 <script setup>
+
 const { label, icon } = getRouteMetaForPath('/admin/settings')
 
 definePageMeta({

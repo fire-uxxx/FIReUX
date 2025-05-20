@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import { getRouteMetaForPath } from '~/composables/utils/useRoutes'
+
 const { label, icon } = getRouteMetaForPath('/admin')
 
 definePageMeta({

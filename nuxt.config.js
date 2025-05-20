@@ -50,7 +50,6 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // Firebase Credentials (from .env)
       firebaseApiKey: process.env.FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
       firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
@@ -59,10 +58,6 @@ export default defineNuxtConfig({
       firebaseAppId: process.env.FIREBASE_APP_ID,
       firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
       domain: process.env.DOMAIN,
-      pwaAppName: process.env.PWA_APP_NAME,
-      pwaAppShortName: process.env.PWA_APP_SHORT_NAME,
-      pwaThemeColor: process.env.PWA_THEME_COLOR,
-      pwaBackgroundColor: process.env.PWA_BACKGROUND_COLOR,
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
       pin: process.env.PIN,
       appId: process.env.APP_ID,
@@ -70,7 +65,12 @@ export default defineNuxtConfig({
       authorName: process.env.AUTHOR_NAME,
       openaiApiKeyName: process.env.OPENAI_API_KEY_NAME,
       openaiApiKey: process.env.OPENAI_API_KEY,
-      nodeEnv: process.env.NODE_ENV
+      nodeEnv: process.env.NODE_ENV,
+      appIcon: process.env.APP_ICON,
+      pwaAppName: process.env.PWA_APP_NAME,
+      pwaAppShortName: process.env.PWA_APP_SHORT_NAME,
+      pwaThemeColor: process.env.PWA_THEME_COLOR,
+      pwaBackgroundColor: process.env.PWA_BACKGROUND_COLOR
     },
     stripeSecretKey: process.env.STRIPE_SECRET_KEY,
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET

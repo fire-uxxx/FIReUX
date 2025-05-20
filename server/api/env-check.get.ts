@@ -25,6 +25,8 @@ export default defineEventHandler(() => {
     pwaAppName: runtimeConfig.public.pwaAppName,
     pwaAppShortName: runtimeConfig.public.pwaAppShortName,
     pwaThemeColor: runtimeConfig.public.pwaThemeColor,
+    appName: runtimeConfig.public.appName,
+    appIcon: runtimeConfig.public.appIcon,
     pwaBackgroundColor: runtimeConfig.public.pwaBackgroundColor,
     pin: runtimeConfig.public.pin
   }

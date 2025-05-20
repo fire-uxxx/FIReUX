@@ -4,14 +4,14 @@
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-         <OrganismsUserAccountEmail />
+            <OrganismsUserAccountEmail />
           </template>
         </UCard>
       </div>
       <div class="dashboard-grid-section">
         <UCard>
           <template #default>
-             <OrganismsUserAccountPassword />
+            <OrganismsUserAccountPassword />
           </template>
         </UCard>
       </div>
@@ -43,7 +43,9 @@
         <UCard>
           <template #default>
             <h2>Delete Account</h2>
-            <p>Request permanent deletion of your account and associated data.</p>
+            <p>
+              Request permanent deletion of your account and associated data.
+            </p>
           </template>
         </UCard>
       </div>
@@ -52,6 +54,8 @@
 </template>
 
 <script setup>
+import { getRouteMetaForPath } from '~/composables/utils/useRoutes'
+
 const { label, icon } = getRouteMetaForPath('/dashboard/account')
 
 definePageMeta({

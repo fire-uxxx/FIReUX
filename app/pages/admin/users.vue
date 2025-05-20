@@ -5,7 +5,10 @@
         <UCard>
           <template #default>
             <h2>Users Overview</h2>
-            <p>This section provides an overview of user statistics and management tools.</p>
+            <p>
+              This section provides an overview of user statistics and
+              management tools.
+            </p>
           </template>
         </UCard>
       </div>

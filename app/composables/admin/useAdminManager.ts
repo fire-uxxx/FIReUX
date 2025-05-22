@@ -10,28 +10,28 @@ import { useFirestore } from 'vuefire'
 export function useAdminManager() {
   const db = useFirestore()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   async function promoteAdmin(uid: string): Promise<void> {
     await updateAppProfileRole(uid, 'admin')
     await updateAppAdmins(uid, true)
-    console.log(`✅ User ${uid} promoted to admin for ${appId}`)
+    console.log(`✅ User ${uid} promoted to admin for ${tenantId}`)
   }
 
   async function demoteAdmin(uid: string): Promise<void> {
     await updateAppProfileRole(uid, 'user')
     await updateAppAdmins(uid, false)
-    console.log(`✅ User ${uid} demoted from admin for ${appId}`)
+    console.log(`✅ User ${uid} demoted from admin for ${tenantId}`)
   }
 
   async function updateAppProfileRole(uid: string, role: 'user' | 'admin') {
-    const profileRef = doc(db, `users/${uid}/profiles`, appId)
+    const profileRef = doc(db, `users/${uid}/profiles`, tenantId)
     await setDoc(profileRef, { role }, { merge: true })
   }
 
   async function updateAppAdmins(uid: string, add: boolean) {
-    const appRef = doc(db, 'apps', appId)
+    const appRef = doc(db, 'apps', tenantId)
     await updateDoc(appRef, {
       admins: add ? arrayUnion(uid) : arrayRemove(uid)
     })

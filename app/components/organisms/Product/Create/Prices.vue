@@ -6,6 +6,7 @@
       :index="index"
       :show-remove="prices.length > 1"
       @remove="removePrice(index)"
+      @move-to-top="movePriceToTop(index)"
     />
 
     <div class="add-price">
@@ -23,6 +24,14 @@
 
 <script setup lang="ts">
 const { prices, addPrice, removePrice } = useCreatePricesState()
+
+function movePriceToTop(index: number) {
+  const item = prices.value[index]
+  if (item) {
+    prices.value.splice(index, 1)
+    prices.value.unshift(item)
+  }
+}
 </script>
 
 <style scoped>

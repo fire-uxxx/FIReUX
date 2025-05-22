@@ -11,14 +11,14 @@ interface RouteLink {
 // Function to generate route links, using runtime config for appName.
 export function getRouteLinks() {
   const {
-    public: { appIcon }
+    public: { appIcon },
+    appName
   } = useRuntimeConfig()
   return {
     app: [
       {
-        label: 'Content',
-        icon:
-          typeof appIcon === 'string' && appIcon ? appIcon : 'i-lucide-banana',
+        label: typeof appName === 'string' ? appName : 'App',
+        icon: typeof appIcon === 'string' && appIcon ? appIcon : 'i-lucide-app', // Use a generic app icon as fallback
         to: '/content'
       },
       { label: 'Products', icon: 'i-lucide-box', to: '/products' },

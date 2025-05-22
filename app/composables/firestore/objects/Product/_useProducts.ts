@@ -1,6 +1,6 @@
 // ~/composables/useProducts.ts
 
-export function useProducts() {
+export async function useProducts() {
   const {
     firestoreFetchCollection,
     firestoreFetchDoc,
@@ -8,13 +8,21 @@ export function useProducts() {
     firestoreFetchSubcollection
   } = useFirestoreManager()
 
-  // Fetch all products (scoped by app_id automatically)
+  // Fetch all products (scoped by tenant_id automatically)
   const { collectionData: productsCollection } =
-    firestoreFetchCollection<FirebaseProduct>('products')
+    await firestoreFetchCollection<FirebaseProduct>('products')
+
+  // After fetching products, load their prices and assign directly to product.prices
+  if (productsCollection.value) {
+    for (const product of productsCollection.value) {
+      const prices = await fetchProductPrices(product.slug || '')
+      product.prices = prices
+    }
+  }
 
   // Fetch by document ID
-  function fetchProduct(id: string): Ref<FirebaseProduct | null | undefined> {
-    return firestoreFetchDoc<FirebaseProduct>('products', id)
+  async function fetchProduct(id: string): Promise<Ref<FirebaseProduct | null | undefined>> {
+    return await firestoreFetchDoc<FirebaseProduct>('products', id)
   }
 
   // Fetch by slug (scoped by app_id automatically)

@@ -3,13 +3,13 @@ import { useFirestore } from 'vuefire'
 
 export function useAppUserEnsure() {
   const db = useFirestore()
-  const { createDocumentWithId, waitForCurrentUser } = useFirestoreManager()
+  const { setDocumentWithId, waitForCurrentUser } = useFirestoreManager()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   async function ensureAppUser(onSuccess?: () => void) {
-    console.log('🚀 [ensureAppUser] Function invoked.');
+    console.log('🚀 [ensureAppUser] Function invoked.')
 
     const { generateHandle } = useAppUserUtils()
 
@@ -17,12 +17,12 @@ export function useAppUserEnsure() {
     const uid = user.uid
     const { coreUser } = useCoreUser()
 
-    if (!uid || !appId) {
-      console.warn('🐶 [ensureAppUser] Missing UID or appId. Aborting.')
+    if (!uid || !tenantId) {
+      console.warn('🐶 [ensureAppUser] Missing UID or tenantId. Aborting.')
       return
     }
 
-    const appRef = doc(db, 'apps', appId)
+    const appRef = doc(db, 'apps', tenantId)
     const appSnap = await getDoc(appRef)
     const isAdmin = appSnap.exists() && appSnap.data().admin_ids?.includes(uid)
     const role = isAdmin ? 'admin' : 'user'
@@ -37,12 +37,12 @@ export function useAppUserEnsure() {
       bio: ''
     }
 
-    const appUserDocRef = doc(db, `users/${uid}/apps`, appId)
+    const appUserDocRef = doc(db, `users/${uid}/apps`, tenantId)
     const appUserSnap = await getDoc(appUserDocRef)
 
     if (!appUserSnap.exists()) {
-      await createDocumentWithId(`users/${uid}/apps`, appId, appUserData)
-      console.log(`✅ [ensureAppUser] Created new app user for ${appId}.`)
+      await setDocumentWithId(`users/${uid}/apps`, tenantId, appUserData)
+      console.log(`✅ [ensureAppUser] Created new app user for ${tenantId}.`)
     } else {
       console.log(
         `✅ [ensureAppUser] App user already exists. No changes made.`
@@ -51,16 +51,18 @@ export function useAppUserEnsure() {
 
     const coreUserRef = doc(db, 'users', uid)
     await updateDoc(coreUserRef, {
-      userOf: arrayUnion(appId)
+      userOf: arrayUnion(tenantId)
     })
 
     console.log(
-      `✅ [ensureAppUser] App User ensured with role: ${role} and appId ensured in core user.`
+      `✅ [ensureAppUser] App User ensured with role: ${role} and tenantId ensured in core user.`
     )
 
     if (typeof onSuccess === 'function') {
-      console.log('📢 [ensureAppUser] Calling onSuccess callback for redirection.')
-      onSuccess();
+      console.log(
+        '📢 [ensureAppUser] Calling onSuccess callback for redirection.'
+      )
+      onSuccess()
     }
   }
 

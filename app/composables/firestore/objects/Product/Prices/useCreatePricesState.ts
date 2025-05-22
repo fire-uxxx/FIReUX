@@ -61,12 +61,28 @@ export function useCreatePricesState() {
     })
   })
 
+  const defaultUnitPrice = computed(() => {
+    return prices.value[0]?.unit_amount ?? 0
+  })
+
+  const defaultPrice = computed<DefaultPrice | undefined>(() => {
+    const p = prices.value[0]
+    if (!p) return undefined
+    return {
+      id: p.id ?? '',
+      unit_amount: p.unit_amount ?? 0,
+      interval: p.interval
+    }
+  })
+
   return {
     prices,
     addPrice,
     removePrice,
     resetPrices,
     resetCreatePricesState,
-    pricesPayload
+    pricesPayload,
+    defaultUnitPrice,
+    defaultPrice
   }
 }

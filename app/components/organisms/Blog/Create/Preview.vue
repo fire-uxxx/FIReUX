@@ -1,4 +1,3 @@
-<!-- app/components/organisms/Blog/Create/Preview.vue -->
 <template>
   <article class="preview-card">
     {{ post }}
@@ -64,11 +63,11 @@
       <em v-else class="warning">Missing type</em>
     </p>
 
-    <!-- APP ID -->
+    <!-- TENANT ID -->
     <p>
-      <strong>App ID:</strong>
-      <span v-if="appId">{{ appId }}</span>
-      <em v-else class="warning">Missing appId</em>
+      <strong>Tenant ID:</strong>
+      <span v-if="tenantId">{{ tenantId }}</span>
+      <em v-else class="warning">Missing tenantId</em>
     </p>
 
     <!-- META DESCRIPTION -->
@@ -150,7 +149,7 @@ const updatedAt = now
 
 // App ID from runtime config
 const config = useRuntimeConfig()
-const appId = config.public.appId
+const tenantId = config.public.tenantId
 
 // Sanitize the HTML before injecting
 const sanitizedContent = computed(() =>

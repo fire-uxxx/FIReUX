@@ -11,7 +11,7 @@ import {
 export function useFirestoreRead() {
   const db = useFirestore()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   async function firestoreFetchCollection<T>(
@@ -22,7 +22,9 @@ export function useFirestoreRead() {
 
     const colRef = query(
       collection(db, collectionName),
-      where('app_id', '==', appId)
+      // To support multi-tenant objects in the future, replace with:
+      // where('tenant_ids', 'array-contains', tenantId)
+      where('tenant_id', '==', tenantId)
     )
 
     const { data: collectionData } = useCollection<T>(colRef, {
@@ -54,7 +56,9 @@ export function useFirestoreRead() {
 
     const q = query(
       collection(db, collectionName),
-      where('app_id', '==', appId),
+      // To support multi-tenant objects in the future, replace with:
+      // where('tenant_ids', 'array-contains', tenantId)
+      where('tenant_id', '==', tenantId),
       where(field, '==', value),
       limit(1)
     )

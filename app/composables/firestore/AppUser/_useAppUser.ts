@@ -7,14 +7,14 @@ export function useAppUser() {
   const db = useFirestore()
   const currentUser = useCurrentUser()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   const appUserDocRef = computed<DocumentReference<AppUserProfile> | null>(() =>
-    currentUser.value && appId
+    currentUser.value && tenantId
       ? (doc(
           db,
-          `users/${currentUser.value.uid}/apps/${appId}`
+          `users/${currentUser.value.uid}/apps/${tenantId}`
         ) as DocumentReference<AppUserProfile>)
       : null
   )

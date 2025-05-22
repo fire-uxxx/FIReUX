@@ -1,4 +1,3 @@
-<!-- app/components/organisms/Product/Create/System.vue -->
 <template>
   <div class="root-container">
     <UTabs v-model="selectedTab" :items="tabItems">
@@ -18,6 +17,12 @@
       >
         Create Product
       </UButton>
+      <UButton
+        variant="subtle"
+        @click="handleClear"
+      >
+        Clear
+      </UButton>
     </div>
   </div>
 </template>
@@ -28,13 +33,16 @@ const tabItems = [
   { label: 'Preview', icon: 'i-lucide-eye', value: 'preview', slot: 'preview' }
 ]
 
-// Composable state
 const {
-  product
-  // resetCreateProductState // optionally re-enable for reset after create
+  product,
+  resetCreateProductState
 } = useCreateProductState()
 
-const { createProduct } = useProducts()
+const {
+  resetCreatePricesState
+} = useCreatePricesState()
+
+const { createProduct } = await useProducts()
 
 const isCreating = ref(false)
 
@@ -55,5 +63,13 @@ async function handleCreate() {
   }
 
   isCreating.value = false
+}
+
+function handleClear() {
+  if (confirm('Are you sure you want to clear the form?')) {
+    resetCreateProductState()
+    resetCreatePricesState()
+    selectedTab.value = 'write'
+  }
 }
 </script>

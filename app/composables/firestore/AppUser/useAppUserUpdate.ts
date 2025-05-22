@@ -6,14 +6,14 @@ export function useAppUserUpdate() {
   const db = useFirestore()
   const currentUser = useCurrentUser()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   async function updateAppProfile(
     fields: Partial<AppUserProfile>
   ): Promise<void> {
     if (!currentUser.value) throw new Error('No authenticated user.')
-    const profileRef = doc(db, `users/${currentUser.value.uid}/apps`, appId)
+    const profileRef = doc(db, `users/${currentUser.value.uid}/apps`, tenantId)
     await updateDoc(profileRef, fields)
   }
 

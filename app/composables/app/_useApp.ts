@@ -1,16 +1,17 @@
 // ~/composables/useApp.ts
 import { doc } from 'firebase/firestore'
-import type { DocumentReference } from 'firebase/firestore'
 import { useFirestore, useDocument } from 'vuefire'
 
 export function useApp() {
   const db = useFirestore()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
-  const appDocRef = computed<DocumentReference<App> | null>(() =>
-    appId ? (doc(db, 'apps', appId) as DocumentReference<App>) : null
+  const appDocRef = computed(() =>
+    typeof tenantId === 'string' && tenantId.length > 0
+      ? doc(db, 'apps', tenantId)
+      : null
   )
 
   const { data: app } = useDocument<App>(appDocRef)

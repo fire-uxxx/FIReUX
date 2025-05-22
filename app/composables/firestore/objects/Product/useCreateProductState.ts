@@ -1,13 +1,14 @@
 // ~/composables/admin/useCreateProductState.ts
 import { useStorage } from '@vueuse/core'
 import { useCurrentUser } from 'vuefire'
+import { useCreatePricesState } from './Prices/useCreatePricesState'
 
 export function useCreateProductState() {
   const now = new Date().toISOString()
 
   const currentUser = useCurrentUser()
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   const defaultProduct: Partial<FirebaseProduct> = {
@@ -21,10 +22,11 @@ export function useCreateProductState() {
     updated_at: now,
     slug: '',
     creator_id: currentUser.value?.uid || '',
-    app_id: appId,
+    tenant_id: tenantId as string,
     stock: null,
     track_stock: false,
-    product_type: 'physical'
+    product_type: 'physical',
+    default_price: undefined
   }
 
   const product = useStorage<Partial<FirebaseProduct>>(
@@ -35,6 +37,7 @@ export function useCreateProductState() {
   const mainImageData = useStorage<string>('createProductMainImage', '')
 
   const { generateSlug } = useProductUtils()
+  const { defaultPrice } = useCreatePricesState()
 
   // Auto-generate slug
   watch(
@@ -48,10 +51,10 @@ export function useCreateProductState() {
     }
   )
 
-  // Populate creator_id and app_id on mount
+  // Populate creator_id and tenant_id on mount
   onMounted(() => {
     if (currentUser.value?.uid) product.value.creator_id = currentUser.value.uid
-    if (appId) product.value.app_id = appId
+    if (tenantId) product.value.tenant_id = tenantId as string
   })
 
   function resetCreateProductState() {
@@ -66,10 +69,11 @@ export function useCreateProductState() {
       updated_at: new Date().toISOString(),
       slug: '',
       creator_id: currentUser.value?.uid || '',
-      app_id: appId,
+      tenant_id: tenantId as string,
       stock: null,
       track_stock: false,
-      product_type: 'physical'
+      product_type: 'physical',
+      default_price: defaultPrice.value ?? undefined
     }
     mainImageData.value = ''
   }
@@ -88,7 +92,8 @@ export function useCreateProductState() {
       stock: product.value.stock ?? null,
       product_type: product.value.product_type ?? 'physical',
       track_stock: product.value.track_stock ?? false,
-      images: [mainImageData.value]
+      images: [mainImageData.value],
+      default_price: defaultPrice.value ?? undefined
     }
   })
 
@@ -96,6 +101,7 @@ export function useCreateProductState() {
     product,
     mainImageData,
     resetCreateProductState,
-    productPayload
+    productPayload,
+    defaultPrice
   }
 }

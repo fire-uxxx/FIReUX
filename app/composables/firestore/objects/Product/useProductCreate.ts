@@ -4,7 +4,7 @@ import { useCurrentUser } from 'vuefire'
 
 export function useProductCreate() {
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   const { product, productPayload, mainImageData, resetCreateProductState } =
@@ -53,16 +53,25 @@ export function useProductCreate() {
         return { success: false, error: 'Stripe product creation failed' }
       }
 
+      // Set the Stripe price id as the default_price id
+      const default_price = {
+        id: response.id,
+        unit_amount: pricesPayload.value[0]?.unit_amount ?? 0,
+        interval: pricesPayload.value[0]?.interval
+      }
+
       await updateProduct(response.id, {
         main_image: product.value.main_image,
-        app_id: appId,
+        tenant_id: tenantId as string,
         creator_id: currentUser.value?.uid || '',
         slug: product.value.slug,
         content: product.value.content,
         product_type: product.value.product_type,
         stock: product.value.stock,
         track_stock: product.value.track_stock,
-        created_at: now
+        created_at: now,
+        updated_at: now,
+        default_price
       })
 
       resetCreateProductState()

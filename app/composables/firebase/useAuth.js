@@ -13,11 +13,11 @@ export function useAuth() {
   const auth = useFirebaseAuth()
   const currentUser = useCurrentUser()
 
-  // const setUserAppIdClaim = async user => {
+  // const setUserTenantIdClaim = async user => {
   //   try {
   //     const functions = getFunctions()
-  //     const setCustomClaims = httpsCallable(functions, 'setAppIdClaim')
-  //     await setCustomClaims({ uid: user.uid, appId })
+  //     const setCustomClaims = httpsCallable(functions, 'setTenantIdClaim')
+  //     await setCustomClaims({ uid: user.uid, tenantId })
   //     await user.getIdToken(true)
   //   } catch (error) {
   //     console.error('❌ Failed to set custom claims:', error.message)
@@ -27,7 +27,7 @@ export function useAuth() {
   const postProcessAuth = async user => {
     const { ensureCoreUser } = useCoreUser()
     await ensureCoreUser(user.uid, user.email ?? '') // ✅ Create Core User if missing
-    // await setUserAppIdClaim(user) // ✅ Set custom claims for app access
+    // await setUserTenantIdClaim(user) // ✅ Set custom claims for tenant access
   }
 
   const authState = computed(() =>

@@ -1,9 +1,9 @@
 import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'
 
 export function useMediaStorage() {
-  const { uploadFile } = useStorage()
+  const { uploadFile } = useAppFirebaseStorage()
   const storage = getStorage()
-  const appId = useRuntimeConfig().public.appId
+  const tenantId = useRuntimeConfig().public.tenantId
 
   // Convert Data-URL to Blob
   const dataUrlToBlob = (dataUrl: string): Promise<Blob> =>
@@ -49,7 +49,7 @@ export function useMediaStorage() {
       typeof source === 'string' ? await dataUrlToBlob(source) : source
 
     const resized = await resizeBlob(blob)
-    const path = `${appId}/${collection}/${id}/${type}Image.jpg`
+    const path = `${tenantId}/${collection}/${id}/${type}Image.jpg`
     return uploadBlobToStorage(resized, path)
   }
 

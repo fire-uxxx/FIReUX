@@ -12,6 +12,12 @@ export interface Price {
   metadata?: Record<string, unknown>
 }
 
+export type DefaultPrice = {
+  id: string
+  unit_amount: number
+  interval?: 'day' | 'week' | 'month' | 'year'
+}
+
 export type StripePriceInput = Omit<Price, 'id' | 'active'>
 
 export interface StripeProduct {
@@ -28,7 +34,7 @@ export type StripeProductInput = Omit<StripeProduct, 'id' | 'prices'> & {
 }
 
 export interface FirebaseProduct extends StripeProduct {
-  app_id: string
+  tenant_id: string
   slug: string
   created_at: Date | string
   updated_at: Date | string
@@ -37,5 +43,6 @@ export interface FirebaseProduct extends StripeProduct {
   product_type: 'physical' | 'digital' | 'service'
   stock: number | null
   track_stock: boolean
-  main_image: string // ← for internal use in Firestore
+  main_image: string
+  default_price?: DefaultPrice
 }

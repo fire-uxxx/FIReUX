@@ -4,7 +4,7 @@ import { useFirestoreManager } from '@/composables/firestore/_useFirestoreManage
 
 export function useAppUserDelete() {
   const {
-    public: { appId }
+    public: { tenantId }
   } = useRuntimeConfig()
 
   const db = useFirestore()
@@ -16,19 +16,19 @@ export function useAppUserDelete() {
 
     try {
       // 🔥 Delete app-specific profile
-      const profileRef = doc(db, `users/${uid}/profiles`, appId)
+      const profileRef = doc(db, `users/${uid}/profiles`, tenantId)
       await deleteDoc(profileRef)
-      console.log(`✅ Deleted profile for app ${appId}`)
+      console.log(`✅ Deleted profile for tenant ${tenantId}`)
 
       // 🗂️ Remove app ID from core user (userOf array)
       const coreUserRef = doc(db, 'users', uid)
       await updateDoc(coreUserRef, {
-        userOf: arrayRemove(appId)
+        userOf: arrayRemove(tenantId)
       })
-      console.log(`✅ Removed app ID ${appId} from core user ${uid}`)
+      console.log(`✅ Removed tenant ID ${tenantId} from core user ${uid}`)
 
       // 🔒 Remove user from app's admin list (admin_ids on App model)
-      const appRef = doc(db, 'apps', appId)
+      const appRef = doc(db, 'apps', tenantId)
       await updateDoc(appRef, {
         admin_ids: arrayRemove(uid)
       })

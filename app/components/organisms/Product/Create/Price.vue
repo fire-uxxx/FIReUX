@@ -10,7 +10,7 @@
           maximumFractionDigits: 2
         }"
         placeholder="0.00"
-        min="0"
+        :min="0"
         class="price-input"
       />
     </div>
@@ -30,6 +30,21 @@
         Remove
       </UButton>
     </div>
+
+    <div
+      v-if="prices.length > 1 && prices[0] !== price"
+      class="set-default-button"
+    >
+      <UButton
+        icon="i-lucide-arrow-up"
+        color="primary"
+        variant="soft"
+        size="xs"
+        @click="movePriceToTop(props.index)"
+      >
+        Move to First
+      </UButton>
+    </div>
   </div>
 </template>
 
@@ -45,9 +60,16 @@ const emit = defineEmits<{
   (e: 'remove'): void
 }>()
 
+function movePriceToTop(index: number) {
+  if (index > 0) {
+    const [item] = prices.value.splice(index, 1)
+    if (item) prices.value.unshift(item)
+  }
+}
+
 const { prices } = useCreatePricesState()
-const { defaultCurrency } = useProducts()
 const { product } = useCreateProductState()
+const { defaultCurrency } = await useProducts()
 
 const isService = computed(() => product.value.product_type === 'service')
 
@@ -120,5 +142,10 @@ const uiFrequency = computed<RadioGroupValue>({
 
 .price-input {
   flex-grow: 1;
+}
+
+.set-default-button {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

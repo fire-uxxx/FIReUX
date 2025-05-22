@@ -20,14 +20,13 @@ export default defineEventHandler(() => {
     firebaseAppId: runtimeConfig.public.firebaseAppId,
     stripePublishableKey: runtimeConfig.public.stripePublishableKey,
     stripeSecretKey: runtimeConfig.stripeSecretKey,
-    appId: runtimeConfig.public.appId,
+    tenantId: runtimeConfig.public.tenantId,
     domain: runtimeConfig.public.domain,
-    pwaAppName: runtimeConfig.public.pwaAppName,
-    pwaAppShortName: runtimeConfig.public.pwaAppShortName,
-    pwaThemeColor: runtimeConfig.public.pwaThemeColor,
     appName: runtimeConfig.public.appName,
+    appShortName: runtimeConfig.public.appShortName,
+    appThemeColor: runtimeConfig.public.appThemeColor,
     appIcon: runtimeConfig.public.appIcon,
-    pwaBackgroundColor: runtimeConfig.public.pwaBackgroundColor,
+    appBackgroundColor: runtimeConfig.public.appBackgroundColor,
     pin: runtimeConfig.public.pin
   }
 

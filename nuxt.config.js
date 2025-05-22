@@ -60,17 +60,16 @@ export default defineNuxtConfig({
       domain: process.env.DOMAIN,
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
       pin: process.env.PIN,
-      appId: process.env.APP_ID,
-      projectName: process.env.PROJECT_NAME,
+      tenantId: process.env.TENANT_ID,
+      appName: process.env.APP_NAME,
+      appShortName: process.env.APP_SHORT_NAME,
+      appThemeColor: process.env.APP_THEME_COLOR,
+      appBackgroundColor: process.env.APP_BACKGROUND_COLOR,
+      appIcon: process.env.APP_ICON,
       authorName: process.env.AUTHOR_NAME,
       openaiApiKeyName: process.env.OPENAI_API_KEY_NAME,
       openaiApiKey: process.env.OPENAI_API_KEY,
-      nodeEnv: process.env.NODE_ENV,
-      appIcon: process.env.APP_ICON,
-      pwaAppName: process.env.PWA_APP_NAME,
-      pwaAppShortName: process.env.PWA_APP_SHORT_NAME,
-      pwaThemeColor: process.env.PWA_THEME_COLOR,
-      pwaBackgroundColor: process.env.PWA_BACKGROUND_COLOR
+      nodeEnv: process.env.NODE_ENV
     },
     stripeSecretKey: process.env.STRIPE_SECRET_KEY,
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET
@@ -99,12 +98,12 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      name: process.env.PWA_APP_NAME || 'FIReUX',
-      short_name: process.env.PWA_APP_SHORT_NAME || 'FIReUX',
+      name: process.env.APP_NAME || 'FIReUX',
+      short_name: process.env.APP_SHORT_NAME || 'FIReUX',
       start_url: '/',
       display: 'standalone',
-      theme_color: process.env.PWA_THEME_COLOR || '#FACC15',
-      background_color: process.env.PWA_BACKGROUND_COLOR || '#FAFAFA',
+      theme_color: process.env.APP_THEME_COLOR || '#FACC15',
+      background_color: process.env.APP_BACKGROUND_COLOR || '#FAFAFA',
       icons: [
         { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
         { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' }

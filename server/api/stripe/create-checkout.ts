@@ -35,7 +35,7 @@ export default defineEventHandler(async event => {
       return { error: 'Missing required parameters', received: body }
     }
 
-    const frontendUrl = domain || 'https://fireux.app/'
+    const frontendUrl = domain
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -43,7 +43,13 @@ export default defineEventHandler(async event => {
         {
           price_data: {
             currency,
-            product_data: { name: product },
+            product_data: {
+              name: product,
+              metadata: {
+                userId,
+                productName: product
+              }
+            },
             unit_amount: amount
           },
           quantity: 1

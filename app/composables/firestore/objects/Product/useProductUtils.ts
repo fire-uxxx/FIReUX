@@ -3,38 +3,32 @@
 export function useProductUtils() {
   // Automatically available globally
   const { uploadImage } = useMediaStorage()
-  const { checkSlug } = useFirestoreUtils()
+  const { checkUnique } = useFirestoreUtils()
 
   /**
-   * Generate a URL-friendly slug and ensure it doesn’t already exist.
+   * Build a tenant-prefixed slug and check if it’s unique in the given collection.
    */
-  async function generateSlug(
+  async function buildSlugIfUnique(
     title: string,
-    tenantId: string
-  ): Promise<
-    { success: true; slug: string } | { success: false; message: string }
-  > {
+    collectionName: string,
+    tenantId?: string
+  ): Promise<{ success: true; slug: string } | { success: false; message: string }> {
     const base = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
 
-    let attempt = 0
-    let slug = `${tenantId}-${base}`
-    let finalSlug = slug
+    const slug = tenantId ? `${tenantId}-${base}` : base
 
-    while (await checkSlug('products', finalSlug)) {
-      attempt++
-      finalSlug = `${slug}-${attempt}`
-      if (attempt > 50) {
-        return {
-          success: false,
-          message: 'This slug already exists. Please pick another title'
-        }
+    const isTaken = await checkUnique(collectionName, 'slug', slug, true)
+    if (isTaken) {
+      return {
+        success: false,
+        message: 'This slug already exists. Please pick another title'
       }
     }
 
-    return { success: true, slug: finalSlug }
+    return { success: true, slug }
   }
 
   /**
@@ -69,8 +63,7 @@ export function useProductUtils() {
   return {
     formatPrice,
     placeholderImage,
-    checkSlug,
-    generateSlug,
+    buildSlugIfUnique,
     uploadMainImage
   }
 }

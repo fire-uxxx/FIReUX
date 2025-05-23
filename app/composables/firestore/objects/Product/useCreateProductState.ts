@@ -36,18 +36,31 @@ export function useCreateProductState() {
 
   const mainImageData = useStorage<string>('createProductMainImage', '')
 
-  const { generateSlug, checkSlug } = useProductUtils()
+  const { buildSlugIfUnique } = useProductUtils()
   const { defaultPrice } = useCreatePricesState()
+
+  const isSlugTaken = ref(false)
 
   // Auto-generate slug
   watch(
     () => product.value.name,
     async newName => {
-      if (!newName) return
-      const slugResult = await generateSlug(newName, tenantId as string)
-      if (slugResult.success) {
-        product.value.slug = slugResult.slug
+      if (!newName) {
+        isSlugTaken.value = false
+        product.value.slug = ''
+        return
       }
+      // Always set the slug to tenantId + kebab-case product name
+      const base = newName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+      const slug = `${tenantId}-${base}`
+      product.value.slug = slug
+
+      // Check if this slug is already taken
+      const { checkUnique } = useFirestoreUtils()
+      isSlugTaken.value = await checkUnique('products', 'slug', slug, true)
     }
   )
 
@@ -83,8 +96,13 @@ export function useCreateProductState() {
     if (!name) throw new Error('❌ Product name is required.')
     if (!mainImageData.value) throw new Error('❌ Main image is required.')
     if (!product.value.slug) throw new Error('❌ Slug is required.')
-    const slugTaken = await checkSlug('products', product.value.slug)
-    if (slugTaken) throw new Error('❌ Slug already exists.')
+
+    const slugResult = await buildSlugIfUnique(
+      'products',
+      name,
+      tenantId as string
+    )
+    if (!slugResult.success) throw new Error(`❌ ${slugResult.message}`)
 
     return {
       name,
@@ -105,6 +123,7 @@ export function useCreateProductState() {
     mainImageData,
     resetCreateProductState,
     getProductPayload,
-    defaultPrice
+    defaultPrice,
+    isSlugTaken // expose this
   }
 }

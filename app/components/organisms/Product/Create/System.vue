@@ -67,8 +67,8 @@ async function handleCreate() {
 
 function handleClear() {
   if (confirm('Are you sure you want to clear the form?')) {
-    resetCreateProductState()
-    resetCreatePricesState()
+    // resetCreateProductState()
+    // resetCreatePricesState()
     selectedTab.value = 'write'
   }
 }

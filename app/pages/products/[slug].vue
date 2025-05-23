@@ -1,6 +1,10 @@
 <template>
   <div v-if="product" class="page">
-    <OrganismsProductCardsPage :product="product" />
+    <OrganismsProductCardsProduct
+      mode="fetch"
+      variant="page"
+      :product="product"
+    />
   </div>
   <div v-else>
     <h1>404 – Product not found</h1>
@@ -9,8 +13,14 @@
 
 <script setup lang="ts">
 const route = useRoute()
-const { fetchProductBySlug } = useProducts()
-
+const {
+  fetchProductBySlug,
+  fetchProductPrices
+} = await useProducts()
 
 const product = await fetchProductBySlug(route.params.slug as string)
+
+if (product && product.id) {
+  product.prices = await fetchProductPrices(product.id)
+}
 </script>

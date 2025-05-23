@@ -36,7 +36,7 @@ export function useCreateProductState() {
 
   const mainImageData = useStorage<string>('createProductMainImage', '')
 
-  const { generateSlug } = useProductUtils()
+  const { generateSlug, checkSlug } = useProductUtils()
   const { defaultPrice } = useCreatePricesState()
 
   // Auto-generate slug
@@ -44,7 +44,7 @@ export function useCreateProductState() {
     () => product.value.name,
     async newName => {
       if (!newName) return
-      const slugResult = await generateSlug(newName)
+      const slugResult = await generateSlug(newName, tenantId as string)
       if (slugResult.success) {
         product.value.slug = slugResult.slug
       }
@@ -78,10 +78,13 @@ export function useCreateProductState() {
     mainImageData.value = ''
   }
 
-  const productPayload = computed(() => {
+  async function getProductPayload() {
     const name = product.value.name?.trim()
     if (!name) throw new Error('❌ Product name is required.')
     if (!mainImageData.value) throw new Error('❌ Main image is required.')
+    if (!product.value.slug) throw new Error('❌ Slug is required.')
+    const slugTaken = await checkSlug('products', product.value.slug)
+    if (slugTaken) throw new Error('❌ Slug already exists.')
 
     return {
       name,
@@ -95,13 +98,13 @@ export function useCreateProductState() {
       images: [mainImageData.value],
       default_price: defaultPrice.value ?? undefined
     }
-  })
+  }
 
   return {
     product,
     mainImageData,
     resetCreateProductState,
-    productPayload,
+    getProductPayload,
     defaultPrice
   }
 }

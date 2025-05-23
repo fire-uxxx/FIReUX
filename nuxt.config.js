@@ -40,7 +40,11 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css', '~/assets/design-system/main.scss'],
 
-  plugins: ['./plugins/firebase.client.js', './plugins/inject-tracer.ts'],
+  plugins: [
+    './plugins/firebase.client.js',
+    './plugins/inject-tracer.ts',
+    './plugins/healthcheck.client.ts'
+  ],
 
   vite: {
     build: {

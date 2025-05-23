@@ -1,44 +1,29 @@
 <template>
   <div class="preview-layout">
-    <div
-      v-if="mainImageData"
-      style="grid-column: 1 / -1; text-align: center; margin-bottom: 1rem"
-    >
-      <img
-        :src="mainImageData"
-        alt="Main Product Preview"
-        style="
-          max-width: 320px;
-          max-height: 320px;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px #0001;
-        "
-      />
-      <div style="font-size: 0.9em; color: #888; margin-top: 0.25rem">
-        Main Product Image Preview
-      </div>
-    </div>
+    <h1>Cell</h1>
     <OrganismsProductCardsProduct
       mode="preview"
       variant="cell"
       :product="previewProduct"
     />
+    <h1>Customer</h1>
     <OrganismsProductCardsProduct
       mode="preview"
       variant="customer"
       :product="previewProduct"
     />
+    <h1>Info</h1>
     <OrganismsProductCardsProduct
       mode="preview"
       variant="info"
       :product="previewProduct"
     />
+    <h1>Page</h1>
     <OrganismsProductCardsProduct
       mode="preview"
       variant="page"
       :product="previewProduct"
     />
-    <pre>{{ prices }}</pre>
   </div>
 </template>
 

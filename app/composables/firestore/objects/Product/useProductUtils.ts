@@ -9,7 +9,8 @@ export function useProductUtils() {
    * Generate a URL-friendly slug and ensure it doesn’t already exist.
    */
   async function generateSlug(
-    title: string
+    title: string,
+    tenantId: string
   ): Promise<
     { success: true; slug: string } | { success: false; message: string }
   > {
@@ -18,14 +19,22 @@ export function useProductUtils() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
 
-    if (await checkSlug('products', base)) {
-      return {
-        success: false,
-        message: 'This slug is already in use. Please pick another title.'
+    let attempt = 0
+    let slug = `${tenantId}-${base}`
+    let finalSlug = slug
+
+    while (await checkSlug('products', finalSlug)) {
+      attempt++
+      finalSlug = `${slug}-${attempt}`
+      if (attempt > 50) {
+        return {
+          success: false,
+          message: 'This slug already exists. Please pick another title'
+        }
       }
     }
 
-    return { success: true, slug: base }
+    return { success: true, slug: finalSlug }
   }
 
   /**
@@ -33,10 +42,11 @@ export function useProductUtils() {
    */
   async function uploadMainImage(
     data: File | string,
+    collection: string,
     id: string
   ): Promise<string> {
     // Call uploadImage(fileOrUrl, collection, id, type)
-    const url = await uploadImage(data, 'products', id, 'main')
+    const url = await uploadImage(data, collection, id, 'main')
     return url || ''
   }
   function formatPrice(
@@ -59,6 +69,7 @@ export function useProductUtils() {
   return {
     formatPrice,
     placeholderImage,
+    checkSlug,
     generateSlug,
     uploadMainImage
   }

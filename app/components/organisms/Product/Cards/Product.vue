@@ -13,10 +13,8 @@
         <div class="cell-text">
           <p class="cell-description">{{ display(product?.description) }}</p>
           <p v-if="product?.default_price" class="cell-price">
-            €{{ product.default_price.unit_amount }}
+            €{{ product.default_price.unit_amount }}<span v-if="product.default_price.interval">/{{ product.default_price.interval }}</span>
           </p>
-          <p><strong>Stock:</strong> {{ product?.stock ?? '!' }}</p>
-          <p><strong>Type:</strong> {{ product?.product_type ?? '!' }}</p>
           <div class="purchace-buttons">
             <UButton :disabled="props.mode === 'preview'" color="primary">Buy Now</UButton>
             <UButton :disabled="props.mode === 'preview'" variant="outline">Add to Basket</UButton>
@@ -107,6 +105,7 @@ console.log('🔍 ProductCard Props:', props)
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  text-align: left;
 }
 
 .cell-image {
@@ -127,6 +126,7 @@ console.log('🔍 ProductCard Props:', props)
 .cell-title {
   margin: 0;
   font-weight: 600;
+  text-align: left;
 }
 
 .cell-description {
